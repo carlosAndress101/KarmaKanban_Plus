@@ -22,8 +22,7 @@ export const sessionMiddleware = createMiddleware(
     try {
       payload = await verify(sessionToken, SECRET_JWT);
     } catch (err) {
-      err
-      return c.json({ error: "Unauthorized" }, 401);
+      return c.json({ error: "Unauthorized", stack: err }, 401);
     }
 
     // Validar estructura del payload

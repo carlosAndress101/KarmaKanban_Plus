@@ -5,6 +5,7 @@ import auth from "@/feature/auth/server/route";
 
 const app = new Hono().basePath("/api");
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routes = app.route("/auth", auth);
 
 export const GET = handle(app);

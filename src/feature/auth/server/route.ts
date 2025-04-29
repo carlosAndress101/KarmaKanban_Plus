@@ -3,7 +3,7 @@ import { deleteCookie, setCookie } from "hono/cookie";
 import { zValidator } from "@hono/zod-validator";
 import { loginSchema, registerSchema } from "@/feature/schemas";
 import { db } from "@/lib/drizzle";
-import { AUTH_COOKIE, COOKIE_SECRET, SECRET_JWT } from "../constants";
+import { AUTH_COOKIE, SECRET_JWT } from "../constants";
 import { users } from "@/lib/schemas_drizzle";
 import { eq } from "drizzle-orm";
 import { sign } from "hono/jwt";
