@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { useLogin } from "../api/use-login";
 import { z } from "zod";
-import { loginSchema } from "@/feature/schemas";
+import { loginSchema } from "@/feature/auth/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField } from "@/components/ui/form";
 import { renderEmailField, renderPasswordField } from "../custom/loginFormFields";

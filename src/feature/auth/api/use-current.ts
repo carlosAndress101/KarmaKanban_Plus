@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
-import { User } from "@/feature/schemas";
+import { User } from "@/feature/auth/schemas";
 
 export const useCurrent = () => {
     const query = useQuery({

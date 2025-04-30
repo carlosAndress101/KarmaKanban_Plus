@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form';
 import { Form, FormField } from '@/components/ui/form';
 import { z } from 'zod';
-import { registerSchema } from '@/feature/schemas';
+import { registerSchema } from '@/feature/auth/schemas';
 import { useRegister } from "@/feature/auth/api/use-register";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

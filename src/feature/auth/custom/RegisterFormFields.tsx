@@ -2,7 +2,7 @@ import { FormItem, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ControllerRenderProps } from "react-hook-form";
 import { z } from "zod";
-import { registerSchema } from "@/feature/schemas";
+import { registerSchema } from "@/feature/auth/schemas";
 
 export function renderNameField({ field }: { field: ControllerRenderProps<z.infer<typeof registerSchema>, "name"> }) {
     return (

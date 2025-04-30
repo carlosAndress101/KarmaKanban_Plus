@@ -2,7 +2,7 @@ import { FormItem, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ControllerRenderProps } from "react-hook-form";
 import { z } from "zod";
-import { loginSchema } from "@/feature/schemas";
+import { loginSchema } from "@/feature/auth/schemas";
 
 export function renderEmailField({ field }: { field: ControllerRenderProps<z.infer<typeof loginSchema>, "email"> }) {
   return (

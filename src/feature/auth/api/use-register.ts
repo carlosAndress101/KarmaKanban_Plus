@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
 
@@ -26,8 +27,12 @@ export const useRegister = () => {
             }
         },
         onSuccess: () => {
+            toast.success("Registro exitoso");
             router.refresh()
             queryClient.invalidateQueries({ queryKey: ["current"]})
+        },
+        onError: () => {
+            toast.error("Error al registrar");
         }
     });
 

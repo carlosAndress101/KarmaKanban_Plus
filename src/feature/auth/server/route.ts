@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
 import { zValidator } from "@hono/zod-validator";
-import { loginSchema, registerSchema } from "@/feature/schemas";
+import { loginSchema, registerSchema } from "@/feature/auth/schemas";
 import { db } from "@/lib/drizzle";
 import { AUTH_COOKIE, SECRET_JWT } from "../constants";
 import { users } from "@/lib/schemas_drizzle";

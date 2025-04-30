@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
 
@@ -27,8 +28,12 @@ export const useLogin = () => {
             }
         },
         onSuccess: () => {
+            toast.success("Sesión iniciada");
             router.refresh()
             queryClient.invalidateQueries({ queryKey: ["current"]})
+        },
+        onError: () => {
+            toast.error("Hubo un error al iniciar sesión");
         }
     });
 

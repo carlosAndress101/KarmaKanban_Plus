@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferResponseType } from "hono";
 
@@ -17,11 +18,18 @@ export const useLogout = () => {
     >({
         mutationFn: async () => {
             const response = await client.api.auth.logout["$post"]();
+            if (!response.ok) {
+				throw new Error("Fallo al cerrar sesión");
+			}
             return await response.json();
         },
         onSuccess: () => {
+            toast("Sesión cerrada");
             router.refresh()
             queryClient.invalidateQueries({ queryKey: ["current"]})
+        },
+        onError: () => {
+            toast.error("Hubo un error al cerrar la sesión");
         }
     });
 
