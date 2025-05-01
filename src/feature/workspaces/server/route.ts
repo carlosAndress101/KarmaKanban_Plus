@@ -5,6 +5,7 @@ import { sessionMiddleware } from "@/lib/session";
 import { members, userRoles, workspaces } from "@/lib/schemas_drizzle";
 import { db } from "@/lib/drizzle";
 import { desc, eq, inArray } from "drizzle-orm";
+import { generateInviteCode } from "@/lib/utils";
 
 const app = new Hono()
     .get("/", sessionMiddleware, async (c) => {
@@ -17,7 +18,7 @@ const app = new Hono()
         const members_ = await db
             .select()
             .from(members)
-            .where(eq(members.userId, user.id))
+            .where(eq(members.id, user.id))
             .orderBy(desc(members.createdAt))
 
         if (members_.length === 0) {
@@ -46,11 +47,12 @@ const app = new Hono()
 
         const workspace = await db.insert(workspaces).values({
             name,
-            userId: user.id
+            userId: user.id,
+            inviteCode: generateInviteCode(6)
         }).returning({ id: workspaces.id })
 
         await db.insert(members).values({
-            userId: user.id,
+            id: user.id,
             workspaceId: workspace[0].id,
             role: userRoles[1]
         })

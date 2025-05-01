@@ -1,0 +1,1 @@
+ALTER TABLE "workspaces" ADD COLUMN "invite_code" text NOT NULL;

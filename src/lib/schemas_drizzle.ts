@@ -26,7 +26,7 @@ export const workspaces = pgTable('workspaces', {
   export const userRoles = ["member", "admin"] as const;
 
   export const members = pgTable("members", {
-    userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    id: uuid('id').notNull().references(() => users.id, { onDelete: 'cascade' }),
     workspaceId: uuid('workspace_id').notNull().references(() => workspaces.id, { onDelete: 'cascade' }),
     role: text("role", {enum : userRoles}).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
