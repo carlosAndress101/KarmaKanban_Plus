@@ -1,11 +1,12 @@
-import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { createWorkspaceSchema } from "../schema";
-import { sessionMiddleware } from "@/lib/session";
-import { members, userRoles, workspaces } from "@/lib/schemas_drizzle";
 import { db } from "@/lib/drizzle";
+import { getMember } from "../members/utils";
 import { desc, eq, inArray } from "drizzle-orm";
 import { generateInviteCode } from "@/lib/utils";
+import { zValidator } from "@hono/zod-validator";
+import { sessionMiddleware } from "@/lib/session";
+import { members, userRoles, workspaces } from "@/lib/schemas_drizzle";
+import { createWorkspaceSchema, updateWorkspaceSchema } from "../schema";
 
 const app = new Hono()
     .get("/", sessionMiddleware, async (c) => {
@@ -58,6 +59,36 @@ const app = new Hono()
         })
 
         return c.json({ data: workspace });
+    })
+    .patch(
+        "/:workspaceId", 
+        sessionMiddleware,
+        zValidator("json", updateWorkspaceSchema), 
+         async (c) => {
+            const user = c.get("user")
+            const { name } = c.req.valid("json");
+            const { workspaceId } = c.req.param();
+
+            if (!user?.id) {
+                throw new Error("User ID is required");
+            }
+
+            if (!workspaceId) {
+                throw new Error("Workspace ID is required");
+            }
+
+            const member = await getMember(workspaceId, user.id)
+
+            if (!member || member.role !== userRoles[1]) {
+                return c.json({ error: "You don't have permission to update this workspace"}, 401)
+            }
+
+            const workspace = await db
+                .update(workspaces)
+                .set({name, updatedAt: new Date()}).where(eq(workspaces.id, workspaceId))
+                .returning({ id: workspaces.id })
+            
+            return c.json({ data: workspace })
     })
 
 export default app;

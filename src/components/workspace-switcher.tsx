@@ -15,13 +15,14 @@ import { useWorkspaceId } from "@/feature/workspaces/hooks/useWorkspaceId"
 import { useCreateWorkspaceModal } from "@/feature/workspaces/hooks/useCreateWorkspaceModal";
 
 export const WorkspaceSwitcher = () => {
+
     const routes = useRouter();
     const workspaceId = useWorkspaceId();
     const { data: workspaces } = useGetWorkspaces();
 	const { open } = useCreateWorkspaceModal()
     
     const onSelect = (id: string) => {
-        routes.push("/workspaces/" + id);
+        routes.push(`/workspaces/${id}`);
     }
     return (
         <div className="flex flex-col gap-y-2">

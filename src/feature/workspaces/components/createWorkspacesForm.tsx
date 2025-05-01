@@ -1,5 +1,6 @@
 "use client";
 import { z } from "zod";
+import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createWorkspaceSchema } from "../schema";
@@ -22,6 +23,7 @@ import { useRouter } from "next/navigation";
 interface Props {
     onCancel?: () => void;
 }
+
 const CreateWorkspaceForm = ({ onCancel }: Props) => {
     const router = useRouter();
     const { mutate, isPending } = useCreateWorkspace();
@@ -78,6 +80,7 @@ const CreateWorkspaceForm = ({ onCancel }: Props) => {
                                 variant="secondary"
                                 onClick={onCancel}
                                 disabled={isPending}
+                                className={cn(!onCancel && "invisible")}
                             >
                                 Cancel
                             </Button>
