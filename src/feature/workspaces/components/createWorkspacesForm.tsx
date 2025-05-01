@@ -32,13 +32,11 @@ const CreateWorkspaceForm = ({ onCancel }: Props) => {
     });
 
     const onSubmit = (values: z.infer<typeof createWorkspaceSchema>) => {
-        mutate({ json: values },
-            {
-                onSuccess: () => {
-                    form.reset();
-                },
-            }
-        );
+        mutate({ json: values }, {
+            onSuccess: () => {
+                form.reset();
+            },
+        });
     };
 
     return (

@@ -18,26 +18,20 @@ export const workspaces = pgTable('workspaces', {
     userId: uuid('user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
+    inviteCode: text("invite_code").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
   });
   
+  export const userRoles = ["member", "admin"] as const;
 
-//   /** RELACIÓN USERS ↔ WORKSPACES */
-//   export const workspaceMembers = pgTable('workspace_members', {
-//     id: uuid('id').defaultRandom().primaryKey(),
-//     workspaceId: uuid('workspace_id')
-//       .notNull()
-//       .references(() => workspaces.id, { onDelete: 'cascade' }),
-//     userId: uuid('user_id')
-//       .notNull()
-//       .references(() => users.id, { onDelete: 'cascade' }),
-//     role: text('role', )
-//       .notNull()
-//       .default('member'),  // roles: 'admin' | 'member' | 'guest'
-//     invitedAt: timestamp('invited_at').defaultNow().notNull(),
-//     accepted: boolean('accepted').default(false).notNull(),
-//   });
+  export const members = pgTable("members", {
+    userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    workspaceId: uuid('workspace_id').notNull().references(() => workspaces.id, { onDelete: 'cascade' }),
+    role: text("role", {enum : userRoles}).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
+  });
 
 
 
