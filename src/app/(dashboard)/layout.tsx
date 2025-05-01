@@ -1,3 +1,5 @@
+"use client"; 
+import CreateWorkspaceModal from "@/feature/workspaces/components/createWorkspaceModal";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 
@@ -8,6 +10,7 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     return (
         <div className="min-h-screen">
+            <CreateWorkspaceModal/>
             <div className="flex w-full h-full">
                 <div className="fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full">
                     <Sidebar/>

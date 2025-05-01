@@ -12,11 +12,13 @@ import {
 } from "./ui/select";
 import WorkspaceAvatar from "@/feature/workspaces/components/workspace-avatar";
 import { useWorkspaceId } from "@/feature/workspaces/hooks/useWorkspaceId"
+import { useCreateWorkspaceModal } from "@/feature/workspaces/hooks/useCreateWorkspaceModal";
 
 export const WorkspaceSwitcher = () => {
     const routes = useRouter();
     const workspaceId = useWorkspaceId();
     const { data: workspaces } = useGetWorkspaces();
+	const { open } = useCreateWorkspaceModal()
     
     const onSelect = (id: string) => {
         routes.push("/workspaces/" + id);
@@ -25,7 +27,7 @@ export const WorkspaceSwitcher = () => {
         <div className="flex flex-col gap-y-2">
 			<div className="flex items-center justify-between">
 				<p className="text-xs uppercase text-neutral-500">Workspace</p>
-				<FaPlusCircle className="size-5 text-neutral-500 cursor-pointer hover:opacity-75" />
+				<FaPlusCircle onClick={open} className="size-5 text-neutral-500 cursor-pointer hover:opacity-75" />
 			</div>
 			<Select onValueChange={onSelect} value={workspaceId}>
 				<SelectTrigger className="w-full bg-neutral-200 font-medium p-1">

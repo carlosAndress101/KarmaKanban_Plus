@@ -1,5 +1,5 @@
 import { useMedia } from "react-use";
-import { DialogContent, Dialog } from "./ui/dialog";
+import { DialogContent, Dialog, DialogTitle } from "./ui/dialog";
 import { Drawer, DrawerContent } from "./ui/drawer";
 
 export function ResponsiveModal({
@@ -18,6 +18,7 @@ export function ResponsiveModal({
 			<Dialog open={open} onOpenChange={onOpenChange}>
 				<DialogContent className="w-full sm:max-w-lg p-0 border-none overflow-y-auto hide-scrollbar max-h-[85vh]">
 					{children}
+					<DialogTitle/>
 				</DialogContent>
 			</Dialog>
 		);
