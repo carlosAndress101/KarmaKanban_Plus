@@ -90,5 +90,32 @@ const app = new Hono()
             
             return c.json({ data: workspace })
     })
+    .get("/:workspaceId", sessionMiddleware, async (c) => {
+        
+        const user = c.get("user");
+        const { workspaceId } = c.req.param();
+
+        if (!user?.id) {
+            throw new Error("User ID is required");
+        }
+
+        const member = await getMember(workspaceId, user?.id)
+
+        if (!member) return c.json({ error: "Unauthorized" }, 401);
+
+        const workspace = await db
+            .select()
+            .from(workspaces)
+            .where(eq(workspaces.id, workspaceId))
+        
+        return c.json({
+            data: {
+                id: workspace[0].id,
+                name: workspace[0].name,
+            },
+        })
+        
+
+    })
 
 export default app;
