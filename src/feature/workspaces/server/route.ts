@@ -112,10 +112,51 @@ const app = new Hono()
             data: {
                 id: workspace[0].id,
                 name: workspace[0].name,
+                inviteCode: workspace[0].inviteCode
             },
         })
         
 
+    })
+    .delete("/:workspaceId", sessionMiddleware, async (c) => {
+        const user = c.get("user")
+        const { workspaceId } = c.req.param();
+
+        if (!user?.id) {
+            throw new Error("User ID is required");
+        }
+
+        const member = await getMember(workspaceId, user?.id)
+
+        if (!member || member.role !== userRoles[1]) {
+            return c.json({ error: "Tu no tienes permiso para eliminar este workspace"}, 401)
+        }
+
+        await db.delete(workspaces).where(eq(workspaces.id, workspaceId))
+
+        return c.json({data: {id: workspaceId}});
+    })
+    .post("/:workspaceId/reset-invite-code", sessionMiddleware, async (c) => {
+        const user = c.get("user")
+        const { workspaceId } = c.req.param();
+
+        if (!user?.id) {
+            throw new Error("User ID is required");
+        }
+
+        const member = await getMember(workspaceId, user?.id)
+
+        if (!member || member.role !== userRoles[1]) {
+            return c.json({ error: "Tu no tienes permiso para resetear el enlace de invitación"}, 401)
+        }
+
+        const workspace = await db
+            .update(workspaces)
+            .set({inviteCode: generateInviteCode(6)})
+            .where(eq(workspaces.id, workspaceId))
+            .returning()
+
+        return c.json({data: workspace});
     })
 
 export default app;
