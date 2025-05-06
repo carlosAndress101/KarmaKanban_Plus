@@ -6,7 +6,7 @@ interface UseGetWorkspaceProps {
   workspaceId: string;
 }
 
-export const useGetWorkspace = ({ workspaceId }: UseGetWorkspaceProps) => {
+export const useGetWorkspaceInfo = ({ workspaceId }: UseGetWorkspaceProps) => {
   const query = useQuery({
     queryKey: ["workspace", workspaceId],
     queryFn: async () => {

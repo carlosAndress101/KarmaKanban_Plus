@@ -1,7 +1,7 @@
 "use client";
 
 import { useWorkspaceId } from "@/feature/workspaces/hooks/useWorkspaceId";
-import { useGetWorkspace } from "@/feature/workspaces/api/useGetWorkspace";
+import { useGetWorkspaceInfo } from "@/feature/workspaces/api/useGetWorkspace";
 import EditWorkspaceForm from "@/feature/workspaces/components/editWorkspacesForm";
 
 import { PageError } from "@/components/page-error";
@@ -10,7 +10,7 @@ import { PageLoader } from "@/components/page-loader";
 export const WorkspaceIdSettingsClient = () => {
   const workspaceId = useWorkspaceId();
 
-  const { data: initialValues, isLoading } = useGetWorkspace({ workspaceId });
+  const { data: initialValues, isLoading } = useGetWorkspaceInfo({ workspaceId });
 
   if (isLoading) return <PageLoader />;
 
