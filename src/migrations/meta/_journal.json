@@ -10,31 +10,10 @@
       "breakpoints": true
     },
     {
-      "idx": 3,
+      "idx": 1,
       "version": "7",
-      "when": 1745945105760,
-      "tag": "0003_grey_harry_osborn",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1746053369338,
-      "tag": "0004_crazy_rockslide",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1746059666273,
-      "tag": "0005_dashing_hairball",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1746060275882,
-      "tag": "0006_melted_leopardon",
+      "when": 1746379796484,
+      "tag": "0001_salty_invaders",
       "breakpoints": true
     }
   ]

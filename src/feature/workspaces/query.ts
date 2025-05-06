@@ -45,3 +45,23 @@ export const getWorkspaces = async () => {
         return { data: [], total: 0 };
     }
 };
+
+interface Props {
+    workspaceId: string;
+}
+
+export const getWorkspaceinfo = async ({ workspaceId }: Props) => {
+    try {
+
+        const workspace = await db
+            .select()
+            .from(workspaces)
+            .where(eq(workspaces.id, workspaceId))
+
+        return {
+            name: workspace[0].name,
+        };
+    } catch {
+        return null;
+    }
+};

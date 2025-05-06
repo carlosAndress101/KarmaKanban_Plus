@@ -36,10 +36,10 @@ const CreateWorkspaceForm = ({ onCancel }: Props) => {
     });
 
     const onSubmit = (values: z.infer<typeof createWorkspaceSchema>) => {
-        mutate({ json: values }, {
+        mutate({ form: values }, {
             onSuccess: ({ data}) => {
                 form.reset();
-                router.push(`/workspaces/${data[0].id}`)
+                router.push(`/workspaces/${data.id}`)
             },
         });
     };

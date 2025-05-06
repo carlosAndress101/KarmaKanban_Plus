@@ -126,7 +126,7 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
                         Atras
                     </Button>
                     <CardTitle className="text-xl font-bold">
-                        {initialValues.inviteCode}
+                        {initialValues.name}
                     </CardTitle>
                 </CardHeader>
                 <div className="px-7">
