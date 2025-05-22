@@ -24,6 +24,7 @@ export const workspaces = pgTable('workspaces', {
 });
 
 export const userRoles = ["member", "admin"] as const;
+export type UserRole = typeof userRoles[number]; 
 
 export const members = pgTable("members", {
   id: uuid('id').primaryKey().notNull().defaultRandom(),

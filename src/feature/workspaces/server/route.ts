@@ -14,27 +14,27 @@ const app = new Hono()
         const user = c.get("user")
 
         if (!user?.id) {
-            throw new Error("User ID is required");
+            return c.json({ error: "Unauthorized" }, 401);
         }
 
-        const members_ = await db
-            .select()
+        // Obtener todos los workspace IDs en una sola consulta si no necesitas más del objeto members
+        const workspaceIds = await db
+            .select({ workspaceId: members.workspaceId })
             .from(members)
-            .where(eq(members.userId, user.id))
-            .orderBy(desc(members.createdAt))
+            .where(eq(members.userId, user.id));
 
-        if (members_.length === 0) {
+        if (workspaceIds.length === 0) {
             return c.json({ data: [] });
         }
 
-        const workspaceIds = members_.map(m => m.workspaceId);
+        const ids = workspaceIds.map(w => w.workspaceId);
 
+        // Obtener los workspaces ordenados por fecha de creación
         const workspaces_ = await db
             .select()
             .from(workspaces)
-            .where(inArray(workspaces.id, workspaceIds))
+            .where(inArray(workspaces.id, ids))
             .orderBy(desc(workspaces.createdAt));
-
 
         return c.json({ data: workspaces_ });
     })
@@ -43,8 +43,8 @@ const app = new Hono()
         const user = c.get("user")
         const { name } = c.req.valid("form");
 
-        if (!user?.id) {
-            throw new Error("User ID is required");
+        if (!user || !user.id) {
+            throw new Error("User is required");
         }
 
         const [workspace] = await db.insert(workspaces).values({
@@ -67,18 +67,17 @@ const app = new Hono()
         zValidator("json", updateWorkspaceSchema),
         async (c) => {
             const user = c.get("user")
+            if (!user || !user.id) {
+                throw new Error("User is required");
+            }
             const { name } = c.req.valid("json");
             const { workspaceId } = c.req.param();
-
-            if (!user?.id) {
-                throw new Error("User ID is required");
-            }
 
             if (!workspaceId) {
                 throw new Error("Workspace ID is required");
             }
 
-            const member = await getMember(workspaceId, user.id)
+            const [member] = await getMember(workspaceId, user.id)
 
             if (!member || member.role !== userRoles[1]) {
                 return c.json({ error: "You don't have permission to update this workspace" }, 401)
@@ -94,15 +93,21 @@ const app = new Hono()
     .get("/:workspaceId", sessionMiddleware, async (c) => {
 
         const user = c.get("user");
-        const { workspaceId } = c.req.param();
 
-        if (!user?.id) {
-            throw new Error("User ID is required");
+        if (!user || !user.id) {
+            throw new Error("User is required");
         }
 
-        const member = await getMember(workspaceId, user?.id)
+        const { workspaceId } = c.req.param();
 
-        if (!member) return c.json({ error: "Unauthorized" }, 401);
+        console.log(workspaceId)
+        console.log(user.id)
+
+        const member = await getMember(workspaceId, user.id)
+
+        if (!member) {
+            return c.json({ error: "Unauthorized" }, 401);
+        }
 
         const [workspace] = await db
             .select()
@@ -124,11 +129,11 @@ const app = new Hono()
         const user = c.get("user")
         const { workspaceId } = c.req.param();
 
-        if (!user?.id) {
-            throw new Error("User ID is required");
+        if (!user || !user.id) {
+            throw new Error("User is required");
         }
 
-        const member = await getMember(workspaceId, user?.id)
+        const [member] = await getMember(workspaceId, user.id)
 
         if (!member || member.role !== userRoles[1]) {
             return c.json({ error: "Tu no tienes permiso para eliminar este workspace" }, 401)
@@ -142,11 +147,11 @@ const app = new Hono()
         const user = c.get("user")
         const { workspaceId } = c.req.param();
 
-        if (!user?.id) {
-            throw new Error("User ID is required");
+        if (!user || !user.id) {
+            throw new Error("User is required");
         }
 
-        const member = await getMember(workspaceId, user?.id)
+        const [member] = await getMember(workspaceId, user.id)
 
         if (!member || member.role !== userRoles[1]) {
             return c.json({ error: "Tu no tienes permiso para resetear el enlace de invitación" }, 401)
@@ -163,17 +168,11 @@ const app = new Hono()
     .post("/:workspaceId/join", sessionMiddleware, zValidator("json", z.object({ inviteCode: z.string() })), async (c) => {
 
         const user = c.get("user")
-        if (!user?.id) {
-            throw new Error("User ID is required");
+        if (!user || !user.id) {
+            throw new Error("User is required");
         }
         const { workspaceId } = c.req.param();
         const { inviteCode } = c.req.valid("json")
-
-        const member = await getMember(workspaceId, user?.id);
-
-        if (member) {
-            return c.json({ error: "Ya has unido a este workspace" }, 400)
-        }
 
         const workspace = await db
             .select()
@@ -187,7 +186,7 @@ const app = new Hono()
         await db.insert(members).values({
             workspaceId,
             userId: user.id,
-            role: userRoles[1]
+            role: userRoles[0]
         })
 
         return c.json({ data: workspace });

@@ -1,17 +1,17 @@
 import { redirect } from "next/navigation";
 
 import { getCurrent } from "@/feature/auth/actions";
-import { MembersList } from "@/feature/workspaces/components/members-list";
+import { MemberList } from "@/feature/workspaces/components/memberList";
 
-const WorkspaceMembersPage = async () => {
+const WorkspaceIdMembersPage = async () => {
   const user = await getCurrent();
   if (!user) redirect("/sign-in");
 
   return (
     <div className="w-full lg:max-w-xl">
-      <MembersList />
+      <MemberList />
     </div>
   );
-}
+};
 
-export default WorkspaceMembersPage;
+export default WorkspaceIdMembersPage;

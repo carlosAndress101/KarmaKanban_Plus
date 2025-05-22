@@ -1,14 +1,17 @@
 import { db } from "@/lib/drizzle";
 import { members, workspaces } from "@/lib/schemas_drizzle";
 import { eq, inArray, desc } from "drizzle-orm";
-import { cookies } from "next/headers";
+import { cookies } from 'next/headers'
 import { AUTH_COOKIE, SECRET_JWT } from "../auth/constants";
 import { verify } from "hono/jwt";
 
 export const getWorkspaces = async () => {
-    const seccion = (await cookies()).get(AUTH_COOKIE);
+    const cookieStore = await cookies()
+    const seccion = cookieStore.get(AUTH_COOKIE)
 
-    if (!seccion) return { data: [], total: 0 };
+    if (!seccion) {
+        return { data: [], total: 0 };
+    }
 
     let payload;
     try {
@@ -25,7 +28,7 @@ export const getWorkspaces = async () => {
         const members_ = await db
             .select()
             .from(members)
-            .where(eq(members.id, payload.sub));
+            .where(eq(members.userId, payload.sub));
 
         if (members_.length === 0) {
             return { data: [], total: 0 };
