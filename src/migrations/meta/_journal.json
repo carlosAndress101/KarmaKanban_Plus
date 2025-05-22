@@ -15,6 +15,13 @@
       "when": 1746379796484,
       "tag": "0001_salty_invaders",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747923701620,
+      "tag": "0002_noisy_peter_parker",
+      "breakpoints": true
     }
   ]
 }

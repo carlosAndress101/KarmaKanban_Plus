@@ -1,3 +1,3 @@
-import { users, members, workspaces } from "./schemas_drizzle";
+import { users, members, workspaces, projects } from "./schemas_drizzle";
 
-export const schema = { users, members, workspaces };
+export const schema = { users, members, workspaces, projects };
