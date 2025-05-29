@@ -9,10 +9,15 @@ import { PageLoader } from "@/components/page-loader";
 
 export const ProjectIdSettingsClient = () => {
   const projectId = useProjectId();
+
+  // Early return if no projectId
+  if (!projectId) {
+    return <PageError message="No project ID provided" />;
+  }
+
   const { data: initialValues, isLoading } = useGetProject({ projectId });
 
   if (isLoading) return <PageLoader />;
-
   if (!initialValues) return <PageError message="Project not found" />;
 
   return (
