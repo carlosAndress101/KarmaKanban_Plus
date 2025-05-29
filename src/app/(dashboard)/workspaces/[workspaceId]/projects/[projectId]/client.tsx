@@ -15,13 +15,17 @@ import { PageLoader } from "@/components/page-loader";
 import { TaskViewSwticher } from "@/features/tasks/components/task-view-swticher";
 //import { Analytics } from "@/components/analytics";
 
+
 export const ProjectIdClient = () => {
   const projectId = useProjectId();
+
+  if (!projectId) {
+    return null;
+  }
+
   const { data: project, isLoading: isLoadingProject } = useGetProject({
     projectId,
   });
-//   const { data: analytics, isLoading: isLoadingAnalytics } =
-//     useGetProjectAnalytics({ projectId });
 
   const isLoading = isLoadingProject || ""//isLoadingAnalytics;
 
