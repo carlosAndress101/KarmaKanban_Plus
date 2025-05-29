@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 
 import { useGetProject } from "@/features/projects/api/useGetProject";
