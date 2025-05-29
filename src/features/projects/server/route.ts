@@ -1,13 +1,13 @@
 import { Hono } from "hono";
 import { db } from "@/lib/drizzle";
-import { desc, eq } from "drizzle-orm";
+import { and, eq, gte, lte, lt, ne, desc} from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { sessionMiddleware } from "@/lib/session";
-import { projects, userRoles } from "@/lib/schemas_drizzle";
+import { projects, tasks, userRoles } from "@/lib/schemas_drizzle";
 import { z } from "zod";
 import { getMember } from "@/features/workspaces/members/utils";
 import { createProjectSchema, updateProjectSchema } from "../schemas";
-//import { endOfMonth, startOfMonth, subMonths } from "date-fns";
+import { endOfMonth, startOfMonth, subMonths } from "date-fns";
 
 const app = new Hono()
     .get(
@@ -92,40 +92,189 @@ const app = new Hono()
             return c.json({ data: project });
         }
     )
-    // .get(
-    //     "/:projectId/analytics",
-    //     sessionMiddleware,
-    //     async (c) => {
-    //         const { projectId } = c.req.param()
-    //         const user = c.get("user")
+    .get(
+        "/:projectId/analytics",
+        sessionMiddleware,
+        async (c) => {
+            const { projectId } = c.req.param()
+            const user = c.get("user")
 
-    //         if (!user) {
-    //             return c.json({ error: "Authentication required" }, 401);
-    //         }
+            if (!user) {
+                return c.json({ error: "Authentication required" }, 401);
+            }
 
-    //         const [project] = await db
-    //             .select()
-    //             .from(projects)
-    //             .where(eq(projects.id, projectId))
+            const [project] = await db
+                .select()
+                .from(projects)
+                .where(eq(projects.id, projectId))
 
-    //         if (!project) {
-    //             return c.json({ error: "Project not found" }, 404);
-    //         }
+            if (!project) {
+                return c.json({ error: "Project not found" }, 404);
+            }
 
-    //         const member = await getMember(project.workspaceId, user.id)
+            const [member] = await getMember(project.workspaceId, user.id)
 
-    //         if (!member) {
-    //             return c.json({ error: "Unauthorized" }, 401);
-    //         }
+            if (!member) {
+                return c.json({ error: "Unauthorized" }, 401);
+            }
 
-    //         const now = new Date();
-    //         const thisMonthStart = startOfMonth(now);
-    //         const thisMonthEnd = endOfMonth(now);
-    //         const lastMonthStart = startOfMonth(subMonths(now, 1));
-    //         const lastMonthEnd = endOfMonth(subMonths(now, 1));
+            const now = new Date();
+            const thisMonthStart = startOfMonth(now);
+            const thisMonthEnd = endOfMonth(now);
+            const lastMonthStart = startOfMonth(subMonths(now, 1));
+            const lastMonthEnd = endOfMonth(subMonths(now, 1));
 
-    //         const thisMnthTasks = await
-    // )
+            const thisMonthTasks = await db
+                .select()
+                .from(tasks)
+                .where(
+                    and(
+                        eq(tasks.projectId, projectId),
+                        gte(tasks.createdAt, thisMonthStart),
+                        lte(tasks.createdAt, thisMonthEnd)
+                    )
+                );
+
+            const lastMonthTasks = await db
+                .select()
+                .from(tasks)
+                .where(
+                    and(
+                        eq(tasks.projectId, projectId),
+                        gte(tasks.createdAt, lastMonthStart),
+                        lte(tasks.createdAt, lastMonthEnd)
+                    )
+                );
+
+            const taskCount = thisMonthTasks.length;
+            const taskDifference = taskCount - lastMonthTasks.length;
+
+            const thisMonthAssignedTasks = await db
+                .select()
+                .from(tasks)
+                .where(
+                    and(
+                        eq(tasks.projectId, projectId),
+                        eq(tasks.assigneeId, member.id),
+                        gte(tasks.createdAt, thisMonthStart),
+                        lte(tasks.createdAt, thisMonthEnd)
+                    )
+                );
+
+            const lastMonthAssignedTasks = await db
+                .select()
+                .from(tasks)
+                .where(
+                    and(
+                        eq(tasks.projectId, projectId),
+                        eq(tasks.assigneeId, member.id),
+                        gte(tasks.createdAt, lastMonthStart),
+                        lte(tasks.createdAt, lastMonthEnd)
+                    )
+                );
+
+            const assignedTaskCount = thisMonthAssignedTasks.length;
+            const assignedTaskDifference = assignedTaskCount - lastMonthAssignedTasks.length;
+
+            const thisMonthInCompleteTasks = await db
+                .select()
+                .from(tasks)
+                .where(
+                    and(
+                        eq(tasks.projectId, projectId),
+                        ne(tasks.status, "DONE"),
+                        gte(tasks.createdAt, thisMonthStart),
+                        lte(tasks.createdAt, thisMonthEnd)
+                    )
+                );
+
+            const lastMonthInCompleteTasks = await db
+                .select()
+                .from(tasks)
+                .where(
+                    and(
+                        eq(tasks.projectId, projectId),
+                        ne(tasks.status, "DONE"),
+                        gte(tasks.createdAt, lastMonthStart),
+                        lte(tasks.createdAt, lastMonthEnd)
+                    )
+                );
+
+            const inCompleteTaskCount = thisMonthInCompleteTasks.length;
+            const inCompleteTaskDifference = inCompleteTaskCount - lastMonthInCompleteTasks.length;
+
+            const thisMonthCompletedTasks = await db
+                .select()
+                .from(tasks)
+                .where(
+                    and(
+                        eq(tasks.projectId, projectId),
+                        eq(tasks.status, "DONE"),
+                        gte(tasks.createdAt, thisMonthStart),
+                        lte(tasks.createdAt, thisMonthEnd)
+                    )
+                );
+
+            const lastMonthCompletedTasks = await db
+                .select()
+                .from(tasks)
+                .where(
+                    and(
+                        eq(tasks.projectId, projectId),
+                        eq(tasks.status, "DONE"),
+                        gte(tasks.createdAt, lastMonthStart),
+                        lte(tasks.createdAt, lastMonthEnd)
+                    )
+                );
+
+            const completedTaskCount = thisMonthCompletedTasks.length;
+            const completedTaskDifference = completedTaskCount - lastMonthCompletedTasks.length;
+
+            const thisMonthOverDueTasks = await db
+                .select()
+                .from(tasks)
+                .where(
+                    and(
+                        eq(tasks.projectId, projectId),
+                        ne(tasks.status, "DONE"),
+                        lt(tasks.dueDate, now),
+                        gte(tasks.createdAt, thisMonthStart),
+                        lte(tasks.createdAt, thisMonthEnd)
+                    )
+                );
+
+            const lastMonthOverDueTasks = await db
+                .select()
+                .from(tasks)
+                .where(
+                    and(
+                        eq(tasks.projectId, projectId),
+                        ne(tasks.status, "DONE"),
+                        lt(tasks.dueDate, now),
+                        gte(tasks.createdAt, lastMonthStart),
+                        lte(tasks.createdAt, lastMonthEnd)
+                    )
+                );
+
+            const overDueTaskCount = thisMonthOverDueTasks.length;
+            const overDueTaskDifference = overDueTaskCount - lastMonthOverDueTasks.length;
+
+            return c.json({
+                data: {
+                    taskCount,
+                    taskDifference,
+                    assignedTaskCount,
+                    assignedTaskDifference,
+                    completedTaskCount,
+                    completedTaskDifference,
+                    inCompleteTaskCount,
+                    inCompleteTaskDifference,
+                    overDueTaskCount,
+                    overDueTaskDifference,
+                },
+            });
+        }
+    )
     .patch(
         "/:projectId",
         sessionMiddleware,

@@ -5,6 +5,7 @@ import { useQueryState } from "nuqs";
 import { Loader, PlusIcon } from "lucide-react";
 
 import { useProjectId } from "@/features/projects/hooks/useProjectId";
+import { useGetProjects } from "@/features/projects/api/useGetProjects";
 import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
 
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ export const TaskViewSwticher = ({
   const workspaceId = useWorkspaceId();
   const paramProjectId = useProjectId();
   const { open } = useCreateTaskModal();
+  const { data: projects } = useGetProjects({ workspaceId });
   const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
     workspaceId,
     assigneeId,
@@ -109,7 +111,7 @@ export const TaskViewSwticher = ({
             </TabsContent>
 
             <TabsContent value="calendar" className="mt-0 h-full pb-4">
-              <DataCalendar data={normalizedTasks} />
+              <DataCalendar data={normalizedTasks} projects={projects} />
             </TabsContent>
           </>
         )}

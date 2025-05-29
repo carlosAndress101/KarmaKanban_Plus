@@ -80,7 +80,12 @@ export const DataCalendar = ({ data, projects }: DataCalendarProps) => {
   const events = useMemo(() => {
     if (!projects) return [];
 
-    return data
+    // Filtrar tareas duplicadas usando Set
+    const uniqueTasks = Array.from(
+      new Map(data.map(task => [task.id, task])).values()
+    );
+
+    return uniqueTasks
       .filter((task) => task.dueDate && task.name && task.id)
       .map((task) => {
         const projectObj = projects.find(

@@ -25,6 +25,7 @@ type TasksState = {
 
 interface DataKanbanProps {
   data: Task[];
+  onChange: (tasks: { id: string; status: TaskStatus; position: number }[]) => void;
 }
 
 // Helper para eliminar duplicados por id
