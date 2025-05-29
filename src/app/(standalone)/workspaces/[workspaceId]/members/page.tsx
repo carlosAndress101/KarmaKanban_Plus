@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
-import { getCurrent } from "@/feature/auth/actions";
-import { MemberList } from "@/feature/workspaces/components/memberList";
+import { getCurrent } from "@/features/auth/actions";
+import { MemberList } from "@/features/workspaces/components/memberList";
 
 const WorkspaceIdMembersPage = async () => {
   const user = await getCurrent();

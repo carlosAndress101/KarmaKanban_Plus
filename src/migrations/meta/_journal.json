@@ -22,6 +22,13 @@
       "when": 1747923701620,
       "tag": "0002_noisy_peter_parker",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1748147021451,
+      "tag": "0003_public_wolfsbane",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { getCurrent } from "@/feature/auth/actions";
+import { getCurrent } from "@/features/auth/actions";
 
 import { ProjectIdSettingsClient } from "./client";
 

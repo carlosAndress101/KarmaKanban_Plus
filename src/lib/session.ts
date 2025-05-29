@@ -1,8 +1,8 @@
 import { createMiddleware } from "hono/factory";
-import { getCookie } from "hono/cookie";
+import { deleteCookie, getCookie } from "hono/cookie";
 import { verify } from "hono/jwt";
 import { eq } from "drizzle-orm";
-import { AUTH_COOKIE, SECRET_JWT } from "@/feature/auth/constants";
+import { AUTH_COOKIE, SECRET_JWT } from "@/features/auth/constants";
 import { users } from "./schemas_drizzle";
 import { db } from "./drizzle";
 
@@ -22,7 +22,11 @@ export const sessionMiddleware = createMiddleware(
     try {
       payload = await verify(sessionToken, SECRET_JWT);
     } catch (err) {
-      return c.json({ error: "Unauthorized", stack: err }, 401);
+      deleteCookie(c, AUTH_COOKIE, {
+        path: '/',
+        secure: true,
+      })
+      return c.json({ error: "Se terminno tu seccion", stack: err }, 401);
     }
 
     // Validar estructura del payload

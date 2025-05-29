@@ -1,4 +1,4 @@
-import UserButton from "@/feature/auth/components/userButton";
+import UserButton from "@/features/auth/components/userButton";
 import MobileSidebar from "./mobile-sidebar";
 
 const Navbar = () => {

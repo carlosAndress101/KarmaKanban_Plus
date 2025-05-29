@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { getCurrent } from "@/feature/auth/actions";
-import SingIn from "@/feature/auth/components/singInCard";
+import { getCurrent } from "@/features/auth/actions";
+import SingIn from "@/features/auth/components/singInCard";
 
 const SingInPage = async () => {
 

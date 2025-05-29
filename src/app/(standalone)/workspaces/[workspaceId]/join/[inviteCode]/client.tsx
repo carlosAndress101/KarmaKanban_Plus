@@ -1,8 +1,8 @@
 "use client";
 
-import { useWorkspaceId } from "@/feature/workspaces/hooks/useWorkspaceId";
-import { useGetWorkspaceInfo } from "@/feature/workspaces/api/useGetWorkspace";
-import { JoinWorkspaceForm } from "@/feature/workspaces/components/joinWorkspaceForm";
+import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
+import { useGetWorkspaceInfo } from "@/features/workspaces/api/useGetWorkspace";
+import { JoinWorkspaceForm } from "@/features/workspaces/components/joinWorkspaceForm";
 
 import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";

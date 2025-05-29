@@ -11,7 +11,7 @@ import {
     GoHomeFill,
 } from "react-icons/go";
 
-import { useWorkspaceId } from "@/feature/workspaces/hooks/useWorkspaceId";
+import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
 
 const routes = [
     { label: "Home", href: "/", icon: GoHome, activeIcon: GoHomeFill },

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { getCurrent } from "@/feature/auth/actions";
+import { getCurrent } from "@/features/auth/actions";
 import { WorkspaceIdSettingsClient } from "./client";
 
 const WorkspaceIdSettingsPage = async () => {

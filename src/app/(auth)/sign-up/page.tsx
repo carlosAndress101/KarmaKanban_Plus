@@ -1,5 +1,5 @@
-import { getCurrent } from "@/feature/auth/actions";
-import RegisterForm from "@/feature/auth/components/singUpCard";
+import { getCurrent } from "@/features/auth/actions";
+import RegisterForm from "@/features/auth/components/singUpCard";
 import { redirect } from "next/navigation";
 
 const SingUpPage = async () => {

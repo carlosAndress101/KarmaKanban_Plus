@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useGetWorkspaces } from "@/feature/workspaces/api/useGetWorkspaces";
+import { useGetWorkspaces } from "@/features/workspaces/api/useGetWorkspaces";
 import { FaPlusCircle } from "react-icons/fa";
 import {
 	Select,
@@ -10,9 +10,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "./ui/select";
-import WorkspaceAvatar from "@/feature/workspaces/components/workspace-avatar";
-import { useWorkspaceId } from "@/feature/workspaces/hooks/useWorkspaceId"
-import { useCreateWorkspaceModal } from "@/feature/workspaces/hooks/useCreateWorkspaceModal";
+import WorkspaceAvatar from "@/features/workspaces/components/workspace-avatar";
+import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId"
+import { useCreateWorkspaceModal } from "@/features/workspaces/hooks/useCreateWorkspaceModal";
 
 export const WorkspaceSwitcher = () => {
 

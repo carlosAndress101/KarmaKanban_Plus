@@ -1,8 +1,8 @@
 "use client";
 
-import { useGetProject } from "@/feature/projects/api/useGetProject";
-import { useProjectId } from "@/feature/projects/hooks/useProjectId";
-import { EditProjectForm } from "@/feature/projects/components/editProjectForm";
+import { useGetProject } from "@/features/projects/api/useGetProject";
+import { useProjectId } from "@/features/projects/hooks/useProjectId";
+import { EditProjectForm } from "@/features/projects/components/editProjectForm";
 
 import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";

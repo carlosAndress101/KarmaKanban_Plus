@@ -3,15 +3,16 @@
 import Link from "next/link";
 import { PencilIcon } from "lucide-react";
 
-import { useProjectId } from "@/feature/projects/hooks/useProjectId";
-import { useGetProject } from "@/feature/projects/api/useGetProject";
-import { ProjectAvatar } from "@/feature/projects/components/projectAvatar";
-//import { TaskViewSwticher } from "@/feature/tasks/components/task-view-swticher";
-//import { useGetProjectAnalytics } from "@/feature/projects/api/use-get-project-analytics";
+import { useProjectId } from "@/features/projects/hooks/useProjectId";
+import { useGetProject } from "@/features/projects/api/useGetProject";
+import { ProjectAvatar } from "@/features/projects/components/projectAvatar";
+//import { TaskViewSwticher } from "@/features/tasks/components/task-view-swticher";
+//import { useGetProjectAnalytics } from "@/features/projects/api/use-get-project-analytics";
 
 import { Button } from "@/components/ui/button";
 import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";
+import { TaskViewSwticher } from "@/features/tasks/components/task-view-swticher";
 //import { Analytics } from "@/components/analytics";
 
 export const ProjectIdClient = () => {
@@ -50,8 +51,8 @@ export const ProjectIdClient = () => {
           </Button>
         </div>
       </div>
-      {/* {analytics && <Analytics data={analytics} />}
-      <TaskViewSwticher /> */}
+      {/* {analytics && <Analytics data={analytics} />} */}
+      <TaskViewSwticher />
     </div>
   );
 };
