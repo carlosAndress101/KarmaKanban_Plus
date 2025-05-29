@@ -18,16 +18,15 @@ import { TaskViewSwticher } from "@/features/tasks/components/task-view-swticher
 
 export const ProjectIdClient = () => {
   const projectId = useProjectId();
+  const { data: project, isLoading: isLoadingProject } = useGetProject({
+    projectId: projectId ?? '', // Provide fallback for type safety
+  });
 
   if (!projectId) {
     return null;
   }
 
-  const { data: project, isLoading: isLoadingProject } = useGetProject({
-    projectId,
-  });
-
-  const isLoading = isLoadingProject || ""//isLoadingAnalytics;
+  const isLoading = isLoadingProject || "";
 
   if (isLoading) return <PageLoader />;
 
