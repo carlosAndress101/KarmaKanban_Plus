@@ -6,8 +6,8 @@ import { getMember } from "@/features/members/utils";
 import { sessionMiddleware } from "@/lib/session";
 
 import { BulkUpdateTasksSchema, taskSchema } from "../schemas";
-import { TaskStatus } from "../types";
-import { members, projects, tasks } from "@/lib/schemas_drizzle";
+import {  TaskStatus } from "../types";
+import { members, projects, tasks, users } from "@/lib/schemas_drizzle";
 import { and, eq, desc, inArray, like } from "drizzle-orm";
 import { db } from "@/lib/drizzle";
 
@@ -33,10 +33,6 @@ const app = new Hono()
 
       const { workspaceId, assigneeId, dueDate, projectId, search, status } =
         c.req.valid("query");
-
-      if (!projectId) {
-        return c.json({ error: "ProjectId required" }, 400);
-      }
 
       const [member] = await getMember(workspaceId, user.id);
       if (!member) return c.json({ error: "Unauthorized" }, 401);
@@ -85,7 +81,7 @@ const app = new Hono()
 
         })
         .from(tasks)
-        .leftJoin(projects, eq(tasks.projectId, projectId))
+        .leftJoin(projects, eq(tasks.projectId, projects.id))
         .leftJoin(members, eq(tasks.assigneeId, members.id))
         .where(and(...whereConditions))
         .orderBy(desc(tasks.createdAt));
@@ -222,32 +218,87 @@ const app = new Hono()
   })
   .get("/:taskId", sessionMiddleware, async (c) => {
     const user = c.get("user");
-
     if (!user) {
       return c.json({ error: "Unauthorized" }, 401);
     }
-
     const { taskId } = c.req.param();
-
-    const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId)).limit(1);
-    if (!task) return c.json({ error: "Task not found" }, 404);
-
-    const [member] = await getMember(task.workspaceId, user.id);
-    if (!member) return c.json({ error: "Unauthorized" }, 401);
-
-    return c.json({
-      data: {
-        ...task,
-        assigneedId: task.assigneeId ?? undefined,
-        description: task.description ?? undefined,
-        project: task.projectId ?? undefined,
-        assignee: task.assigneeId ?? undefined,
+    const [task] = await db
+      .select()
+      .from(tasks)
+      .where(eq(tasks.id, taskId))
+      .limit(1);
+    
+      if (!task) {
+        return c.json({ error: "Task not found" }, 404);
       }
-    });
+
+      const [member] = await db
+        .select()
+        .from(members)
+        .where(
+          and(
+            eq(members.userId, user.id),
+            eq(members.workspaceId, task.workspaceId)
+          )
+        )
+        .limit(1);
+
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      const [project] = await db
+        .select()
+        .from(projects)
+        .where(eq(projects.id, task.projectId))
+        .limit(1);
+
+      if (!project) {
+        return c.json({ error: "Project not found" }, 404);
+      }
+
+      if (!task.assigneeId) {
+        return c.json({ error: "Task has no assignee" }, 400);
+      }
+
+      const [assigneeMember] = await db
+        .select()
+        .from(members)
+        .where(eq(members.id, task.assigneeId))
+        .limit(1);
+      
+      if (!assigneeMember) {
+        return c.json({ error: "Assignee not found" }, 404);
+      }
+
+      const [assigneeUser] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, assigneeMember.userId))
+        .limit(1);
+
+      const assignee = {
+        ...assigneeMember,
+        name: assigneeUser.name,
+        email: assigneeUser.email,
+        createdAt: new Date(assigneeMember.createdAt),
+        updatedAt: new Date(assigneeMember.updatedAt),
+      }
+
+      return c.json({
+        data: {
+          ...task,
+          description: task.description ?? undefined,
+          status: TaskStatus[task.status as keyof typeof TaskStatus],
+          dueDate: task.dueDate ?? "",
+          project,
+          assignee
+        }
+      })
   })
   .post(
     "/bulk-update", sessionMiddleware, zValidator("json", BulkUpdateTasksSchema), async (c) => {
-      
+
       const user = c.get("user");
 
       if (!user) {

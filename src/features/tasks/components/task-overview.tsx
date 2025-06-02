@@ -7,13 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DottedSeparator } from "@/components/dotted-separator";
 
-import { Task } from "../types";
+import { TaskFront } from "../types";
 import { TaskDate } from "./task-date";
 import { OverviewProperty } from "./overview-property";
 import { useEditTaskModal } from "../hooks/use-edit-task-modal";
 
 interface TaskOverviewProps {
-  task: Task;
+  task: TaskFront;
 }
 
 export const TaskOveriew = ({ task }: TaskOverviewProps) => {
@@ -23,17 +23,17 @@ export const TaskOveriew = ({ task }: TaskOverviewProps) => {
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-muted rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">Overview</p>
+          <p className="text-lg font-semibold">Descripción general</p>
           <Button size="sm" variant="secondary" onClick={() => open(task.id)}>
             <PencilIcon className="size-4 mr-2" />
-            Edit
+            Editar
           </Button>
         </div>
         <DottedSeparator className="my-4" />
         <div className="flex flex-col gap-y-4">
           <OverviewProperty label="Assignee">
-            <MemberAvatar name={task.assignee} className="size-6" />
-            <p className="text-sm font-medium">{task.assignee}</p>
+            <MemberAvatar name={task.assignee.toString()} className="size-6" />
+            <p className="text-sm font-medium">{task.assignee.toString()}</p>
           </OverviewProperty>
 
           <OverviewProperty label="Due Date">

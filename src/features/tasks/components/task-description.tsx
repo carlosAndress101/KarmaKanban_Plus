@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { DottedSeparator } from "@/components/dotted-separator";
 
-import { Task } from "../types";
+import { TaskFront } from "../types";
 import { useUpdateTask } from "../api/useUpdateTask";
 
 interface TaskDescriptionProps {
-  task: Task;
+  task: TaskFront;
 }
 
 export const TaskDescription = ({ task }: TaskDescriptionProps) => {
@@ -31,7 +31,7 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
   return (
     <div className="p-4 border rounded-lg">
       <div className="flex items-center justify-between">
-        <p className="text-lg font-semibold">Overview</p>
+        <p className="text-lg font-semibold">Descripción general</p>
         <Button
           size="sm"
           variant="secondary"
@@ -45,7 +45,7 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
           ) : (
             <>
               <PencilIcon className="size-4 mr-2" />
-              Edit
+              Editar
             </>
           )}
         </Button>
@@ -54,7 +54,7 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
       {isEditing ? (
         <div className="flex flex-col gap-y-4">
           <Textarea
-            placeholder="Add a description..."
+            placeholder="Escribe una descripción"
             value={value}
             rows={4}
             onChange={(e) => setValue(e.target.value)}
@@ -66,13 +66,13 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
             onClick={handleSave}
             disabled={isPending}
           >
-            {isPending ? "Saving..." : "Save changes"}
+            {isPending ? "Guardando..." : "Guardar cambios"}
           </Button>
         </div>
       ) : (
-        <div className="">
+        <div>
           {task.description || (
-            <span className="text-muted-foreground">No description</span>
+            <span className="text-muted-foreground">Sin descripción</span>
           )}
         </div>
       )}

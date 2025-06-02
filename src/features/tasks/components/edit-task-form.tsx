@@ -74,7 +74,7 @@ export const EditTaskForm = ({
   return (
     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="flex p-7">
-        <CardTitle className="text-xl font-bold">Edit a task</CardTitle>
+        <CardTitle className="text-xl font-bold">Editar tarea</CardTitle>
       </CardHeader>
       <div className="px-7">
         <DottedSeparator />
@@ -88,9 +88,9 @@ export const EditTaskForm = ({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Task Name</FormLabel>
+                    <FormLabel>Nombre de la tarea</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Enter task name" />
+                      <Input {...field} placeholder="Ingrese el nombre de la tarea" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -101,9 +101,9 @@ export const EditTaskForm = ({
                 name="dueDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Due Date</FormLabel>
+                    <FormLabel>Fecha de vencimiento</FormLabel>
                     <FormControl>
-                      <DatePicker {...field} placeholder="Select due date" />
+                      <DatePicker {...field} placeholder="Seleccione la fecha de vencimiento" />
                     </FormControl>
                   </FormItem>
                 )}

@@ -19,7 +19,7 @@ const boards: TaskStatus[] = [
   TaskStatus.DONE,
 ];
 
-type TasksState = {
+export type TasksState = {
   [key in TaskStatus]: Task[];
 };
 

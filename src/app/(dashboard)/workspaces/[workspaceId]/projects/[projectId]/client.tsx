@@ -55,7 +55,7 @@ export const ProjectIdClient = () => {
         </div>
       </div>
       {/* {analytics && <Analytics data={analytics} />} */}
-      <TaskViewSwticher />
+      <TaskViewSwticher hideProjectFilter />
     </div>
   );
 };

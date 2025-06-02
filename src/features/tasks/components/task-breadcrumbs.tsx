@@ -9,12 +9,12 @@ import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
 import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/hooks/useConfirm";
 
-import { Task } from "../types";
+import { TaskFront } from "../types";
 import { useDeleteTask } from "../api/useDeleteTask";
 
 interface TaskBreadcrumbsProps {
   project: Project;
-  task: Task;
+  task: TaskFront;
 }
 
 export const TaskBreadcrumbs = ({ project, task }: TaskBreadcrumbsProps) => {
@@ -22,8 +22,8 @@ export const TaskBreadcrumbs = ({ project, task }: TaskBreadcrumbsProps) => {
   const workspaceId = useWorkspaceId();
 
   const [ConfirmDialog, confirm] = useConfirm(
-    "Delete task",
-    "This action cannot be undone.",
+    "Eliminar tarea",
+    "¿Estás seguro de que quieres eliminar esta tarea?",
     "destructive"
   );
 
@@ -70,7 +70,7 @@ export const TaskBreadcrumbs = ({ project, task }: TaskBreadcrumbsProps) => {
         disabled={isPending}
       >
         <TrashIcon className="size-4 mr-2" />
-        <span className="hidden lg:block">Delete Task</span>
+        <span className="hidden lg:block">Eliminar tarea</span>
       </Button>
     </div>
   );

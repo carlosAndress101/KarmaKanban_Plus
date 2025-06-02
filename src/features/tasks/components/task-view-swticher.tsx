@@ -78,7 +78,7 @@ export const TaskViewSwticher = ({
               Kanban
             </TabsTrigger>
             <TabsTrigger className="h-8 w-full lg:w-auto" value="calendar">
-              Calendar
+              Calendario
             </TabsTrigger>
           </TabsList>
           <Button
@@ -87,7 +87,7 @@ export const TaskViewSwticher = ({
             onClick={() => open(undefined)}
           >
             <PlusIcon className="size-4 mr-2" />
-            New
+            Nueva tarea
           </Button>
         </div>
 

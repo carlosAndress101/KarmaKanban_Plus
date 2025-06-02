@@ -24,7 +24,6 @@ export const EditTaskFormWrapper = ({
   const { data: initialValues, isLoading: isLoadingTask } = useGetTask({
     taskId: id,
   });
-
   const { data: projects, isLoading: isLoadingProjects } = useGetProjects({
     workspaceId,
   });
@@ -72,12 +71,16 @@ export const EditTaskFormWrapper = ({
   if (!initialValues) return undefined;
 
   const normalizedInitialValues: Task = {
-  ...initialValues,
-  status: initialValues.status as TaskStatus,
-  dueDate: initialValues.dueDate ?? "",       
-  assignee: initialValues.assignee ?? "", 
-  project: initialValues.project ?? "",      
-};
+    ...initialValues,
+    status: initialValues.status as TaskStatus,
+    dueDate: initialValues.dueDate ?? "",
+    assignee: typeof initialValues.assignee === "string"
+      ? initialValues.assignee
+      : initialValues.assignee?.id ?? "",
+    project: typeof initialValues.project === "string"
+      ? initialValues.project
+      : initialValues.project?.id ?? "",
+  };
 
   return (
     <EditTaskForm

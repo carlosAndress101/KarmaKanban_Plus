@@ -21,17 +21,34 @@ export type Task = {
   updatedAt?: string;
 };
 
-
-export type TaskDTO = {
+export type TaskFront = {
   id: string;
   name: string;
-  description?: string;
-  status: "BACKLOG" | "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
-  dueDate?: Date;
-  assignee?: string;
-  project: string;
-  workspaceId: string;
+  description?: string; 
+  status: TaskStatus;
+  dueDate: string;
+  assignee: string | assigneeTId;
+  project: string | ProjectTId ;
   position: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  workspaceId: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
+
+export type ProjectTId = {
+  id: string;
+  workspaceId: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export type assigneeTId = {
+  name: string;
+    email: string;
+    id: string;
+    workspaceId: string;
+    userId: string;
+    role: "member" | "admin";
+    createdAt: string;
+    updatedAt: string;
+}
