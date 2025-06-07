@@ -6,11 +6,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.members)[":memberId"]["$patch"],
+  (typeof client.KarmaKanban.api.members)[":memberId"]["$patch"],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.members)[":memberId"]["$patch"]
+  (typeof client.KarmaKanban.api.members)[":memberId"]["$patch"]
 >;
 
 export const useUpdateMember = () => {
@@ -19,8 +19,11 @@ export const useUpdateMember = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param, json }) => {
-      const response = await client.api.members[":memberId"]["$patch"]({
-        param, json
+      const response = await client.KarmaKanban.api.members[":memberId"][
+        "$patch"
+      ]({
+        param,
+        json,
       });
 
       if (!response.ok) {

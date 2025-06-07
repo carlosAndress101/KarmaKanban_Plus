@@ -6,11 +6,11 @@ import { client } from "@/lib/rpc";
 import { Task } from "../types";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.tasks)["bulk-update"]["$post"],
+  (typeof client.KarmaKanban.api.tasks)["bulk-update"]["$post"],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.tasks)["bulk-update"]["$post"]
+  (typeof client.KarmaKanban.api.tasks)["bulk-update"]["$post"]
 >;
 
 export const useBulkUpdateTask = () => {
@@ -18,7 +18,9 @@ export const useBulkUpdateTask = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
-      const response = await client.api.tasks["bulk-update"]["$post"]({
+      const response = await client.KarmaKanban.api.tasks["bulk-update"][
+        "$post"
+      ]({
         json,
       });
 
@@ -70,4 +72,3 @@ export const useBulkUpdateTask = () => {
 
   return mutation;
 };
-

@@ -32,7 +32,7 @@ export const useGetTasks = ({
       search,
     ],
     queryFn: async () => {
-      const response = await client.api.tasks.$get({
+      const response = await client.KarmaKanban.api.tasks.$get({
         query: {
           workspaceId,
           assigneeId: assigneeId ?? undefined,

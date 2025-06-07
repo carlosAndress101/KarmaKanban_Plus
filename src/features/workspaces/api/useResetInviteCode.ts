@@ -5,11 +5,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.workspaces)[":workspaceId"]["reset-invite-code"]["$post"],
+  (typeof client.KarmaKanban.api.workspaces)[":workspaceId"]["reset-invite-code"]["$post"],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.workspaces)[":workspaceId"]["reset-invite-code"]["$post"]
+  (typeof client.KarmaKanban.api.workspaces)[":workspaceId"]["reset-invite-code"]["$post"]
 >;
 
 // Tipo para el callback onSuccess
@@ -20,7 +20,9 @@ export const useResetInviteCode = (onSuccessCallback?: OnSuccessCallback) => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
-      const response = await client.api.workspaces[":workspaceId"]["reset-invite-code"]["$post"]({param});
+      const response = await client.KarmaKanban.api.workspaces[":workspaceId"][
+        "reset-invite-code"
+      ]["$post"]({ param });
 
       if (!response.ok) {
         throw new Error("Fallo al resetear el codigo de invitación");
@@ -31,8 +33,10 @@ export const useResetInviteCode = (onSuccessCallback?: OnSuccessCallback) => {
     onSuccess: (response) => {
       toast.success("Codigo de invitación reseteado");
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({ queryKey: ["workspace", response.data[0].id]});
-      
+      queryClient.invalidateQueries({
+        queryKey: ["workspace", response.data[0].id],
+      });
+
       // Llamar al callback si se proporciona
       if (onSuccessCallback) {
         onSuccessCallback(response);

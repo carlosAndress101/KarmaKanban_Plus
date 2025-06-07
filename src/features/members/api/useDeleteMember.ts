@@ -6,11 +6,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.members)[":memberId"]["$delete"],
+  (typeof client.KarmaKanban.api.members)[":memberId"]["$delete"],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.members)[":memberId"]["$delete"]
+  (typeof client.KarmaKanban.api.members)[":memberId"]["$delete"]
 >;
 
 export const useDeleteMember = () => {
@@ -19,7 +19,9 @@ export const useDeleteMember = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
-      const response = await client.api.members[":memberId"]["$delete"]({
+      const response = await client.KarmaKanban.api.members[":memberId"][
+        "$delete"
+      ]({
         param,
       });
 

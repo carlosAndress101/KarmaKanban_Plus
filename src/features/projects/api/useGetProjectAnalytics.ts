@@ -8,7 +8,7 @@ interface UseGetProjectAnalyticsProps {
 }
 
 export type ProjectAnalyticsResponseType = InferResponseType<
-  (typeof client.api.projects)[":projectId"]["analytics"]["$get"],
+  (typeof client.KarmaKanban.api.projects)[":projectId"]["analytics"]["$get"],
   200
 >;
 
@@ -18,7 +18,7 @@ export const useGetProjectAnalytics = ({
   const query = useQuery({
     queryKey: ["project-analytics", projectId],
     queryFn: async () => {
-      const response = await client.api.projects[":projectId"][
+      const response = await client.KarmaKanban.api.projects[":projectId"][
         "analytics"
       ].$get({
         param: { projectId },

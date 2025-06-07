@@ -7,7 +7,7 @@ export const useCurrent = () => {
         queryKey: ["current"],
         queryFn: async () => {
             try {
-                const response = await client.api.auth.current.$get();
+                const response = await client.KarmaKanban.api.auth.current.$get();
 
                 if (!response.ok) {
                     if (response.status === 401) {

@@ -5,11 +5,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.projects)[":projectId"]["$patch"],
+  (typeof client.KarmaKanban.api.projects)[":projectId"]["$patch"],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.projects)[":projectId"]["$patch"]
+  (typeof client.KarmaKanban.api.projects)[":projectId"]["$patch"]
 >;
 
 export const useUpdateProject = () => {
@@ -17,7 +17,9 @@ export const useUpdateProject = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ form, param }) => {
-      const response = await client.api.projects[":projectId"]["$patch"]({
+      const response = await client.KarmaKanban.api.projects[":projectId"][
+        "$patch"
+      ]({
         form,
         param,
       });
