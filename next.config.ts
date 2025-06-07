@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // opcional, pero ayuda con rutas internas y estáticos
+  basePath: "/KarmaKanban",
 };
 
 export default nextConfig;
