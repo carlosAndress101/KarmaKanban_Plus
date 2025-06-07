@@ -6,11 +6,9 @@ import { client } from "@/lib/rpc";
 import { useRouter } from "next/navigation";
 
 type ResponseType = InferResponseType<
-  (typeof client.KarmaKanban.api.auth.register)["$post"]
+  (typeof client.api.auth.register)["$post"]
 >;
-type RequestType = InferRequestType<
-  (typeof client.KarmaKanban.api.auth.register)["$post"]
->;
+type RequestType = InferRequestType<(typeof client.api.auth.register)["$post"]>;
 
 export const useRegister = () => {
   const router = useRouter();
@@ -18,7 +16,7 @@ export const useRegister = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
-      const response = await client.KarmaKanban.api.auth.register["$post"]({
+      const response = await client.api.auth.register["$post"]({
         json,
       });
       if (response.ok) {

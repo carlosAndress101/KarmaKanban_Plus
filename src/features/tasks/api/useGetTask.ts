@@ -10,7 +10,7 @@ export const useGetTask = ({ taskId }: UseGetTaskProps) => {
   const query = useQuery({
     queryKey: ["task", taskId],
     queryFn: async () => {
-      const response = await client.KarmaKanban.api.tasks[":taskId"].$get({
+      const response = await client.api.tasks[":taskId"].$get({
         param: { taskId },
       });
 

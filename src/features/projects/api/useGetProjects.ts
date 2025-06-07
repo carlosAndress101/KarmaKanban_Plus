@@ -10,7 +10,7 @@ export const useGetProjects = ({ workspaceId }: UseGetProjectsProps) => {
   const query = useQuery({
     queryKey: ["projects", workspaceId],
     queryFn: async () => {
-      const response = await client.KarmaKanban.api.projects.$get({
+      const response = await client.api.projects.$get({
         query: { workspaceId },
       });
 

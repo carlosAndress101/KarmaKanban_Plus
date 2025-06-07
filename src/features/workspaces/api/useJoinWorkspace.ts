@@ -5,11 +5,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.KarmaKanban.api.workspaces)[":workspaceId"]["join"]["$post"],
+  (typeof client.api.workspaces)[":workspaceId"]["join"]["$post"],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.KarmaKanban.api.workspaces)[":workspaceId"]["join"]["$post"]
+  (typeof client.api.workspaces)[":workspaceId"]["join"]["$post"]
 >;
 
 export const useJoinWorkspace = () => {
@@ -17,9 +17,9 @@ export const useJoinWorkspace = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param, json }) => {
-      const response = await client.KarmaKanban.api.workspaces[":workspaceId"][
-        "join"
-      ]["$post"]({ param, json });
+      const response = await client.api.workspaces[":workspaceId"]["join"][
+        "$post"
+      ]({ param, json });
 
       if (!response.ok) {
         throw new Error("Error al unirse al workspace");

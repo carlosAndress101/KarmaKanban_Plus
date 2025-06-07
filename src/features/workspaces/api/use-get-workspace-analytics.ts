@@ -8,7 +8,7 @@ interface UseGetWorkspaceAnalyticsProps {
 }
 
 export type WorkspaceAnalyticsResponseType = InferResponseType<
-  (typeof client.KarmaKanban.api.workspaces)[":workspaceId"]["analytics"]["$get"],
+  (typeof client.api.workspaces)[":workspaceId"]["analytics"]["$get"],
   200
 >;
 
@@ -18,7 +18,7 @@ export const useGetWorkspaceAnalytics = ({
   const query = useQuery({
     queryKey: ["workspace-analytics", workspaceId],
     queryFn: async () => {
-      const response = await client.KarmaKanban.api.workspaces[":workspaceId"][
+      const response = await client.api.workspaces[":workspaceId"][
         "analytics"
       ].$get({
         param: { workspaceId },

@@ -9,7 +9,7 @@ export const useGetMember = ({ workspaceId }: useGetMemberProps) => {
   const query = useQuery({
     queryKey: ["members", workspaceId],
     queryFn: async () => {
-      const response = await client.KarmaKanban.api.members.$get({
+      const response = await client.api.members.$get({
         query: { workspaceId },
       });
 

@@ -6,10 +6,10 @@ import { InferRequestType, InferResponseType } from "hono";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.KarmaKanban.api.workspaces)["$post"]
+  (typeof client.api.workspaces)["$post"]
 >;
 type RequestType = InferRequestType<
-  (typeof client.KarmaKanban.api.workspaces)["$post"]
+  (typeof client.api.workspaces)["$post"]
 >;
 
 export const useCreateWorkspace = () => {
@@ -18,7 +18,7 @@ export const useCreateWorkspace = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ form }) => {
-      const response = await client.KarmaKanban.api.workspaces["$post"]({
+      const response = await client.api.workspaces["$post"]({
         form,
       });
 
