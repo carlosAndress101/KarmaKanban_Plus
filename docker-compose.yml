@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  nextjs-app:
+    build: .
+    container_name: karma_kanban_app
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
