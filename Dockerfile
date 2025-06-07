@@ -1,5 +1,5 @@
 # Imagen base con Bun
-FROM oven/bun:1.1.13
+FROM oven/bun:latest
 
 # Establecer directorio de trabajo
 WORKDIR /app
