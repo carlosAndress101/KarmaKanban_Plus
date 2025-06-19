@@ -56,12 +56,13 @@ export const TaskViewSwticher = ({
   );
 
   const normalizedTasks = tasks?.documents.map(task => ({
-    ...task,
-    status: TaskStatus[task.status as keyof typeof TaskStatus],
-    description: task.description ?? undefined,
-    dueDate: task.dueDate ?? "",
-    assignee: task.assignee ?? "",
-  })) ?? [];
+  ...task,
+  status: TaskStatus[task.status as keyof typeof TaskStatus],
+  description: task.description ?? null,
+  dueDate: task.dueDate ?? "",
+  assignee: task.assignee ?? null,
+})) ?? [];
+
   return (
     <Tabs
       className="flex-1 w-full border rounded-lg"

@@ -38,7 +38,7 @@ const removeDuplicateTasks = (tasks: Task[]) => {
 };
 
 export const DataKanban = ({ data }: DataKanbanProps) => {
-  const { mutate } = useBulkUpdateTask(); // Usa el hook directamente
+  const { mutate } = useBulkUpdateTask();
 
   const buildTaskState = (taskList: Task[]): TasksState => {
     const cleanData = removeDuplicateTasks(taskList);

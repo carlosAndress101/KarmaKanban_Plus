@@ -53,9 +53,10 @@ export const EditTaskForm = ({
     resolver: zodResolver(schema),
     defaultValues: {
       ...initialValues,
+      assignee: initialValues.assignee?.id ?? "",
       dueDate: initialValues.dueDate
         ? new Date(initialValues.dueDate)
-        : undefined,
+        : new Date(),
     },
   });
 
@@ -114,14 +115,14 @@ export const EditTaskForm = ({
                 name="assignee"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Assignee</FormLabel>
+                    <FormLabel>Asignado</FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select assignee" />
+                          <SelectValue placeholder="Seleccionar asignado" />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage />
@@ -148,14 +149,14 @@ export const EditTaskForm = ({
                 name="status"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Status</FormLabel>
+                    <FormLabel>Estado</FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select status" />
+                          <SelectValue placeholder="Seleccionar estado" />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage />
@@ -182,14 +183,14 @@ export const EditTaskForm = ({
                 name="project"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Project</FormLabel>
+                    <FormLabel>Proyecto</FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select project" />
+                          <SelectValue placeholder="Seleccionar proyecto" />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage />
@@ -221,11 +222,11 @@ export const EditTaskForm = ({
                 disabled={isPending}
                 className={cn(!onCancel && "invisible")}
               >
-                Cancel
+                Cancelar
               </Button>
 
               <Button type="submit" size="lg" disabled={isPending}>
-                Save Changes
+                Guardar cambios
               </Button>
             </div>
           </form>

@@ -26,7 +26,7 @@ export const KanbanCard = ({ task }: KanbanCardProps) => {
 
       <div className="flex items-center gap-x-1.5">
         <MemberAvatar
-          name={task.assignee}
+          name={task.assignee?.name || "Sin asignar"}
           className="size-6"
           fallbackClassName="text-[10px]"
         />

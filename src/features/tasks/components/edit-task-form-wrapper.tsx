@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { EditTaskForm } from "./edit-task-form";
 import { useGetTask } from "../api/useGetTask";
-import { Task, TaskStatus } from "../types";
+import { normalizeAssignee, Task, TaskStatus } from "../types";
 
 interface EditTaskFormWrapperProps {
   onCancel: () => void;
@@ -73,10 +73,9 @@ export const EditTaskFormWrapper = ({
   const normalizedInitialValues: Task = {
     ...initialValues,
     status: initialValues.status as TaskStatus,
-    dueDate: initialValues.dueDate ?? "",
-    assignee: typeof initialValues.assignee === "string"
-      ? initialValues.assignee
-      : initialValues.assignee?.id ?? "",
+    dueDate: initialValues.dueDate ?? null,
+    description: initialValues.description ?? null,
+    assignee: normalizeAssignee(initialValues.assignee),
     project: typeof initialValues.project === "string"
       ? initialValues.project
       : initialValues.project?.id ?? "",
