@@ -18,7 +18,9 @@ export const useBulkUpdateTask = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
-      const response = await client.api.tasks["bulk-update"]["$post"]({
+      const response = await client.api.tasks["bulk-update"][
+        "$post"
+      ]({
         json,
       });
 
@@ -70,4 +72,3 @@ export const useBulkUpdateTask = () => {
 
   return mutation;
 };
-

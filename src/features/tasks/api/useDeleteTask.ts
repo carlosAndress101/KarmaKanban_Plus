@@ -17,7 +17,9 @@ export const useDeleteTask = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
-      const response = await client.api.tasks[":taskId"]["$delete"]({ param });
+      const response = await client.api.tasks[":taskId"]["$delete"](
+        { param }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to delete task");

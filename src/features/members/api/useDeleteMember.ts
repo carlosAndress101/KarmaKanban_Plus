@@ -19,7 +19,9 @@ export const useDeleteMember = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
-      const response = await client.api.members[":memberId"]["$delete"]({
+      const response = await client.api.members[":memberId"][
+        "$delete"
+      ]({
         param,
       });
 

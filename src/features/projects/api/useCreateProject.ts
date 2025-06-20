@@ -8,7 +8,9 @@ type ResponseType = InferResponseType<
   (typeof client.api.projects)["$post"],
   200
 >;
-type RequestType = InferRequestType<(typeof client.api.projects)["$post"]>;
+type RequestType = InferRequestType<
+  (typeof client.api.projects)["$post"]
+>;
 
 export const useCreateProject = () => {
   const queryClient = useQueryClient();

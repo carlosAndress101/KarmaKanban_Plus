@@ -17,7 +17,9 @@ export const useUpdateProject = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ form, param }) => {
-      const response = await client.api.projects[":projectId"]["$patch"]({
+      const response = await client.api.projects[":projectId"][
+        "$patch"
+      ]({
         form,
         param,
       });

@@ -19,7 +19,9 @@ export const useDeleteWorkspace = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
-      const response = await client.api.workspaces[":workspaceId"]["$delete"]({
+      const response = await client.api.workspaces[":workspaceId"][
+        "$delete"
+      ]({
         param,
       });
 

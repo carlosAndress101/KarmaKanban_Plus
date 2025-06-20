@@ -5,37 +5,34 @@ import { InferRequestType, InferResponseType } from "hono";
 import { client } from "@/lib/rpc";
 import { useRouter } from "next/navigation";
 
-type ResponseType = InferResponseType<typeof client.api.auth.login["$post"]>;
-type RequestType = InferRequestType<typeof client.api.auth.login["$post"]>;
+type ResponseType = InferResponseType<(typeof client.api.auth.login)["$post"]>;
+type RequestType = InferRequestType<(typeof client.api.auth.login)["$post"]>;
 
 export const useLogin = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
-    const router = useRouter();
-    const queryClient = useQueryClient();
+  const mutation = useMutation<ResponseType, Error, RequestType>({
+    mutationFn: async ({ json }) => {
+      const response = await client.api.auth.login["$post"]({
+        json,
+      });
 
-    const mutation = useMutation<
-        ResponseType,
-        Error,
-        RequestType
-    >({
-        mutationFn: async ({ json }) => {
-            const response = await client.api.auth.login["$post"]({ json });
-            
-            if (response.ok) {
-                return await response.json();
-            }else{
-                throw new Error();
-            }
-        },
-        onSuccess: () => {
-            toast.success("Sesión iniciada");
-            router.refresh()
-            queryClient.invalidateQueries({ queryKey: ["current"]})
-        },
-        onError: () => {
-            toast.error("Hubo un error al iniciar sesión");
-        }
-    });
+      if (response.ok) {
+        return await response.json();
+      } else {
+        throw new Error();
+      }
+    },
+    onSuccess: () => {
+      toast.success("Sesión iniciada");
+      router.refresh();
+      queryClient.invalidateQueries({ queryKey: ["current"] });
+    },
+    onError: () => {
+      toast.error("Hubo un error al iniciar sesión");
+    },
+  });
 
-    return mutation;
-}
+  return mutation;
+};
