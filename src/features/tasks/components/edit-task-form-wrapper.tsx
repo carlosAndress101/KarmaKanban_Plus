@@ -77,8 +77,11 @@ export const EditTaskFormWrapper = ({
     description: initialValues.description ?? null,
     assignee: normalizeAssignee(initialValues.assignee),
     project: typeof initialValues.project === "string"
-      ? initialValues.project
-      : initialValues.project?.id ?? "",
+      ? { id: initialValues.project, name: "N/A" } // o un nombre por defecto si lo tienes
+      : {
+        id: initialValues.project?.id ?? "",
+        name: initialValues.project?.name ?? "N/A",
+      },
   };
 
   return (

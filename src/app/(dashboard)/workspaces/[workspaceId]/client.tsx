@@ -76,7 +76,7 @@ export const TaskList = ({ data, total }: TaskListProps) => {
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-muted rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">Tasks ({total})</p>
+          <p className="text-lg font-semibold">Tareas ({total})</p>
           <Button variant="ghost" size="icon" onClick={() => open(undefined)}>
             <PlusIcon className="size-4 text-neutral-400" />
           </Button>
@@ -91,7 +91,7 @@ export const TaskList = ({ data, total }: TaskListProps) => {
                     <p className="text-lg font-medium truncate">{task.name}</p>
 
                     <div className="flex items-center gap-x-2">
-                      <p className="">{task.project}</p>
+                      <p className="">{task.project.name}</p>
                       <div className="size-1 rounded-full bg-neutral-300" />
                       <div className="text-sm text-muted-foreground flex items-center">
                         <CalendarIcon className="size-3 mr-1" />
@@ -106,11 +106,11 @@ export const TaskList = ({ data, total }: TaskListProps) => {
             </li>
           ))}
           <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
-            No tasks found
+            No hay tareas
           </li>
         </ul>
         <Button variant="ghost" className="mt-4 w-full" asChild>
-          <Link href={`/workspaces/${workspaceId}/tasks`}>Show All</Link>
+          <Link href={`/workspaces/${workspaceId}/tasks`}>Ver todo</Link>
         </Button>
       </div>
     </div>
@@ -130,7 +130,7 @@ export const ProjectList = ({ data, total }: ProjectListProps) => {
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-white border rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">Projects ({total})</p>
+          <p className="text-lg font-semibold">Proyectos ({total})</p>
           <Button variant="secondary" size="icon" onClick={open}>
             <PlusIcon className="size-4 text-neutral-400" />
           </Button>
@@ -156,7 +156,7 @@ export const ProjectList = ({ data, total }: ProjectListProps) => {
             </li>
           ))}
           <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
-            No projects found
+            No hay proyectos
           </li>
         </ul>
       </div>
@@ -176,7 +176,7 @@ export const MemberList = ({ data, total }: MemberListProps) => {
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-white border rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">Members ({total})</p>
+          <p className="text-lg font-semibold">Miembros ({total})</p>
           <Button variant="secondary" size="icon" asChild>
             <Link href={`/workspaces/${workspaceId}/members`}>
               <SettingsIcon className="size-4 text-neutral-400" />
@@ -191,13 +191,13 @@ export const MemberList = ({ data, total }: MemberListProps) => {
             <li key={member.userId}>
               <Card className="shadow-none rounded-lg overflow-hidden">
                 <CardContent className="p-3 flex flex-col items-center gap-x-2">
-                  <MemberAvatar name={member.userId} className="size-12" />
+                  <MemberAvatar name={member.name} className="size-12" />
                   <div className="flex flex-col items-center overflow-hidden">
                     <p className="text-lg font-medium line-clamp-1">
-                      {member.userId}
+                      {member.name}
                     </p>
                     <p className="text-sm line-clamp-1 text-muted-foreground">
-                      {member.userId}
+                      {member.email}
                     </p>
                   </div>
                 </CardContent>
@@ -205,7 +205,7 @@ export const MemberList = ({ data, total }: MemberListProps) => {
             </li>
           ))}
           <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
-            No members found
+            No hay miembros
           </li>
         </ul>
       </div>

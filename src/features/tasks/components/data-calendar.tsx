@@ -89,7 +89,7 @@ export const DataCalendar = ({ data, projects }: DataCalendarProps) => {
       .filter((task) => task.dueDate && task.name && task.id)
       .map((task) => {
         const projectObj = projects.find(
-          (p) => p.name === task.project || p.id === task.project
+          (p) => p.name === task.project.name || p.id === task.project.id
         );
         if (!projectObj) return null;
 

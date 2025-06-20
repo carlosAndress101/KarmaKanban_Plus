@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface AnalyticsCardProps {
   title: string;
   value: number;
-  variant: "up" | "down";
+  variant: "up" | "down" | "neutral";
   increaseValue: number;
 }
 
@@ -15,10 +15,20 @@ export const AnalyticsCard = ({
   value,
   variant,
 }: AnalyticsCardProps) => {
-  const iconColor = variant === "up" ? "text-emerald-500" : "text-red-500";
-  const increaseValueColor =
-    variant === "up" ? "text-emerald-500" : "text-red-500";
-  const Icon = variant === "up" ? FaCaretUp : FaCaretDown;
+  const iconColor = variant === "up"
+    ? "text-emerald-500"
+    : variant === "down"
+    ? "text-red-500"
+    : "text-gray-400";
+
+  const increaseValueColor = iconColor;
+
+  const Icon =
+    variant === "up"
+      ? FaCaretUp
+      : variant === "down"
+      ? FaCaretDown
+      : null; 
 
   return (
     <Card className="shadow-none border-none w-full">
@@ -27,8 +37,9 @@ export const AnalyticsCard = ({
           <CardDescription className="flex items-center gap-x-2 font-medium overflow-hidden">
             <span className="truncate text-base">{title}</span>
           </CardDescription>
+
           <div className="flex items-center gap-x-1">
-            <Icon className={cn(iconColor, "size-4")} />
+            {Icon && <Icon className={cn(iconColor, "size-4")} />}
             <span
               className={cn(
                 increaseValueColor,

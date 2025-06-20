@@ -1,3 +1,5 @@
+import { z } from "zod";
+import { taskSchema } from "./schemas";
 
 export enum TaskStatus {
   BACKLOG = "BACKLOG",
@@ -6,20 +8,6 @@ export enum TaskStatus {
   IN_REVIEW = "IN_REVIEW",
   DONE = "DONE",
 }
-
-// export type Task = {
-//   id: string;
-//   name: string;
-//   description?: string; 
-//   status: TaskStatus;
-//   dueDate: string;
-//   assignee: string;
-//   project: string;
-//   position: number;
-//   workspaceId: string;
-//   createdAt?: string;
-//   updatedAt?: string;
-// };
 
 export interface Task {
   id: string;
@@ -32,7 +20,10 @@ export interface Task {
     name: string | null;
     lastName: string | null;
   } | null;
-  project: string;
+  project: {
+    id: string;
+    name: string;
+  };
   workspaceId: string;
   position: number;
   createdAt: string;
@@ -61,6 +52,7 @@ export type ProjectTId = {
   createdAt: string;
   updatedAt: string;
 }
+
 export type assigneeTId = {
   name: string;
     email: string;
@@ -71,7 +63,7 @@ export type assigneeTId = {
     createdAt: string;
     updatedAt: string;
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function normalizeAssignee(assignee: any): Task["assignee"] {
   if (!assignee) return null;
 
@@ -83,5 +75,20 @@ export function normalizeAssignee(assignee: any): Task["assignee"] {
     id: assignee.id ?? null,
     name: assignee.name ?? null,
     lastName: "lastName" in assignee ? assignee.lastName ?? null : null,
+  };
+}
+
+export function normalizeFormValues(initialValues: Task): z.infer<typeof taskSchema> {
+  return {
+    name: initialValues.name,
+    status: initialValues.status,
+    workspaceId: initialValues.workspaceId,
+    project:
+      typeof initialValues.project === "string"
+        ? initialValues.project
+        : initialValues.project?.id ?? "",
+    assignee: initialValues.assignee?.id ?? "",
+    dueDate: initialValues.dueDate ? new Date(initialValues.dueDate) : undefined,
+    description: initialValues.description ?? "",
   };
 }

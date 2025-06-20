@@ -29,7 +29,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { Task, TaskStatus } from "../types";
+import { normalizeFormValues, Task, TaskStatus } from "../types";
 import { taskSchema } from "../schemas";
 import { useUpdateTask } from "../api/useUpdateTask";
 
@@ -49,15 +49,10 @@ export const EditTaskForm = ({
   const { mutate, isPending } = useUpdateTask();
 
   const schema = taskSchema.omit({ workspaceId: true, description: true })
+  
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      ...initialValues,
-      assignee: initialValues.assignee?.id ?? "",
-      dueDate: initialValues.dueDate
-        ? new Date(initialValues.dueDate)
-        : new Date(),
-    },
+    defaultValues: normalizeFormValues(initialValues),
   });
 
   const onSubmit = (values: z.infer<typeof schema>) => {

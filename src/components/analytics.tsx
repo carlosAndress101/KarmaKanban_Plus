@@ -4,6 +4,12 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AnalyticsCard } from "./analytics-card";
 import { DottedSeparator } from "./dotted-separator";
 
+const getVariant = (difference: number) => {
+  if (difference > 0) return "up";
+  if (difference < 0) return "down";
+  return "neutral"; 
+};
+
 export const Analytics = ({ data }: ProjectAnalyticsResponseType) => {
   return (
     <ScrollArea className="border rounded-lg w-full whitespace-nowrap shrink-0">
@@ -11,49 +17,49 @@ export const Analytics = ({ data }: ProjectAnalyticsResponseType) => {
       <div className="w-full flex flex-row">
         <div className="flex items-center flex-1">
           <AnalyticsCard
-            title="Total Tasks"
+            title="Tareas totales"
             value={data.taskCount}
-            variant={data.taskDifference > 0 ? "up" : "down"}
-            increaseValue={data.taskDifference}
+            variant={getVariant(data.taskCount)}
+            increaseValue={data.taskCount}
           />
           <DottedSeparator direction="vertical" />
         </div>
 
         <div className="flex items-center flex-1">
           <AnalyticsCard
-            title="Assigned Tasks"
+            title="Tareas asignadas"
             value={data.assignedTaskCount}
-            variant={data.assignedTaskDifference > 0 ? "up" : "down"}
-            increaseValue={data.assignedTaskDifference}
+            variant={getVariant(data.assignedTaskCount)}
+            increaseValue={data.assignedTaskCount}
           />
           <DottedSeparator direction="vertical" />
         </div>
 
         <div className="flex items-center flex-1">
           <AnalyticsCard
-            title="Completed Tasks"
+            title="Tareas completadas"
             value={data.completedTaskCount}
-            variant={data.completedTaskDifference > 0 ? "up" : "down"}
-            increaseValue={data.completedTaskDifference}
+            variant={getVariant(data.completedTaskCount)}
+            increaseValue={data.completedTaskCount}
           />
           <DottedSeparator direction="vertical" />
         </div>
 
         <div className="flex items-center flex-1">
           <AnalyticsCard
-            title="Incomplete Tasks"
+            title="Tareas incompletas"
             value={data.inCompleteTaskCount}
-            variant={data.inCompleteTaskDifference > 0 ? "up" : "down"}
-            increaseValue={data.inCompleteTaskDifference}
+            variant={getVariant(data.inCompleteTaskDifference)}
+            increaseValue={data.inCompleteTaskCount}
           />
           <DottedSeparator direction="vertical" />
         </div>
 
         <div className="flex items-center flex-1">
           <AnalyticsCard
-            title="Overdue Tasks"
+            title="Tareas vencidas"
             value={data.overDueTaskCount}
-            variant={data.overDueTaskDifference > 0 ? "up" : "down"}
+            variant={getVariant(data.overDueTaskDifference)}
             increaseValue={data.overDueTaskDifference}
           />
           <DottedSeparator direction="vertical" />

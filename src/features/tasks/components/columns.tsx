@@ -54,9 +54,9 @@ export const columns: ColumnDef<Task>[] = [
         <div className="flex items-center gap-x-2 text-sm font-medium">
           <ProjectAvatar
             className="size-6"
-            name={project}
+            name={project.name}
           />
-          <p className="line-clamp-1">{project}</p>
+          <p className="line-clamp-1">{project.name}</p>
         </div>
       );
     },
@@ -133,7 +133,7 @@ export const columns: ColumnDef<Task>[] = [
       const { id, project } = row.original;
 
       return (
-        <TaskActions id={id} projectId={project}>
+        <TaskActions id={id} projectId={project.id}>
           <Button variant="ghost" className="size-8 p-0">
             <MoreVertical className="size-4" />
           </Button>

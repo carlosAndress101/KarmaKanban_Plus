@@ -80,6 +80,7 @@ const app = new Hono()
           updatedAt: tasks.updatedAt,
           assigneeName: users.name,
           assigneeLastName: users.lastName,
+          projectName: projects.name,
         })
         .from(tasks)
         .leftJoin(projects, eq(tasks.projectId, projects.id))
@@ -100,7 +101,10 @@ const app = new Hono()
           name: row.assigneeName,
           lastName: row.assigneeLastName,
         },
-        project: row.projectId,
+        project: {
+          id: row.projectId,
+          name: row.projectName,
+        },
         workspaceId: row.workspaceId,
         position: row.position,
         createdAt: row.createdAt,

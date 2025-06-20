@@ -61,6 +61,10 @@ export const TaskViewSwticher = ({
   description: task.description ?? null,
   dueDate: task.dueDate ?? "",
   assignee: task.assignee ?? null,
+  project: {
+    id: task.project?.id ?? "",
+    name: task.project?.name ?? "N/A", // ✅ evita null
+  },
 })) ?? [];
 
   return (
