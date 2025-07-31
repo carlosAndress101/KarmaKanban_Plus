@@ -54,6 +54,14 @@ export const TaskOveriew = ({ task }: TaskOverviewProps) => {
               {snakeCaseToTitleCase(task.status)}
             </Badge>
           </OverviewProperty>
+
+          <OverviewProperty label="Dificultad">
+            <Badge
+              variant={task.difficulty}
+            >
+              {snakeCaseToTitleCase(task.difficulty)}
+            </Badge>
+          </OverviewProperty>
         </div>
       </div>
     </div>

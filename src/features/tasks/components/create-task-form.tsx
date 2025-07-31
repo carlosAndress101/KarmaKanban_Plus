@@ -48,7 +48,6 @@ export const CreateTaskForm = ({
   memberOptions,
   projectOptions,
 }: CreateTaskFormProps) => {
-
   const workspaceId = useWorkspaceId();
   const { mutate, isPending } = useCreateTask();
   const { status } = useCreateTaskModal();
@@ -212,6 +211,32 @@ export const CreateTaskForm = ({
                             </div>
                           </SelectItem>
                         ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="difficulty"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Dificultad</FormLabel>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccione la dificultad" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <FormMessage />
+                      <SelectContent>
+                        <SelectItem value="Facil">Fácil</SelectItem>
+                        <SelectItem value="Medio">Medio</SelectItem>
+                        <SelectItem value="Dificil">Difícil</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>

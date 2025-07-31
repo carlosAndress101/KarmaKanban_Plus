@@ -9,6 +9,7 @@ export const taskSchema = z.object({
   dueDate: z.coerce.date().optional(),
   assignee: z.string().min(1, "Assignee requerido"),
   description: z.string().optional(),
+  difficulty: z.enum(["Facil", "Medio", "Dificil"], { required_error: "Dificultad requerida" }), // <-- Nuevo campo
 });
 
 export const querySchema = z.object({

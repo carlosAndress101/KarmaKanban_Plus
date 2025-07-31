@@ -9,25 +9,25 @@ export enum TaskStatus {
   DONE = "DONE",
 }
 
+export enum TaskDifficulty {
+  Facil = "Facil",
+  Medio = "Medio",
+  Dificil = "Dificil",
+}
+
 export interface Task {
   id: string;
   name: string;
   description: string | null;
   status: TaskStatus;
   dueDate: string;
-  assignee: {
-    id: string | null;
-    name: string | null;
-    lastName: string | null;
-  } | null;
-  project: {
-    id: string;
-    name: string;
-  };
+  assignee: { id: string | null; name: string | null; lastName: string | null } | null;
+  project: { id: string; name: string };
   workspaceId: string;
   position: number;
   createdAt: string;
   updatedAt: string;
+  difficulty: "Facil" | "Medio" | "Dificil"; // <-- Nuevo campo
 }
 
 
@@ -43,6 +43,7 @@ export type TaskFront = {
   workspaceId: string;
   createdAt?: string;
   updatedAt?: string;
+  difficulty: "Facil" | "Medio" | "Dificil";
 };
 
 export type ProjectTId = {
@@ -90,5 +91,6 @@ export function normalizeFormValues(initialValues: Task): z.infer<typeof taskSch
     assignee: initialValues.assignee?.id ?? "",
     dueDate: initialValues.dueDate ? new Date(initialValues.dueDate) : undefined,
     description: initialValues.description ?? "",
+    difficulty: initialValues.difficulty ?? "Medio",
   };
 }

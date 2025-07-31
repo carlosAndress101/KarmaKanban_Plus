@@ -51,6 +51,7 @@ export const tasks = pgTable("tasks", {
   description: text('description'),
   dueDate: timestamp('due_date', { withTimezone: true }),
   status: text("status", { enum: ["BACKLOG", "TODO", "IN_PROGRESS", "IN_REVIEW", "DONE"] }).notNull(),
+  difficulty: text("difficulty", { enum: ["Facil", "Medio", "Dificil"] }).notNull(), // <-- NUEVO CAMPO
   position: integer("position").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),

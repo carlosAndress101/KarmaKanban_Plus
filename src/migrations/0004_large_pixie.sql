@@ -1,0 +1,1 @@
+ALTER TABLE "tasks" ADD COLUMN "difficulty" text NOT NULL;

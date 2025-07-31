@@ -11,6 +11,7 @@ interface UseGetTasksProps {
   assigneeId?: string | null;
   dueDate?: string | null;
   search?: string | null;
+  difficulty?: string | null;
 }
 
 export const useGetTasks = ({
@@ -20,6 +21,7 @@ export const useGetTasks = ({
   projectId,
   status,
   search,
+  difficulty,
 }: UseGetTasksProps) => {
   const query = useQuery({
     queryKey: [
@@ -30,6 +32,7 @@ export const useGetTasks = ({
       projectId,
       status,
       search,
+      difficulty,
     ],
     queryFn: async () => {
       const response = await client.api.tasks.$get({
@@ -40,6 +43,7 @@ export const useGetTasks = ({
           projectId: projectId ?? undefined,
           status: status ?? undefined,
           search: search ?? undefined,
+          difficulty: difficulty ?? undefined,
         },
       });
 

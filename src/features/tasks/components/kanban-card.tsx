@@ -6,6 +6,7 @@ import { DottedSeparator } from "@/components/dotted-separator";
 import { MemberAvatar } from "@/features/members/components/meberAvatar";
 import { TaskDate } from "./task-date";
 import { ProjectAvatar } from "@/features/projects/components/projectAvatar";
+import { Badge } from "@/components/ui/badge";
 
 interface KanbanCardProps {
   task: Task;
@@ -38,9 +39,14 @@ export const KanbanCard = ({ task }: KanbanCardProps) => {
         <ProjectAvatar
           name={task.name}
           fallbackClassname="text-[10px]"
-        />
+          />
         <span className="text-xs font-medium">{task.name}</span>
       </div>
+          {task.difficulty && (
+            <Badge variant={task.difficulty}>
+              {task.difficulty}
+            </Badge>
+          )}
     </div>
   );
 };

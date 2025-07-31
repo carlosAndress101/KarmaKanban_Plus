@@ -6,7 +6,7 @@ import { getMember } from "@/features/members/utils";
 import { sessionMiddleware } from "@/lib/session";
 
 import { BulkUpdateTasksSchema, taskSchema } from "../schemas";
-import { TaskStatus } from "../types";
+import { TaskStatus, TaskDifficulty } from "../types";
 import { members, projects, tasks, users } from "@/lib/schemas_drizzle";
 import { and, eq, desc, inArray, like } from "drizzle-orm";
 import { db } from "@/lib/drizzle";
@@ -24,6 +24,7 @@ const app = new Hono()
         status: z.nativeEnum(TaskStatus).nullish(),
         search: z.string().nullish(),
         dueDate: z.string().nullish(),
+        difficulty: z.nativeEnum(TaskDifficulty).nullish(),
       })
     ),
     async (c) => {
@@ -31,7 +32,7 @@ const app = new Hono()
 
       if (!user) return c.json({ error: "user required" }, 400);
 
-      const { workspaceId, assigneeId, dueDate, projectId, search, status } =
+      const { workspaceId, assigneeId, dueDate, projectId, search, status, difficulty} =
         c.req.valid("query");
 
       const [member] = await getMember(workspaceId, user.id);
@@ -63,6 +64,10 @@ const app = new Hono()
         );
       }
 
+      if (difficulty) {
+        whereConditions.push(eq(tasks.difficulty, difficulty));
+      }
+
       // Query optimizada con JOIN para obtener todo en una sola consulta
       const populatedTasks = await db
         .select({
@@ -81,6 +86,7 @@ const app = new Hono()
           assigneeName: users.name,
           assigneeLastName: users.lastName,
           projectName: projects.name,
+          difficulty: tasks.difficulty, // <-- Agrega esto
         })
         .from(tasks)
         .leftJoin(projects, eq(tasks.projectId, projects.id))
@@ -109,6 +115,7 @@ const app = new Hono()
         position: row.position,
         createdAt: row.createdAt,
         updatedAt: row.updatedAt,
+        difficulty: row.difficulty, // <-- Agrega esto
       }));
 
       return c.json({ data: { documents: formattedTasks } });
@@ -125,7 +132,7 @@ const app = new Hono()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
-      const { assignee, dueDate, name, project, status, workspaceId, description } = c.req.valid("json");
+      const { assignee, dueDate, name, project, status, workspaceId, description, difficulty } = c.req.valid("json");
 
       const [member] = await getMember(workspaceId, user.id)
 
@@ -157,7 +164,8 @@ const app = new Hono()
           dueDate: dueDate ? new Date(dueDate) : undefined,
           assigneeId: assignee,
           position: newPosition,
-          description
+          description,
+          difficulty
         })
         .returning()
 
@@ -173,6 +181,7 @@ const app = new Hono()
         workspaceId: Task.workspaceId,
         createdAt: Task.createdAt,
         updatedAt: Task.updatedAt,
+        difficulty: Task.difficulty, // <-- Agrega esto
       };
 
       return c.json({ data: formattedTask });
@@ -302,7 +311,8 @@ const app = new Hono()
         status: TaskStatus[task.status as keyof typeof TaskStatus],
         dueDate: task.dueDate ?? "",
         project,
-        assignee
+        assignee,
+        difficulty: task.difficulty, // <-- Agrega esto
       }
     })
   })

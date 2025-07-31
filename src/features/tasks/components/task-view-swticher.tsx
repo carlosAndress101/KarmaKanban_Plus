@@ -18,7 +18,7 @@ import { DataKanban } from "./data-kanban";
 import { DataFilters } from "./data-filters";
 import { DataCalendar } from "./data-calendar";
 
-import { TaskStatus } from "../types";
+import { TaskDifficulty, TaskStatus } from "../types";
 import { useGetTasks } from "../api/useGetTasks";
 import { useTaskFilters } from "../hooks/use-task-filters";
 import { useBulkUpdateTask } from "../api/useBulkUpdateTask";
@@ -55,7 +55,7 @@ export const TaskViewSwticher = ({
     [bulkUpdate]
   );
 
-  const normalizedTasks = tasks?.documents.map(task => ({
+const normalizedTasks = tasks?.documents.map(task => ({
   ...task,
   status: TaskStatus[task.status as keyof typeof TaskStatus],
   description: task.description ?? null,
@@ -65,6 +65,8 @@ export const TaskViewSwticher = ({
     id: task.project?.id ?? "",
     name: task.project?.name ?? "N/A", // ✅ evita null
   },
+  // Map enum value to its string representation
+  difficulty: TaskDifficulty[task.difficulty as keyof typeof TaskDifficulty] as "Facil" | "Medio" | "Dificil",
 })) ?? [];
 
   return (
