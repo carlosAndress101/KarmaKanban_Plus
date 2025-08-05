@@ -337,7 +337,59 @@ const app = new Hono()
 
       const [member] = await getMember([...workspaceIds][0], user.id);
       if (!member) return c.json({ error: "Unauthorized" }, 401);
+      
+      console.log('Member processing points:', {
+        memberId: member.id,
+        userId: user.id,
+        workspaceId: [...workspaceIds][0],
+        currentPoints: member.points
+      });
 
+      // Calculate points for tasks moving to DONE status
+      // Group points by assignee to award points to the correct members
+      const pointsByAssignee = new Map<string, number>();
+      
+      console.log('=== POINTS CALCULATION DEBUG ===');
+      console.log('Updates received:', updates.length);
+      console.log('Existing tasks:', existingTasks.length);
+      
+      for (const update of updates) {
+        const existingTask = existingTasks.find(t => t.id === update.id);
+        console.log(`Task ${update.id}:`);
+        console.log('  - Existing status:', existingTask?.status);
+        console.log('  - New status:', update.status);
+        console.log('  - Difficulty:', existingTask?.difficulty);
+        console.log('  - Assignee:', existingTask?.assigneeId);
+        
+        if (existingTask && existingTask.status !== "DONE" && update.status === "DONE" && existingTask.assigneeId) {
+          let taskPoints = 0;
+          // Award points based on difficulty
+          switch (existingTask.difficulty) {
+            case "Facil":
+              taskPoints = 10;
+              break;
+            case "Medio":
+              taskPoints = 20;
+              break;
+            case "Dificil":
+              taskPoints = 30;
+              break;
+          }
+          
+          if (taskPoints > 0) {
+            const currentPoints = pointsByAssignee.get(existingTask.assigneeId) || 0;
+            pointsByAssignee.set(existingTask.assigneeId, currentPoints + taskPoints);
+            console.log(`  - Points awarded: ${taskPoints} to assignee ${existingTask.assigneeId}`);
+          }
+        } else {
+          console.log('  - No points awarded (not moving to DONE, already DONE, or no assignee)');
+        }
+      }
+      
+      console.log('Points by assignee:', Object.fromEntries(pointsByAssignee));
+      console.log('================================');
+
+      // Update tasks
       const updated = await Promise.all(
         updates.map((update) =>
           db
@@ -351,7 +403,31 @@ const app = new Hono()
         )
       );
 
-      return c.json({ data: updated });
+      // Update member points for each assignee that earned points
+      let totalPointsAwarded = 0;
+      for (const [assigneeId, points] of pointsByAssignee) {
+        // Get the current points for this member
+        const [assigneeMember] = await db
+          .select()
+          .from(members)
+          .where(eq(members.id, assigneeId))
+          .limit(1);
+          
+        if (assigneeMember) {
+          await db
+            .update(members)
+            .set({
+              points: assigneeMember.points ? assigneeMember.points + points : points,
+              updatedAt: new Date(),
+            })
+            .where(eq(members.id, assigneeId));
+          
+          totalPointsAwarded += points;
+          console.log(`Updated member ${assigneeId} with ${points} points (total: ${assigneeMember.points ? assigneeMember.points + points : points})`);
+        }
+      }
+
+      return c.json({ data: updated, pointsAwarded: totalPointsAwarded });
     }
   );
 

@@ -7,6 +7,7 @@ import { MemberAvatar } from "@/features/members/components/meberAvatar";
 import { TaskDate } from "./task-date";
 import { ProjectAvatar } from "@/features/projects/components/projectAvatar";
 import { Badge } from "@/components/ui/badge";
+import { TaskPoints } from "./task-points";
 
 interface KanbanCardProps {
   task: Task;
@@ -35,18 +36,24 @@ export const KanbanCard = ({ task }: KanbanCardProps) => {
         <TaskDate value={task.dueDate} className="text-xs" />
       </div>
 
-      <div className="flex items-center gap-x-1.5">
-        <ProjectAvatar
-          name={task.name}
-          fallbackClassname="text-[10px]"
-          />
-        <span className="text-xs font-medium">{task.name}</span>
-      </div>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-x-1.5">
+          <ProjectAvatar
+            name={task.project.name}
+            fallbackClassname="text-[10px]"
+            />
+          <span className="text-xs font-medium">{task.project.name}</span>
+        </div>
+        
+        <div className="flex items-center gap-x-1.5">
           {task.difficulty && (
-            <Badge variant={task.difficulty}>
+            <Badge variant={task.difficulty} className="text-xs">
               {task.difficulty}
             </Badge>
           )}
+          <TaskPoints difficulty={task.difficulty} size="sm" />
+        </div>
+      </div>
     </div>
   );
 };

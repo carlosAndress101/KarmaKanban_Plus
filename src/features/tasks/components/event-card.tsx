@@ -7,7 +7,8 @@ import { MemberAvatar } from "@/features/members/components/meberAvatar";
 import { ProjectAvatar } from "@/features/projects/components/projectAvatar";
 import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
 
-import { TaskStatus } from "../types";
+import { TaskStatus, TaskDifficulty } from "../types";
+import { TaskPoints } from "./task-points";
 
 interface EventCardProps {
   id: string;
@@ -19,6 +20,7 @@ interface EventCardProps {
   } | null;
   project: Project;
   status: TaskStatus;
+  difficulty: TaskDifficulty;
 }
 
 const statusColorMap: Record<TaskStatus, string> = {
@@ -35,6 +37,7 @@ export const EventCard = ({
   project,
   status,
   title,
+  difficulty,
 }: EventCardProps) => {
   const router = useRouter();
   const workspaceId = useWorkspaceId();
@@ -59,6 +62,9 @@ export const EventCard = ({
           <MemberAvatar name={assignee?.name || "Sin asignar"} />
           <div className="size-1 rounded-full bg-neutral-300" />
           <ProjectAvatar name={project.name} />
+          <div className="flex justify-end flex-1">
+            <TaskPoints difficulty={difficulty} size="sm" />
+          </div>
         </div>
       </div>
     </div>

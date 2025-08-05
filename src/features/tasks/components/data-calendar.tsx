@@ -101,6 +101,7 @@ export const DataCalendar = ({ data, projects }: DataCalendarProps) => {
           assignee: task.assignee,
           status: task.status,
           id: task.id,
+          difficulty: task.difficulty,
         };
       })
       .filter((e): e is NonNullable<typeof e> => e !== null);
@@ -137,6 +138,7 @@ export const DataCalendar = ({ data, projects }: DataCalendarProps) => {
               assignee={event.assignee}
               project={event.project}
               status={event.status}
+              difficulty={event.difficulty}
             />
           );
         },

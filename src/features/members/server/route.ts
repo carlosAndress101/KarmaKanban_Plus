@@ -38,6 +38,11 @@ const app = new Hono()
                     role: members.role,
                     name: users.name,
                     email: users.email,
+                    // Gamification fields
+                    points: members.points,
+                    gamificationRole: members.gamificationRole,
+                    selectedIcons: members.selectedIcons,
+                    aboutMe: members.aboutMe,
                 })
                 .from(members)
                 .innerJoin(users, eq(members.userId, users.id))

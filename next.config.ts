@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: "/KarmaKanban",
+  // basePath: "/KarmaKanban", // Commented out for local development
 };
 
 export default nextConfig;

@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Task } from "../types";
 import { TaskDate } from "./task-date";
 import { TaskActions } from "./task-actions";
+import { TaskPoints } from "./task-points";
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -125,6 +126,25 @@ export const columns: ColumnDef<Task>[] = [
       const status = row.original.status;
 
       return <Badge variant={status}>{snakeCaseToTitleCase(status)}</Badge>;
+    },
+  },
+  {
+    accessorKey: "points",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Puntos
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const difficulty = row.original.difficulty;
+
+      return <TaskPoints difficulty={difficulty} size="md" />;
     },
   },
   {

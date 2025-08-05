@@ -30,6 +30,11 @@ export const members = pgTable("members", {
   workspaceId: uuid('workspace_id').notNull().references(() => workspaces.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   role: text("role", { enum: userRoles }).notNull(),
+  // Gamification fields
+  gamificationRole: text("gamification_role", { enum: ["Developer", "Designer", "Project Manager", "Team Lead"] }),
+  points: integer("points").default(0),
+  selectedIcons: text("selected_icons"), // JSON array of selected icon IDs
+  aboutMe: text("about_me"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
