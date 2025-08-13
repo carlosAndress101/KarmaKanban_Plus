@@ -192,7 +192,7 @@ export const EditProjectForm = ({
                     
                     <div className="flex flex-col gap-y-4">
                         <div>
-                            <FormLabel>Assign Project Manager</FormLabel>
+                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Assign Project Manager</label>
                             <p className="text-sm text-muted-foreground mb-2">
                                 The Project Manager can manage store items and approve redemption requests.
                             </p>
