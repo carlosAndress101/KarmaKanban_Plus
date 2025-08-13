@@ -207,11 +207,31 @@ const app = new Hono()
       const [member] = await getMember(task.workspaceId, user.id);
       if (!member) return c.json({ error: "Unauthorized" }, 401);
 
+      // Track status changes for gamification
+      const oldStatus = task.status;
+      const newStatus = values.status || oldStatus;
+      const isStatusChanging = oldStatus !== newStatus;
+      const hasAssignee = task.assigneeId;
+
       const [updatedTask] = await db
         .update(tasks)
         .set({ ...values, updatedAt: new Date() })
         .where(eq(tasks.id, taskId))
         .returning();
+
+      // Handle gamification points and badges
+      if (isStatusChanging && hasAssignee) {
+        const { GamificationService } = await import("@/features/gamification/services/gamification-service");
+        
+        // Task completed (moved to DONE)
+        if (newStatus === "DONE" && oldStatus !== "DONE") {
+          await GamificationService.awardPointsForTaskCompletion(taskId, task.assigneeId);
+        }
+        // Task uncompleted (moved from DONE to another status)
+        else if (oldStatus === "DONE" && newStatus !== "DONE") {
+          await GamificationService.removePointsForTaskUncompletion(taskId, task.assigneeId);
+        }
+      }
 
       return c.json({ data: updatedTask });
     }
@@ -338,58 +358,44 @@ const app = new Hono()
       const [member] = await getMember([...workspaceIds][0], user.id);
       if (!member) return c.json({ error: "Unauthorized" }, 401);
       
-      console.log('Member processing points:', {
-        memberId: member.id,
-        userId: user.id,
-        workspaceId: [...workspaceIds][0],
-        currentPoints: member.points
-      });
-
-      // Calculate points for tasks moving to DONE status
-      // Group points by assignee to award points to the correct members
-      const pointsByAssignee = new Map<string, number>();
+      // Import gamification service
+      const { GamificationService } = await import("@/features/gamification/services/gamification-service");
       
-      console.log('=== POINTS CALCULATION DEBUG ===');
-      console.log('Updates received:', updates.length);
-      console.log('Existing tasks:', existingTasks.length);
+      // Track gamification changes for bulk update
+      const gamificationChanges: Array<{
+        taskId: string;
+        assigneeId: string;
+        action: 'award' | 'remove';
+      }> = [];
       
+      // Identify tasks with status changes that affect points
       for (const update of updates) {
         const existingTask = existingTasks.find(t => t.id === update.id);
-        console.log(`Task ${update.id}:`);
-        console.log('  - Existing status:', existingTask?.status);
-        console.log('  - New status:', update.status);
-        console.log('  - Difficulty:', existingTask?.difficulty);
-        console.log('  - Assignee:', existingTask?.assigneeId);
         
-        if (existingTask && existingTask.status !== "DONE" && update.status === "DONE" && existingTask.assigneeId) {
-          let taskPoints = 0;
-          // Award points based on difficulty
-          switch (existingTask.difficulty) {
-            case "Facil":
-              taskPoints = 10;
-              break;
-            case "Medio":
-              taskPoints = 20;
-              break;
-            case "Dificil":
-              taskPoints = 30;
-              break;
-          }
+        if (existingTask && existingTask.assigneeId) {
+          const oldStatus = existingTask.status;
+          const newStatus = update.status;
           
-          if (taskPoints > 0) {
-            const currentPoints = pointsByAssignee.get(existingTask.assigneeId) || 0;
-            pointsByAssignee.set(existingTask.assigneeId, currentPoints + taskPoints);
-            console.log(`  - Points awarded: ${taskPoints} to assignee ${existingTask.assigneeId}`);
+          // Task completed (moved to DONE)
+          if (newStatus === "DONE" && oldStatus !== "DONE") {
+            gamificationChanges.push({
+              taskId: update.id,
+              assigneeId: existingTask.assigneeId,
+              action: 'award'
+            });
           }
-        } else {
-          console.log('  - No points awarded (not moving to DONE, already DONE, or no assignee)');
+          // Task uncompleted (moved from DONE to another status)
+          else if (oldStatus === "DONE" && newStatus !== "DONE") {
+            gamificationChanges.push({
+              taskId: update.id,
+              assigneeId: existingTask.assigneeId,
+              action: 'remove'
+            });
+          }
         }
       }
-      
-      console.log('Points by assignee:', Object.fromEntries(pointsByAssignee));
-      console.log('================================');
 
-      // Update tasks
+      // Update tasks first
       const updated = await Promise.all(
         updates.map((update) =>
           db
@@ -403,31 +409,23 @@ const app = new Hono()
         )
       );
 
-      // Update member points for each assignee that earned points
+      // Apply gamification changes
       let totalPointsAwarded = 0;
-      for (const [assigneeId, points] of pointsByAssignee) {
-        // Get the current points for this member
-        const [assigneeMember] = await db
-          .select()
-          .from(members)
-          .where(eq(members.id, assigneeId))
-          .limit(1);
-          
-        if (assigneeMember) {
-          await db
-            .update(members)
-            .set({
-              points: assigneeMember.points ? assigneeMember.points + points : points,
-              updatedAt: new Date(),
-            })
-            .where(eq(members.id, assigneeId));
-          
-          totalPointsAwarded += points;
-          console.log(`Updated member ${assigneeId} with ${points} points (total: ${assigneeMember.points ? assigneeMember.points + points : points})`);
+      for (const change of gamificationChanges) {
+        if (change.action === 'award') {
+          await GamificationService.awardPointsForTaskCompletion(change.taskId, change.assigneeId);
+          totalPointsAwarded++;
+        } else if (change.action === 'remove') {
+          await GamificationService.removePointsForTaskUncompletion(change.taskId, change.assigneeId);
+          totalPointsAwarded--;
         }
       }
 
-      return c.json({ data: updated, pointsAwarded: totalPointsAwarded });
+      return c.json({ 
+        data: updated, 
+        gamificationChanges: gamificationChanges.length,
+        message: `Updated ${updates.length} tasks with ${gamificationChanges.length} point changes`
+      });
     }
   );
 

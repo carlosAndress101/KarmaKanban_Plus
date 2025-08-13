@@ -9,6 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Edit2Icon, TrophyIcon, ZapIcon, Star, Target, Users, Code, Palette, Settings, Shield } from "lucide-react";
+import { BadgeCarousel } from "./badge-carousel";
+import { BadgeModal } from "./badge-modal";
+import { MemberStats } from "../utils/badge-manager";
 
 // Development team quality icons with meanings
 const TEAM_QUALITY_ICONS = [
@@ -35,20 +38,29 @@ interface GamificationProfileProps {
     points: number;
     selectedIcons: string[];
     aboutMe?: string;
+    earnedBadges?: string[];
+    totalTasksCompleted?: number;
+    tasksCompletedByDifficulty?: {
+      Facil: number;
+      Medio: number;
+      Dificil: number;
+    };
   };
   onUpdate: (data: {
     gamificationRole?: string;
     selectedIcons: string[];
     aboutMe?: string;
   }) => void;
+  onPurchaseBadge?: (badgeId: string) => void;
 }
 
-export const GamificationProfile = ({ user, gamificationData, onUpdate }: GamificationProfileProps) => {
+export const GamificationProfile = ({ user, gamificationData, onUpdate, onPurchaseBadge }: GamificationProfileProps) => {
   const [isEditingAbout, setIsEditingAbout] = useState(false);
   const [aboutText, setAboutText] = useState(gamificationData.aboutMe || "");
   const [selectedRole, setSelectedRole] = useState(gamificationData.gamificationRole || "");
   const [selectedIcons, setSelectedIcons] = useState<string[]>(gamificationData.selectedIcons || []);
   const [isIconDialogOpen, setIsIconDialogOpen] = useState(false);
+  const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
 
   // Update local state when props change
   useEffect(() => {
@@ -130,21 +142,39 @@ export const GamificationProfile = ({ user, gamificationData, onUpdate }: Gamifi
     });
   };
 
-  return (
-    <Card className="w-full">
-      <CardContent className="space-y-6 pt-6">
-        {/* Avatar and User Info Section */}
-        <div className="flex items-start space-x-6">
-          {/* Avatar */}
-          <Avatar className="w-32 h-32">
-            <AvatarImage src={user.avatar} alt={`${user.name} ${user.lastName}`} />
-            <AvatarFallback className="text-2xl">
-              {user.name.charAt(0)}{user.lastName.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
+  // Create member stats for badge system
+  const memberStats: MemberStats = {
+    totalTasksCompleted: gamificationData.totalTasksCompleted || 0,
+    totalPoints: gamificationData.points,
+    tasksCompletedByDifficulty: gamificationData.tasksCompletedByDifficulty || {
+      Facil: 0,
+      Medio: 0,
+      Dificil: 0,
+    },
+    tasksCompletedToday: 0, // TODO: Calculate from today's completed tasks
+    currentStreak: 0, // TODO: Calculate streak
+    collaborativeTasks: 0, // TODO: Calculate collaborative tasks
+    earnedBadges: gamificationData.earnedBadges || [],
+  };
 
-          {/* User Information */}
-          <div className="flex-1 space-y-3">
+  return (
+    <>
+      <div className="flex gap-6">
+        {/* Main Profile Section */}
+        <Card className="flex-1">
+          <CardContent className="space-y-6 pt-6">
+            {/* Avatar and User Info Section */}
+            <div className="flex items-start space-x-6">
+              {/* Avatar */}
+              <Avatar className="w-32 h-32">
+                <AvatarImage src={user.avatar} alt={`${user.name} ${user.lastName}`} />
+                <AvatarFallback className="text-2xl">
+                  {user.name.charAt(0)}{user.lastName.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+
+              {/* User Information */}
+              <div className="flex-1 space-y-3">
             {/* Name */}
             <h2 className="text-2xl font-bold">{user.name} {user.lastName}</h2>
 
@@ -304,8 +334,28 @@ export const GamificationProfile = ({ user, gamificationData, onUpdate }: Gamifi
               </p>
             </div>
           )}
-        </div>
-      </CardContent>
-    </Card>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Badge Carousel Section */}
+        <Card className="w-80 flex-shrink-0">
+          <CardContent className="pt-6">
+            <BadgeCarousel
+              earnedBadgeIds={memberStats.earnedBadges}
+              onViewAllBadges={() => setIsBadgeModalOpen(true)}
+            />
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Badge Modal */}
+      <BadgeModal
+        isOpen={isBadgeModalOpen}
+        onClose={() => setIsBadgeModalOpen(false)}
+        memberStats={memberStats}
+        onPurchaseBadge={onPurchaseBadge}
+      />
+    </>
   );
 };

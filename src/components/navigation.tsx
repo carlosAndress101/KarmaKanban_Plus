@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import { SettingsIcon, UsersIcon, TrophyIcon } from "lucide-react";
+import { SettingsIcon, UsersIcon, TrophyIcon, ShoppingBagIcon } from "lucide-react";
 import {
     GoCheckCircle,
     GoCheckCircleFill,
@@ -38,6 +38,12 @@ const routes = [
         href: "/gamification",
         icon: TrophyIcon,
         activeIcon: TrophyIcon,
+    },
+    {
+        label: "Store",
+        href: "/store",
+        icon: ShoppingBagIcon,
+        activeIcon: ShoppingBagIcon,
     },
 ];
 

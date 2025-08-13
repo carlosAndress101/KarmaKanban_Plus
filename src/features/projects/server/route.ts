@@ -3,7 +3,7 @@ import { db } from "@/lib/drizzle";
 import { eq, desc } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { sessionMiddleware } from "@/lib/session";
-import { projects, tasks, userRoles } from "@/lib/schemas_drizzle";
+import { projects, tasks, userRoles, members } from "@/lib/schemas_drizzle";
 import { z } from "zod";
 import { getMember } from "@/features/workspaces/members/utils";
 import { createProjectSchema, updateProjectSchema } from "../schemas";
@@ -58,6 +58,7 @@ const app = new Hono()
             const [project] = await db.insert(projects).values({
                 name,
                 workspaceId,
+                projectManagerId: member.id, // Assign creator as Project Manager by default
             }).returning()
 
             return c.json({ data: project });
@@ -251,6 +252,60 @@ const app = new Hono()
             await db.delete(projects).where(eq(projects.id, projectId))
 
             return c.json({ data: { id: existProject[0].id } });
+        }
+    )
+    .patch(
+        "/:projectId/manager",
+        sessionMiddleware,
+        zValidator("json", z.object({
+            projectManagerId: z.string().nullable(),
+        })),
+        async (c) => {
+            const user = c.get("user");
+            const { projectManagerId } = c.req.valid("json");
+            const { projectId } = c.req.param();
+
+            if (!user) {
+                return c.json({ error: "Authentication required" }, 401);
+            }
+
+            const [project] = await db
+                .select()
+                .from(projects)
+                .where(eq(projects.id, projectId));
+
+            if (!project) {
+                return c.json({ error: "Project not found" }, 404);
+            }
+
+            const member = await getMember(project.workspaceId, user.id);
+            
+            if (!member || member.role !== userRoles[1]) {
+                return c.json({ error: "Only admins can change Project Managers" }, 403);
+            }
+
+            // If assigning a new manager, validate they exist in the workspace
+            if (projectManagerId) {
+                const [newManager] = await db
+                    .select()
+                    .from(members)
+                    .where(eq(members.id, projectManagerId));
+                
+                if (!newManager || newManager.workspaceId !== project.workspaceId) {
+                    return c.json({ error: "Invalid Project Manager" }, 400);
+                }
+            }
+
+            const [updatedProject] = await db
+                .update(projects)
+                .set({ 
+                    projectManagerId,
+                    updatedAt: new Date() 
+                })
+                .where(eq(projects.id, projectId))
+                .returning();
+
+            return c.json({ data: updatedProject });
         }
     )
 

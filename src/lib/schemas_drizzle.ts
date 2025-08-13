@@ -1,4 +1,4 @@
-import { integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, timestamp, uuid, boolean } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
@@ -35,6 +35,7 @@ export const members = pgTable("members", {
   points: integer("points").default(0),
   selectedIcons: text("selected_icons"), // JSON array of selected icon IDs
   aboutMe: text("about_me"),
+  earnedBadges: text("earned_badges"), // JSON array of earned badge IDs
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
@@ -43,6 +44,7 @@ export const projects = pgTable("projects", {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   workspaceId: uuid('workspace_id').notNull().references(() => workspaces.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
+  projectManagerId: uuid('project_manager_id').references(() => members.id, { onDelete: 'set null' }), // Project Manager assignment
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
@@ -58,6 +60,37 @@ export const tasks = pgTable("tasks", {
   status: text("status", { enum: ["BACKLOG", "TODO", "IN_PROGRESS", "IN_REVIEW", "DONE"] }).notNull(),
   difficulty: text("difficulty", { enum: ["Facil", "Medio", "Dificil"] }).notNull(), // <-- NUEVO CAMPO
   position: integer("position").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
+});
+
+// Store Items table
+export const storeItems = pgTable("store_items", {
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  workspaceId: uuid('workspace_id').notNull().references(() => workspaces.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  description: text('description').notNull(),
+  pointsCost: integer('points_cost').notNull(),
+  category: text('category', { enum: ["Physical", "Digital", "Experience", "Perk"] }).notNull(),
+  isActive: boolean('is_active').default(true),
+  stock: integer('stock'), // null means unlimited
+  imageUrl: text('image_url'),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
+});
+
+// Redemption Requests table
+export const redemptionRequests = pgTable("redemption_requests", {
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  workspaceId: uuid('workspace_id').notNull().references(() => workspaces.id, { onDelete: 'cascade' }),
+  requesterId: uuid('requester_id').notNull().references(() => members.id, { onDelete: 'cascade' }),
+  storeItemId: uuid('store_item_id').notNull().references(() => storeItems.id, { onDelete: 'cascade' }),
+  pointsSpent: integer('points_spent').notNull(),
+  status: text('status', { enum: ["pending", "approved", "rejected", "fulfilled"] }).default("pending").notNull(),
+  notes: text('notes'), // User's redemption notes
+  adminNotes: text('admin_notes'), // Admin's approval/rejection notes
+  reviewedBy: uuid('reviewed_by').references(() => members.id, { onDelete: 'set null' }), // Admin who reviewed
+  reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
