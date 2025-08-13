@@ -35,6 +35,8 @@ export const useUpdateTask = () => {
       queryClient.invalidateQueries({ queryKey: ["workspace-analytics"] });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["task", data.id] });
+      queryClient.invalidateQueries({ queryKey: ["members"] }); // Refresh member data for points
+      queryClient.invalidateQueries({ queryKey: ["gamification-stats"] }); // Refresh gamification stats
     },
     onError: () => {
       toast.error("Failed to update task");

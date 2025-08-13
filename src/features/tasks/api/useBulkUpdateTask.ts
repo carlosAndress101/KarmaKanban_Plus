@@ -68,6 +68,7 @@ export const useBulkUpdateTask = () => {
       queryClient.invalidateQueries({ queryKey: ["workspace-analytics"] });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["members"] }); // Refresh member data for points
+      queryClient.invalidateQueries({ queryKey: ["gamification-stats"] }); // Refresh gamification stats
     },
   });
 
