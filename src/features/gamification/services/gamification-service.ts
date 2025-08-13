@@ -20,9 +20,13 @@ export class GamificationService {
       .from(tasks)
       .where(eq(tasks.id, taskId));
 
-    if (!task || !task.assigneeId) return;
+    if (!task || !task.assigneeId) {
+      console.log(`⚠️  Task ${taskId} not found or has no assignee`);
+      return;
+    }
 
     const pointsToAward = POINTS_BY_DIFFICULTY[task.difficulty];
+    console.log(`💰 Awarding ${pointsToAward} points for ${task.difficulty} task ${taskId} to member ${memberId}`);
 
     // Award points to the member
     await db
@@ -31,7 +35,10 @@ export class GamificationService {
       .where(eq(members.id, memberId));
 
     // Check for new badge achievements
-    await this.checkAndAwardBadges(memberId, task.workspaceId);
+    const newBadges = await this.checkAndAwardBadges(memberId, task.workspaceId);
+    if (newBadges.length > 0) {
+      console.log(`🏆 New badges awarded: ${newBadges.join(', ')}`);
+    }
   }
 
   /**

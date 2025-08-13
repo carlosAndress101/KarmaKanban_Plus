@@ -18,11 +18,22 @@ import {
     FormItem,
     FormLabel,
 } from "@/components/ui/form";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 import { Project, updateProjectSchema } from "../schemas";
 import { useUpdateProject } from "../api/useUpdateProject";
 import { useDeleteProject } from "../api/useDeleteProject";
-import { ArrowLeftIcon } from "lucide-react";
+import { useUpdateProjectManager } from "../api/useUpdateProjectManager";
+import { useGetMember } from "@/features/members/api/useGetMember";
+import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
+import { ArrowLeftIcon, AlertTriangleIcon, UserIcon } from "lucide-react";
 
 interface EditProjectFormProps {
     onCancel?: () => void;
@@ -34,9 +45,15 @@ export const EditProjectForm = ({
     initialValues,
 }: EditProjectFormProps) => {
     const router = useRouter();
+    const workspaceId = useWorkspaceId();
     const { mutate, isPending } = useUpdateProject();
     const { mutate: deleteProject, isPending: isDeletingProject } =
         useDeleteProject();
+    const { mutate: updateProjectManager, isPending: isUpdatingManager } =
+        useUpdateProjectManager();
+    
+    // Get workspace members for Project Manager selection
+    const { data: members } = useGetMember({ workspaceId });
 
     const [DeleteDialog, confirmDelete] = useConfirm(
         "Eliminar Proyecto",
@@ -73,6 +90,17 @@ export const EditProjectForm = ({
 
         mutate({ form: finalValues, param: { projectId: initialValues.id } });
     };
+
+    const handleProjectManagerChange = (managerId: string | null) => {
+        updateProjectManager({
+            param: { projectId: initialValues.id },
+            json: { projectManagerId: managerId }
+        });
+    };
+
+    // Find current project manager
+    const currentManager = members?.find(member => member.id === initialValues.projectManagerId);
+    const hasProjectManager = !!initialValues.projectManagerId;
 
     return (
         <div className="flex flex-col gap-y-4">
@@ -138,6 +166,62 @@ export const EditProjectForm = ({
                             </div>
                         </form>
                     </Form>
+                </CardContent>
+            </Card>
+
+            {/* Project Manager Assignment Card */}
+            <Card className="w-full h-full border-none shadow-none">
+                <CardHeader className="p-7">
+                    <CardTitle className="flex items-center gap-2">
+                        <UserIcon className="size-5" />
+                        Project Manager
+                    </CardTitle>
+                </CardHeader>
+                <div className="px-7">
+                    <DottedSeparator />
+                </div>
+                <CardContent className="p-7">
+                    {!hasProjectManager && (
+                        <Alert className="mb-4">
+                            <AlertTriangleIcon className="h-4 w-4" />
+                            <AlertDescription>
+                                No Project Manager assigned. Tasks may only award points when a Project Manager is assigned to manage the store system.
+                            </AlertDescription>
+                        </Alert>
+                    )}
+                    
+                    <div className="flex flex-col gap-y-4">
+                        <div>
+                            <FormLabel>Assign Project Manager</FormLabel>
+                            <p className="text-sm text-muted-foreground mb-2">
+                                The Project Manager can manage store items and approve redemption requests.
+                            </p>
+                        </div>
+                        
+                        <Select
+                            value={initialValues.projectManagerId || "none"}
+                            onValueChange={(value) => handleProjectManagerChange(value === "none" ? null : value)}
+                            disabled={isUpdatingManager}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select a Project Manager" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">No Project Manager</SelectItem>
+                                {members?.map((member) => (
+                                    <SelectItem key={member.id} value={member.id}>
+                                        {member.name} {member.lastName}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        
+                        {currentManager && (
+                            <div className="text-sm text-muted-foreground">
+                                Current manager: <span className="font-medium">{currentManager.name} {currentManager.lastName}</span>
+                            </div>
+                        )}
+                    </div>
                 </CardContent>
             </Card>
 

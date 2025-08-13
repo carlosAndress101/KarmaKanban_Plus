@@ -226,10 +226,12 @@ const app = new Hono()
         // Task completed (moved to DONE)
         if (newStatus === "DONE" && oldStatus !== "DONE") {
           await GamificationService.awardPointsForTaskCompletion(taskId, task.assigneeId);
+          console.log(`✅ Points awarded for task ${taskId} to member ${task.assigneeId}`);
         }
         // Task uncompleted (moved from DONE to another status)
         else if (oldStatus === "DONE" && newStatus !== "DONE") {
           await GamificationService.removePointsForTaskUncompletion(taskId, task.assigneeId);
+          console.log(`🔄 Points removed for task ${taskId} from member ${task.assigneeId}`);
         }
       }
 

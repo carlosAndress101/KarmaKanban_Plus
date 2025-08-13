@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { GamificationProfile } from "@/features/gamification/components/gamification-profile";
 import { BadgeDisplay } from "@/features/gamification/components/badge-display";
 import { useGetMember } from "@/features/members/api/useGetMember";
@@ -16,6 +17,7 @@ interface GamificationClientProps {
 }
 
 export const GamificationClient = ({ workspaceId }: GamificationClientProps) => {
+  const queryClient = useQueryClient();
   const { data: currentUser, isLoading: isLoadingUser } = useCurrent();
   const { data: allMembers, isLoading: isLoadingMember } = useGetMember({ workspaceId });
   
