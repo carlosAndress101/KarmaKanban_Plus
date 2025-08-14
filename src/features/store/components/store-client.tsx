@@ -6,8 +6,10 @@ import { useCurrent } from "@/features/auth/api/use-current";
 import { useGetMember } from "@/features/members/api/useGetMember";
 import { useGetStoreItems } from "../api/useGetStoreItems";
 import { useCreateRedemption } from "../api/useCreateRedemption";
+import { useDeleteStoreItem } from "../api/useDeleteStoreItem";
 import { StoreItemCard } from "./store-item-card";
 import { RedemptionModal } from "./redemption-modal";
+import { EditStoreItemForm } from "./edit-store-item-form";
 import { StoreItem } from "../types";
 import { StoreItemForm } from "./store-item-form";
 import { Loader, ShoppingBag, Plus, Settings, Coins } from "lucide-react";
@@ -22,10 +24,13 @@ export const StoreClient = () => {
   const { data: members } = useGetMember({ workspaceId });
   const { data: storeItems, isLoading } = useGetStoreItems({ workspaceId });
   const createRedemptionMutation = useCreateRedemption({ workspaceId });
+  const deleteStoreItemMutation = useDeleteStoreItem({ workspaceId });
 
   const [selectedItem, setSelectedItem] = useState<StoreItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("store");
+  const [editingItem, setEditingItem] = useState<StoreItem | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Find current user's member data
   const currentMember = members?.find(member => member.userId === currentUser?.id);
@@ -61,6 +66,22 @@ export const StoreClient = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedItem(null);
+  };
+
+  const handleEdit = (item: StoreItem) => {
+    setEditingItem(item);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditingItem(null);
+  };
+
+  const handleDelete = (item: StoreItem) => {
+    if (confirm(`Are you sure you want to delete "${item.name}"? This action cannot be undone.`)) {
+      deleteStoreItemMutation.mutate(item.id);
+    }
   };
 
   if (isLoading) {
@@ -317,11 +338,21 @@ export const StoreClient = () => {
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleEdit(item)}
+                          >
                             Edit
                           </Button>
-                          <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                            Remove
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-red-600 hover:text-red-700"
+                            onClick={() => handleDelete(item)}
+                            disabled={deleteStoreItemMutation.isPending}
+                          >
+                            {deleteStoreItemMutation.isPending ? "Removing..." : "Remove"}
                           </Button>
                         </div>
                       </div>
@@ -384,6 +415,16 @@ export const StoreClient = () => {
           onConfirm={handleConfirmRedemption}
           isLoading={createRedemptionMutation.isPending}
         />
+        
+        {/* Edit Store Item Modal */}
+        {editingItem && (
+          <EditStoreItemForm
+            workspaceId={workspaceId}
+            item={editingItem}
+            isOpen={isEditModalOpen}
+            onClose={handleCloseEditModal}
+          />
+        )}
       </div>
     );
   }

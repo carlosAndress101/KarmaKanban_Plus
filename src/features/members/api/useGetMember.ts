@@ -21,6 +21,8 @@ export const useGetMember = ({ workspaceId }: useGetMemberProps) => {
 
       return data;
     },
+    refetchInterval: 30000, // Refetch every 30 seconds for real-time updates
+    staleTime: 0, // Always consider data stale to ensure fresh updates
   });
   return query;
 };
