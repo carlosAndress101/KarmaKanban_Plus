@@ -5,66 +5,127 @@ import { EARNABLE_BADGES } from "../constants/badges";
 
 // Point values based on task difficulty
 const POINTS_BY_DIFFICULTY = {
-  "Facil": 10,   // Easy tasks = 10 points
-  "Medio": 20,   // Medium tasks = 20 points
-  "Dificil": 30, // Hard tasks = 30 points
+  Facil: 10, // Easy tasks = 10 points
+  Medio: 20, // Medium tasks = 20 points
+  Dificil: 30, // Hard tasks = 30 points
 } as const;
 
 export class GamificationService {
   /**
    * Awards points and checks badges when a task is completed (moved to DONE)
    */
-  static async awardPointsForTaskCompletion(taskId: string, memberId: string): Promise<void> {
-    const [task] = await db
-      .select()
-      .from(tasks)
-      .where(eq(tasks.id, taskId));
+  static async awardPointsForTaskCompletion(
+    taskId: string,
+    memberId: string
+  ): Promise<void> {
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId));
 
-    if (!task || !task.assigneeId) {
-      console.log(`⚠️  Task ${taskId} not found or has no assignee`);
+    if (!task) {
+      console.warn(`⚠️  Task ${taskId} not found. No points awarded.`);
+      return;
+    }
+    if (!task.assigneeId) {
+      console.warn(`⚠️  Task ${taskId} has no assignee. No points awarded.`);
+      return;
+    }
+    if (!memberId) {
+      console.warn(
+        `⚠️  No memberId provided for awarding points for task ${taskId}.`
+      );
+      return;
+    }
+
+    const [member] = await db
+      .select()
+      .from(members)
+      .where(eq(members.id, memberId));
+    if (!member) {
+      console.warn(
+        `⚠️  Member ${memberId} not found. No points awarded for task ${taskId}.`
+      );
       return;
     }
 
     const pointsToAward = POINTS_BY_DIFFICULTY[task.difficulty];
-    console.log(`💰 Awarding ${pointsToAward} points for ${task.difficulty} task ${taskId} to member ${memberId}`);
+    if (!pointsToAward) {
+      console.warn(
+        `⚠️  Unknown difficulty '${task.difficulty}' for task ${taskId}. No points awarded.`
+      );
+      return;
+    }
+    console.log(
+      `💰 Awarding ${pointsToAward} points for ${task.difficulty} task ${taskId} to member ${memberId}`
+    );
 
     // Award points to the member
+    // Use a subquery to increment points in a type-safe way
     await db
       .update(members)
-      .set(sql`points = points + ${pointsToAward}`)
+      .set({ points: sql`points + ${pointsToAward}` })
       .where(eq(members.id, memberId));
 
     // Check for new badge achievements
-    const newBadges = await this.checkAndAwardBadges(memberId, task.workspaceId);
+    const newBadges = await this.checkAndAwardBadges(
+      memberId,
+      task.workspaceId
+    );
     if (newBadges.length > 0) {
-      console.log(`🏆 New badges awarded: ${newBadges.join(', ')}`);
+      console.log(`🏆 New badges awarded: ${newBadges.join(", ")}`);
     }
   }
 
   /**
    * Removes points when a task is moved back from DONE to another status
    */
-  static async removePointsForTaskUncompletion(taskId: string, memberId: string): Promise<void> {
-    const [task] = await db
-      .select()
-      .from(tasks)
-      .where(eq(tasks.id, taskId));
+  static async removePointsForTaskUncompletion(
+    taskId: string,
+    memberId: string
+  ): Promise<void> {
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId));
 
-    if (!task) return;
+    if (!task) {
+      console.warn(`⚠️  Task ${taskId} not found. No points removed.`);
+      return;
+    }
+    if (!memberId) {
+      console.warn(
+        `⚠️  No memberId provided for removing points for task ${taskId}.`
+      );
+      return;
+    }
+    const [member] = await db
+      .select()
+      .from(members)
+      .where(eq(members.id, memberId));
+    if (!member) {
+      console.warn(
+        `⚠️  Member ${memberId} not found. No points removed for task ${taskId}.`
+      );
+      return;
+    }
 
     const pointsToRemove = POINTS_BY_DIFFICULTY[task.difficulty];
+    if (!pointsToRemove) {
+      console.warn(
+        `⚠️  Unknown difficulty '${task.difficulty}' for task ${taskId}. No points removed.`
+      );
+      return;
+    }
 
     // Remove points from the member (ensure it doesn't go below 0)
     await db
       .update(members)
-      .set(sql`points = GREATEST(points - ${pointsToRemove}, 0)`)
+      .set({ points: sql`GREATEST(points - ${pointsToRemove}, 0)` })
       .where(eq(members.id, memberId));
   }
 
   /**
    * Checks all badge requirements and awards new badges to a member
    */
-  static async checkAndAwardBadges(memberId: string, workspaceId: string): Promise<string[]> {
+  static async checkAndAwardBadges(
+    memberId: string,
+    workspaceId: string
+  ): Promise<string[]> {
     const [member] = await db
       .select()
       .from(members)
@@ -75,7 +136,9 @@ export class GamificationService {
     // Parse current earned badges
     let earnedBadgeIds: string[] = [];
     try {
-      earnedBadgeIds = member.earnedBadges ? JSON.parse(member.earnedBadges) : [];
+      earnedBadgeIds = member.earnedBadges
+        ? JSON.parse(member.earnedBadges)
+        : [];
     } catch {
       earnedBadgeIds = [];
     }
@@ -96,16 +159,17 @@ export class GamificationService {
         case "tasks_completed":
           earned = stats.totalCompleted >= requirement.value;
           break;
-        
+
         case "difficulty":
-          const difficultyCount = stats.completedByDifficulty[requirement.difficulty || ""] || 0;
+          const difficultyCount =
+            stats.completedByDifficulty[requirement.difficulty || ""] || 0;
           earned = difficultyCount >= requirement.value;
           break;
-        
+
         case "points":
-          earned = member.points >= requirement.value;
+          earned = (member.points ?? 0) >= requirement.value;
           break;
-        
+
         case "speed":
           // Check tasks completed today
           const today = new Date();
@@ -113,13 +177,13 @@ export class GamificationService {
           const tasksToday = await this.getTasksCompletedSince(memberId, today);
           earned = tasksToday >= requirement.value;
           break;
-        
+
         case "streak":
           // Check consecutive days with task completion
           const streak = await this.getConsecutiveDaysStreak(memberId);
           earned = streak >= requirement.value;
           break;
-        
+
         case "collaboration":
           // For now, count all completed tasks as collaboration
           // In the future, this could check for tasks assigned by others
@@ -138,7 +202,7 @@ export class GamificationService {
       await db
         .update(members)
         .set({
-          earnedBadges: JSON.stringify(earnedBadgeIds)
+          earnedBadges: JSON.stringify(earnedBadgeIds),
         })
         .where(eq(members.id, memberId));
     }
@@ -149,7 +213,10 @@ export class GamificationService {
   /**
    * Gets comprehensive task statistics for a member
    */
-  private static async getMemberTaskStats(memberId: string, workspaceId: string) {
+  private static async getMemberTaskStats(
+    memberId: string,
+    workspaceId: string
+  ) {
     // Get all completed tasks by this member
     const completedTasks = await db
       .select()
@@ -177,7 +244,10 @@ export class GamificationService {
   /**
    * Gets the number of tasks completed since a specific date
    */
-  private static async getTasksCompletedSince(memberId: string, sinceDate: Date): Promise<number> {
+  private static async getTasksCompletedSince(
+    memberId: string,
+    sinceDate: Date
+  ): Promise<number> {
     const result = await db
       .select({ count: sql<number>`count(*)` })
       .from(tasks)
@@ -195,14 +265,16 @@ export class GamificationService {
   /**
    * Calculates consecutive days with at least one task completed
    */
-  private static async getConsecutiveDaysStreak(memberId: string): Promise<number> {
+  private static async getConsecutiveDaysStreak(
+    memberId: string
+  ): Promise<number> {
     // Get all completion dates for this member (last 30 days to optimize)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     const completions = await db
       .select({
-        date: sql<string>`DATE(${tasks.updatedAt})`
+        date: sql<string>`DATE(${tasks.updatedAt})`,
       })
       .from(tasks)
       .where(
@@ -225,7 +297,7 @@ export class GamificationService {
     for (let i = 0; i < completions.length; i++) {
       const completionDate = new Date(completions[i].date);
       completionDate.setHours(0, 0, 0, 0);
-      
+
       const expectedDate = new Date(today);
       expectedDate.setDate(expectedDate.getDate() - streak);
 
@@ -263,7 +335,7 @@ export class GamificationService {
       .select({
         managerId: projects.projectManagerId,
         managerName: sql<string>`CONCAT(users.name, ' ', users.last_name)`,
-        managerEmail: sql<string>`users.email`
+        managerEmail: sql<string>`users.email`,
       })
       .from(projects)
       .leftJoin(members, eq(projects.projectManagerId, members.id))
