@@ -49,7 +49,7 @@ const app = new Hono()
       pointsCost: z.number().min(1, "Points cost must be at least 1"),
       category: z.enum(["Physical", "Digital", "Experience", "Perk"]),
       stock: z.number().optional(),
-      imageUrl: z.string().url().optional(),
+      imageUrl: z.string().url().optional().or(z.literal("")),
     })),
     async (c) => {
       const user = c.get("user");

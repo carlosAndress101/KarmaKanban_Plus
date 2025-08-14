@@ -9,7 +9,8 @@ import { useCreateRedemption } from "../api/useCreateRedemption";
 import { StoreItemCard } from "./store-item-card";
 import { RedemptionModal } from "./redemption-modal";
 import { StoreItem } from "../types";
-import { Loader, ShoppingBag, Plus, Settings } from "lucide-react";
+import { StoreItemForm } from "./store-item-form";
+import { Loader, ShoppingBag, Plus, Settings, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -88,10 +89,10 @@ export const StoreClient = () => {
                 <p className="text-sm text-muted-foreground text-center max-w-md mb-4">
                   The store is currently empty. As a Project Manager, you can create items for your team!
                 </p>
-                <Button onClick={() => setActiveTab("management")}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Store Items
-                </Button>
+                <StoreItemForm 
+                  workspaceId={workspaceId}
+                  onSuccess={() => {}}
+                />
               </div>
             </TabsContent>
             
@@ -119,24 +120,31 @@ export const StoreClient = () => {
                         Add rewards that team members can redeem with points earned from completing tasks.
                       </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <Button variant="outline" className="w-full justify-start">
-                          <Plus className="h-4 w-4 mr-2" />
-                          Physical Item (Gift cards, merchandise, coffee vouchers)
-                        </Button>
-                        <Button variant="outline" className="w-full justify-start">
-                          <Plus className="h-4 w-4 mr-2" />
-                          Digital Perk (Software licenses, online courses)
-                        </Button>
-                        <Button variant="outline" className="w-full justify-start">
-                          <Plus className="h-4 w-4 mr-2" />
-                          Experience (Team lunch, workshop tickets)
-                        </Button>
-                        <Button variant="outline" className="w-full justify-start">
-                          <Plus className="h-4 w-4 mr-2" />
-                          Team Perk (Extra time off, premium parking)
-                        </Button>
+                    <CardContent className="pt-6">
+                      <div className="flex justify-center">
+                        <StoreItemForm 
+                          workspaceId={workspaceId}
+                          onSuccess={() => {}}
+                        />
+                      </div>
+                      
+                      <div className="mt-6 grid grid-cols-2 gap-4 text-sm text-gray-600">
+                        <div className="space-y-2">
+                          <h4 className="font-medium text-gray-900">Popular Categories:</h4>
+                          <ul className="space-y-1">
+                            <li>• Gift cards & vouchers</li>
+                            <li>• Tech accessories</li>
+                            <li>• Team lunch experiences</li>
+                          </ul>
+                        </div>
+                        <div className="space-y-2">
+                          <h4 className="font-medium text-gray-900">Point Guidelines:</h4>
+                          <ul className="space-y-1">
+                            <li>• 50-100 pts: Small items</li>
+                            <li>• 100-300 pts: Medium rewards</li>
+                            <li>• 300+ pts: Premium items</li>
+                          </ul>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -172,19 +180,26 @@ export const StoreClient = () => {
   // Store content component
   const StoreContent = () => (
     <div className="space-y-8">
-      {/* User Points Display */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">Your Points</h2>
-            <p className="text-gray-600 mt-1">Redeem your points for exclusive rewards</p>
+      {/* User Points Display - Enhanced */}
+      <Card className="border-0 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="bg-blue-600 p-3 rounded-full">
+                <Coins className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Your Points</h2>
+                <p className="text-gray-600 mt-1">Redeem your points for exclusive rewards</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-5xl font-bold text-blue-600">{userPoints.toLocaleString()}</div>
+              <div className="text-sm text-gray-500 font-medium">available points</div>
+            </div>
           </div>
-          <div className="text-right">
-            <div className="text-4xl font-bold text-blue-600">{userPoints}</div>
-            <div className="text-sm text-gray-500">available points</div>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Store Items by Category */}
       {Object.entries(itemsByCategory).map(([category, items]) => (
@@ -225,10 +240,10 @@ export const StoreClient = () => {
           <h3 className="text-lg font-semibold">Store Management</h3>
           <p className="text-sm text-muted-foreground">Create and manage rewards for your team</p>
         </div>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Add New Item
-        </Button>
+        <StoreItemForm 
+          workspaceId={workspaceId}
+          onSuccess={() => {}}
+        />
       </div>
       
       <div className="grid gap-4">
@@ -240,24 +255,86 @@ export const StoreClient = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <Button variant="outline" className="w-full justify-start">
-                <Plus className="h-4 w-4 mr-2" />
-                Physical Item (Gift cards, merchandise, etc.)
-              </Button>
-              <Button variant="outline" className="w-full justify-start">
-                <Plus className="h-4 w-4 mr-2" />
-                Digital Perk (Software licenses, subscriptions, etc.)
-              </Button>
-              <Button variant="outline" className="w-full justify-start">
-                <Plus className="h-4 w-4 mr-2" />
-                Experience (Team events, workshops, etc.)
-              </Button>
-              <Button variant="outline" className="w-full justify-start">
-                <Plus className="h-4 w-4 mr-2" />
-                Team Perk (Extra time off, parking spot, etc.)
-              </Button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-900">Current Store Items</h4>
+                <p className="text-sm text-gray-600">
+                  {storeItems.length} active items
+                </p>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setActiveTab("store")}
+                >
+                  <Settings className="h-4 w-4 mr-2" />
+                  View Team Store
+                </Button>
+              </div>
+              
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-900">Quick Actions</h4>
+                <div className="space-y-2">
+                  <StoreItemForm 
+                    workspaceId={workspaceId}
+                    onSuccess={() => {}}
+                  />
+                </div>
+              </div>
             </div>
+          </CardContent>
+        </Card>
+        
+        {/* Store Items Management History */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Store Items History</CardTitle>
+            <CardDescription>
+              Manage and view all store items you've created for the team.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {storeItems.length > 0 ? (
+              <div className="space-y-4">
+                {storeItems.map((item) => (
+                  <div key={item.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900">{item.name}</h4>
+                          <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                          <div className="flex items-center space-x-4 mt-2">
+                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                              {item.category}
+                            </span>
+                            <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                              {item.pointsCost} points
+                            </span>
+                            {item.stock !== null && (
+                              <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
+                                Stock: {item.stock}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Button variant="outline" size="sm">
+                            Edit
+                          </Button>
+                          <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <Settings className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                <p>No store items created yet. Use the form above to create your first reward!</p>
+              </div>
+            )}
           </CardContent>
         </Card>
         

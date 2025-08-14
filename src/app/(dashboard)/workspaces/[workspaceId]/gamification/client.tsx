@@ -36,11 +36,20 @@ export const GamificationClient = ({ workspaceId }: GamificationClientProps) => 
 
   // Load data from database and localStorage on component mount
   useEffect(() => {
-    if (currentUser && memberData) {
-      // Load from database first
+    if (currentUser && memberData && gamificationStats !== undefined) {
+      // Use real-time data from API and database
+      const realPoints = gamificationStats?.totalPoints ?? memberData.points ?? 0;
+      const realEarnedBadges = (() => {
+        try {
+          return memberData.earnedBadges ? JSON.parse(memberData.earnedBadges) : [];
+        } catch {
+          return [];
+        }
+      })();
+      
       const dbData = {
         gamificationRole: memberData.gamificationRole || "",
-        points: memberData.points || 0,
+        points: realPoints, // Use real-time points
         selectedIcons: (() => {
           try {
             return memberData.selectedIcons ? JSON.parse(memberData.selectedIcons) : [];
@@ -50,31 +59,24 @@ export const GamificationClient = ({ workspaceId }: GamificationClientProps) => 
           }
         })(),
         aboutMe: memberData.aboutMe || "",
-        earnedBadges: (() => {
-          try {
-            return memberData.earnedBadges ? JSON.parse(memberData.earnedBadges) : [];
-          } catch (error) {
-            console.warn('Error parsing earnedBadges:', error);
-            return [];
-          }
-        })(),
+        earnedBadges: realEarnedBadges, // Use real-time badges
       };
       
-      // Then check localStorage for any overrides (for UI responsiveness)
+      // Then check localStorage for UI-only overrides 
       const storageKey = `gamification_${currentUser.id}_${workspaceId}`;
       const savedData = localStorage.getItem(storageKey);
       
       if (savedData) {
         try {
           const parsedData = JSON.parse(savedData);
-          // Merge database data with localStorage data, prioritizing localStorage for UI fields
+          // Merge database data with localStorage data, but always prioritize real-time stats
           setGamificationData({
             ...dbData,
             gamificationRole: parsedData.gamificationRole || dbData.gamificationRole,
             selectedIcons: parsedData.selectedIcons || dbData.selectedIcons,
             aboutMe: parsedData.aboutMe || dbData.aboutMe,
-            points: dbData.points, // Always use database points
-            earnedBadges: dbData.earnedBadges, // Always use database badges
+            points: realPoints, // Always use real-time points
+            earnedBadges: realEarnedBadges, // Always use real-time badges
           });
         } catch (error) {
           console.error('Error parsing saved gamification data:', error);
@@ -84,7 +86,7 @@ export const GamificationClient = ({ workspaceId }: GamificationClientProps) => 
         setGamificationData(dbData);
       }
     }
-  }, [currentUser, workspaceId, memberData]);
+  }, [currentUser, workspaceId, memberData, gamificationStats]);
 
   const handleUpdateGamification = (data: {
     gamificationRole?: string;
@@ -114,14 +116,35 @@ export const GamificationClient = ({ workspaceId }: GamificationClientProps) => 
   };
 
   // Create member stats for badge system using real statistics
-  const memberStats: MemberStats = gamificationStats || {
-    totalTasksCompleted: 0,
-    totalPoints: gamificationData.points,
-    tasksCompletedByDifficulty: { Facil: 0, Medio: 0, Dificil: 0 },
-    tasksCompletedToday: 0,
-    currentStreak: 0,
-    collaborativeTasks: 0,
-    earnedBadges: gamificationData.earnedBadges,
+  const realPoints = gamificationStats?.totalPoints ?? memberData?.points ?? 0;
+  const realEarnedBadges = memberData?.earnedBadges ? (
+    (() => {
+      try {
+        return JSON.parse(memberData.earnedBadges);
+      } catch {
+        return [];
+      }
+    })()
+  ) : [];
+  
+  const memberStats: MemberStats = {
+    totalTasksCompleted: gamificationStats?.totalTasksCompleted ?? 0,
+    totalPoints: realPoints,
+    tasksCompletedByDifficulty: gamificationStats?.tasksCompletedByDifficulty ?? { Facil: 0, Medio: 0, Dificil: 0 },
+    tasksCompletedToday: gamificationStats?.tasksCompletedToday ?? 0,
+    currentStreak: gamificationStats?.currentStreak ?? 0,
+    collaborativeTasks: gamificationStats?.collaborativeTasks ?? 0,
+    earnedBadges: realEarnedBadges,
+  };
+  
+  
+  // Update the gamificationData to use real points from the API
+  const updatedGamificationData = {
+    ...gamificationData,
+    points: realPoints,
+    totalTasksCompleted: memberStats.totalTasksCompleted,
+    tasksCompletedByDifficulty: memberStats.tasksCompletedByDifficulty,
+    earnedBadges: realEarnedBadges,
   };
 
   if (isLoadingUser || isLoadingMember || isLoadingStats) {
@@ -151,7 +174,7 @@ export const GamificationClient = ({ workspaceId }: GamificationClientProps) => 
         <TabsContent value="profile" className="mt-6">
           <GamificationProfile
             user={user}
-            gamificationData={gamificationData}
+            gamificationData={updatedGamificationData}
             onUpdate={handleUpdateGamification}
             onPurchaseBadge={handlePurchaseBadge}
           />

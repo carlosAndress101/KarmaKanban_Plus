@@ -262,14 +262,19 @@ export const GamificationProfile = ({ user, gamificationData, onUpdate, onPurcha
                 )}
               </div>
 
-              {/* Points Display - Made larger */}
+            {/* Points Display - Made larger */}
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-gray-600">Points:</span>
                 <Badge variant="secondary" className="flex items-center space-x-2 px-4 py-2 text-base">
                   <TrophyIcon className="w-5 h-5 text-yellow-600" />
-                  <span className="font-bold text-lg">{gamificationData.points}</span>
+                  <span className="font-bold text-lg">{gamificationData.points.toLocaleString()}</span>
                   <span className="text-sm text-gray-600">pts</span>
                 </Badge>
+              </div>
+              
+              {/* Debug Info - Temporary */}
+              <div className="text-xs text-gray-400 mt-2">
+                Tasks: {gamificationData.totalTasksCompleted || 0} | Badges: {gamificationData.earnedBadges?.length || 0}
               </div>
             </div>
 
