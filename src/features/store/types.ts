@@ -36,6 +36,10 @@ export interface RedemptionRequest {
     id: string;
     name: string;
   };
+  // API joined fields
+  requesterName?: string;
+  itemName?: string;
+  reviewerName?: string;
 }
 
 export type RedemptionStatus = RedemptionRequest["status"];
@@ -50,7 +54,8 @@ export interface CreateStoreItemRequest {
   imageUrl?: string;
 }
 
-export interface UpdateStoreItemRequest extends Partial<CreateStoreItemRequest> {
+export interface UpdateStoreItemRequest
+  extends Partial<CreateStoreItemRequest> {
   isActive?: boolean;
 }
 

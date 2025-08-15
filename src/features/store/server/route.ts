@@ -254,12 +254,12 @@ const app = new Hono()
           reviewedAt: redemptionRequests.reviewedAt,
           createdAt: redemptionRequests.createdAt,
           updatedAt: redemptionRequests.updatedAt,
-          requesterName: sql`CONCAT(${users.name}, ' ', ${users.lastName})`,
+          requesterName: sql`CONCAT(${users.name}, ' ', users.last_name)`,
           requesterEmail: users.email,
           itemName: storeItems.name,
           itemDescription: storeItems.description,
           itemCategory: storeItems.category,
-          reviewerName: sql`CONCAT(reviewer_users.name, ' ', reviewer_users.lastName)`,
+          reviewerName: sql`CONCAT(reviewer_users.name, ' ', reviewer_users.last_name)`,
         })
         .from(redemptionRequests)
         .innerJoin(members, eq(redemptionRequests.requesterId, members.id))

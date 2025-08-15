@@ -12,6 +12,7 @@ import { RedemptionModal } from "./redemption-modal";
 import { EditStoreItemForm } from "./edit-store-item-form";
 import { StoreItem } from "../types";
 import { StoreItemForm } from "./store-item-form";
+import { PendingRequestsModal } from "./pending-requests-modal";
 import { Loader, ShoppingBag, Plus, Settings, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,6 +38,7 @@ export const StoreClient = () => {
   const [activeTab, setActiveTab] = useState("store");
   const [editingItem, setEditingItem] = useState<StoreItem | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
 
   // Find current user's member data
   const currentMember = members?.find(
@@ -427,10 +429,19 @@ export const StoreClient = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="outline" className="w-full">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => setIsPendingModalOpen(true)}
+            >
               <Settings className="h-4 w-4 mr-2" />
               View Pending Requests
             </Button>
+            <PendingRequestsModal
+              workspaceId={workspaceId}
+              open={isPendingModalOpen}
+              onClose={() => setIsPendingModalOpen(false)}
+            />
           </CardContent>
         </Card>
       </div>
