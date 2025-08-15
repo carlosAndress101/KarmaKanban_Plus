@@ -6,7 +6,7 @@ import workspaces from "@/features/workspaces/server/route";
 import members from "@/features/members/server/route";
 import projects from "@/features/projects/server/route";
 import tasks from "@/features/tasks/server/route";
-import store from "@/features/store/server/route";
+import { app as store } from "@/features/store/server/route";
 import gamification from "@/features/gamification/server/route";
 
 const app = new Hono().basePath("/api");

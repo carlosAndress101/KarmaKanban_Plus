@@ -14,11 +14,11 @@ export class GamificationService {
   /**
    * Awards points and checks badges when a task is completed (moved to DONE)
    */
-  static async awardPointsForTaskCompletion(taskId: string, memberId: string): Promise<void> {
-    const [task] = await db
-      .select()
-      .from(tasks)
-      .where(eq(tasks.id, taskId));
+  static async awardPointsForTaskCompletion(
+    taskId: string,
+    memberId: string
+  ): Promise<void> {
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId));
 
     if (!task || !task.assigneeId) {
       console.log(`⚠️  Task ${taskId} not found or has no assignee`);
@@ -26,16 +26,21 @@ export class GamificationService {
     }
 
     const pointsToAward = POINTS_BY_DIFFICULTY[task.difficulty];
-    console.log(`💰 Awarding ${pointsToAward} points for ${task.difficulty} task ${taskId} to member ${memberId}`);
+    console.log(
+      `💰 Awarding ${pointsToAward} points for ${task.difficulty} task ${taskId} to member ${memberId}`
+    );
 
     // Award points to the member
     await db
       .update(members)
-      .set(sql`points = points + ${pointsToAward}`)
+      .set({ points: sql`points + ${pointsToAward}` })
       .where(eq(members.id, memberId));
 
     // Check for new badge achievements
-    const newBadges = await this.checkAndAwardBadges(memberId, task.workspaceId);
+    const newBadges = await this.checkAndAwardBadges(
+      memberId,
+      task.workspaceId
+    );
     if (newBadges.length > 0) {
       console.log(`🏆 New badges awarded: ${newBadges.join(", ")}`);
     }
@@ -44,11 +49,11 @@ export class GamificationService {
   /**
    * Removes points when a task is moved back from DONE to another status
    */
-  static async removePointsForTaskUncompletion(taskId: string, memberId: string): Promise<void> {
-    const [task] = await db
-      .select()
-      .from(tasks)
-      .where(eq(tasks.id, taskId));
+  static async removePointsForTaskUncompletion(
+    taskId: string,
+    memberId: string
+  ): Promise<void> {
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId));
 
     if (!task) return;
 
@@ -70,7 +75,10 @@ export class GamificationService {
   /**
    * Checks all badge requirements and awards new badges to a member
    */
-  static async checkAndAwardBadges(memberId: string, workspaceId: string): Promise<string[]> {
+  static async checkAndAwardBadges(
+    memberId: string,
+    workspaceId: string
+  ): Promise<string[]> {
     const [member] = await db
       .select()
       .from(members)
@@ -86,7 +94,9 @@ export class GamificationService {
     // Parse current earned badges and filter out nulls/invalids
     let earnedBadgeIds: string[] = [];
     try {
-      earnedBadgeIds = member.earnedBadges ? JSON.parse(member.earnedBadges) : [];
+      earnedBadgeIds = member.earnedBadges
+        ? JSON.parse(member.earnedBadges)
+        : [];
     } catch {
       earnedBadgeIds = [];
     }
@@ -107,17 +117,17 @@ export class GamificationService {
         case "tasks_completed":
           earned = stats.totalCompleted >= requirement.value;
           break;
-        
+
         case "difficulty":
           const difficultyCount =
             stats.completedByDifficulty[requirement.difficulty || ""] || 0;
           earned = difficultyCount >= requirement.value;
           break;
-        
+
         case "points":
-          earned = member.points >= requirement.value;
+          earned = (member.points ?? 0) >= requirement.value;
           break;
-        
+
         case "speed":
           // Check tasks completed today
           const today = new Date();
@@ -125,13 +135,13 @@ export class GamificationService {
           const tasksToday = await this.getTasksCompletedSince(memberId, today);
           earned = tasksToday >= requirement.value;
           break;
-        
+
         case "streak":
           // Check consecutive days with task completion
           const streak = await this.getConsecutiveDaysStreak(memberId);
           earned = streak >= requirement.value;
           break;
-        
+
         case "collaboration":
           // For now, count all completed tasks as collaboration
           // In the future, this could check for tasks assigned by others
@@ -157,7 +167,7 @@ export class GamificationService {
       await db
         .update(members)
         .set({
-          earnedBadges: JSON.stringify(earnedBadgeIds)
+          earnedBadges: JSON.stringify(earnedBadgeIds),
         })
         .where(eq(members.id, memberId));
       console.log(
