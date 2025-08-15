@@ -32,8 +32,15 @@ const app = new Hono()
 
       if (!user) return c.json({ error: "user required" }, 400);
 
-      const { workspaceId, assigneeId, dueDate, projectId, search, status, difficulty} =
-        c.req.valid("query");
+      const {
+        workspaceId,
+        assigneeId,
+        dueDate,
+        projectId,
+        search,
+        status,
+        difficulty,
+      } = c.req.valid("query");
 
       const [member] = await getMember(workspaceId, user.id);
       if (!member) return c.json({ error: "Unauthorized" }, 401);
@@ -59,9 +66,7 @@ const app = new Hono()
 
       // Agregar búsqueda por nombre directamente en la query
       if (search) {
-        whereConditions.push(
-          like(tasks.name, `%${search.toLowerCase()}%`)
-        );
+        whereConditions.push(like(tasks.name, `%${search.toLowerCase()}%`));
       }
 
       if (difficulty) {
@@ -121,72 +126,71 @@ const app = new Hono()
       return c.json({ data: { documents: formattedTasks } });
     }
   )
-  .post(
-    "/",
-    sessionMiddleware,
-    zValidator("json", taskSchema),
-    async (c) => {
-      const user = c.get("user");
+  .post("/", sessionMiddleware, zValidator("json", taskSchema), async (c) => {
+    const user = c.get("user");
 
-      if (!user) {
-        return c.json({ error: "Unauthorized" }, 401);
-      }
-
-      const { assignee, dueDate, name, project, status, workspaceId, description, difficulty } = c.req.valid("json");
-
-      const [member] = await getMember(workspaceId, user.id)
-
-      if (!member) return c.json({ error: "Unauthorized" }, 401);
-
-      // Buscar tarea con mayor posición en ese workspace + estado
-      const [highestTask] = await db
-        .select()
-        .from(tasks)
-        .where(
-          and(
-            eq(tasks.workspaceId, workspaceId),
-            eq(tasks.status, status)
-          )
-        )
-        .orderBy(desc(tasks.position))
-        .limit(1)
-
-      const newPosition = highestTask ? highestTask.position + 1000 : 1000
-
-      // Crear nueva tarea
-      const [Task] = await db
-        .insert(tasks)
-        .values({
-          name,
-          status,
-          workspaceId,
-          projectId: project,
-          dueDate: dueDate ? new Date(dueDate) : undefined,
-          assigneeId: assignee,
-          position: newPosition,
-          description,
-          difficulty
-        })
-        .returning()
-
-      // Formatear la respuesta igual que en el GET
-      const formattedTask = {
-        id: Task.id,
-        name: Task.name,
-        description: Task.description,
-        status: Task.status,
-        dueDate: Task.dueDate,
-        assignee: Task.assigneeId,
-        project: Task.projectId,
-        workspaceId: Task.workspaceId,
-        createdAt: Task.createdAt,
-        updatedAt: Task.updatedAt,
-        difficulty: Task.difficulty, // <-- Agrega esto
-      };
-
-      return c.json({ data: formattedTask });
+    if (!user) {
+      return c.json({ error: "Unauthorized" }, 401);
     }
-  )
+
+    const {
+      assignee,
+      dueDate,
+      name,
+      project,
+      status,
+      workspaceId,
+      description,
+      difficulty,
+    } = c.req.valid("json");
+
+    const [member] = await getMember(workspaceId, user.id);
+
+    if (!member) return c.json({ error: "Unauthorized" }, 401);
+
+    // Buscar tarea con mayor posición en ese workspace + estado
+    const [highestTask] = await db
+      .select()
+      .from(tasks)
+      .where(and(eq(tasks.workspaceId, workspaceId), eq(tasks.status, status)))
+      .orderBy(desc(tasks.position))
+      .limit(1);
+
+    const newPosition = highestTask ? highestTask.position + 1000 : 1000;
+
+    // Crear nueva tarea
+    const [Task] = await db
+      .insert(tasks)
+      .values({
+        name,
+        status,
+        workspaceId,
+        projectId: project,
+        dueDate: dueDate ? new Date(dueDate) : undefined,
+        assigneeId: assignee,
+        position: newPosition,
+        description,
+        difficulty,
+      })
+      .returning();
+
+    // Formatear la respuesta igual que en el GET
+    const formattedTask = {
+      id: Task.id,
+      name: Task.name,
+      description: Task.description,
+      status: Task.status,
+      dueDate: Task.dueDate,
+      assignee: Task.assigneeId,
+      project: Task.projectId,
+      workspaceId: Task.workspaceId,
+      createdAt: Task.createdAt,
+      updatedAt: Task.updatedAt,
+      difficulty: Task.difficulty, // <-- Agrega esto
+    };
+
+    return c.json({ data: formattedTask });
+  })
   .patch(
     "/:taskId",
     sessionMiddleware,
@@ -201,7 +205,11 @@ const app = new Hono()
       const { taskId } = c.req.param();
       const values = c.req.valid("json");
 
-      const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId)).limit(1);
+      const [task] = await db
+        .select()
+        .from(tasks)
+        .where(eq(tasks.id, taskId))
+        .limit(1);
       if (!task) return c.json({ error: "Task not found" }, 404);
 
       const [member] = await getMember(task.workspaceId, user.id);
@@ -221,17 +229,37 @@ const app = new Hono()
 
       // Handle gamification points and badges
       if (isStatusChanging && hasAssignee) {
-        const { GamificationService } = await import("@/features/gamification/services/gamification-service");
-        
+        const { GamificationService } = await import(
+          "@/features/gamification/services/gamification-service"
+        );
+
         // Task completed (moved to DONE)
-        if (newStatus === "DONE" && oldStatus !== "DONE") {
-          await GamificationService.awardPointsForTaskCompletion(taskId, task.assigneeId);
-          console.log(`✅ Points awarded for task ${taskId} to member ${task.assigneeId}`);
+        if (
+          newStatus === "DONE" &&
+          oldStatus !== "DONE" &&
+          typeof task.assigneeId === "string"
+        ) {
+          await GamificationService.awardPointsForTaskCompletion(
+            taskId,
+            task.assigneeId
+          );
+          console.log(
+            `✅ Points awarded for task ${taskId} to member ${task.assigneeId}`
+          );
         }
         // Task uncompleted (moved from DONE to another status)
-        else if (oldStatus === "DONE" && newStatus !== "DONE") {
-          await GamificationService.removePointsForTaskUncompletion(taskId, task.assigneeId);
-          console.log(`🔄 Points removed for task ${taskId} from member ${task.assigneeId}`);
+        else if (
+          oldStatus === "DONE" &&
+          newStatus !== "DONE" &&
+          typeof task.assigneeId === "string"
+        ) {
+          await GamificationService.removePointsForTaskUncompletion(
+            taskId,
+            task.assigneeId
+          );
+          console.log(
+            `🔄 Points removed for task ${taskId} from member ${task.assigneeId}`
+          );
         }
       }
 
@@ -247,7 +275,11 @@ const app = new Hono()
 
     const { taskId } = c.req.param();
 
-    const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId)).limit(1);
+    const [task] = await db
+      .select()
+      .from(tasks)
+      .where(eq(tasks.id, taskId))
+      .limit(1);
     if (!task) return c.json({ error: "Task not found" }, 404);
 
     const [member] = await getMember(task.workspaceId, user.id);
@@ -324,7 +356,7 @@ const app = new Hono()
       email: assigneeUser.email,
       createdAt: new Date(assigneeMember.createdAt),
       updatedAt: new Date(assigneeMember.updatedAt),
-    }
+    };
 
     return c.json({
       data: {
@@ -335,12 +367,14 @@ const app = new Hono()
         project,
         assignee,
         difficulty: task.difficulty, // <-- Agrega esto
-      }
-    })
+      },
+    });
   })
   .post(
-    "/bulk-update", sessionMiddleware, zValidator("json", BulkUpdateTasksSchema), async (c) => {
-
+    "/bulk-update",
+    sessionMiddleware,
+    zValidator("json", BulkUpdateTasksSchema),
+    async (c) => {
       const user = c.get("user");
 
       if (!user) {
@@ -350,49 +384,67 @@ const app = new Hono()
       const { tasks: updates } = c.req.valid("json");
 
       const ids = updates.map((t) => t.id);
-      const existingTasks = await db.select().from(tasks).where(inArray(tasks.id, ids));
+      const existingTasks = await db
+        .select()
+        .from(tasks)
+        .where(inArray(tasks.id, ids));
 
       const workspaceIds = new Set(existingTasks.map((t) => t.workspaceId));
       if (workspaceIds.size !== 1) {
-        return c.json({ error: "Todas las tareas deben pertenecer al mismo espacio de trabajo" });
+        return c.json({
+          error:
+            "Todas las tareas deben pertenecer al mismo espacio de trabajo",
+        });
       }
 
       const [member] = await getMember([...workspaceIds][0], user.id);
       if (!member) return c.json({ error: "Unauthorized" }, 401);
-      
+
       // Import gamification service
-      const { GamificationService } = await import("@/features/gamification/services/gamification-service");
-      
+      const { GamificationService } = await import(
+        "@/features/gamification/services/gamification-service"
+      );
+
       // Track gamification changes for bulk update
       const gamificationChanges: Array<{
         taskId: string;
         assigneeId: string;
-        action: 'award' | 'remove';
+        action: "award" | "remove";
       }> = [];
-      
-      // Identify tasks with status changes that affect points
+
+      // Identify tasks with status changes that affect points, prevent duplicate awards/removals in this batch
+      const processedAward = new Set<string>();
+      const processedRemove = new Set<string>();
       for (const update of updates) {
-        const existingTask = existingTasks.find(t => t.id === update.id);
-        
+        const existingTask = existingTasks.find((t) => t.id === update.id);
         if (existingTask && existingTask.assigneeId) {
           const oldStatus = existingTask.status;
           const newStatus = update.status;
-          
           // Task completed (moved to DONE)
-          if (newStatus === "DONE" && oldStatus !== "DONE") {
+          if (
+            newStatus === "DONE" &&
+            oldStatus !== "DONE" &&
+            !processedAward.has(update.id)
+          ) {
             gamificationChanges.push({
               taskId: update.id,
               assigneeId: existingTask.assigneeId,
-              action: 'award'
+              action: "award",
             });
+            processedAward.add(update.id);
           }
           // Task uncompleted (moved from DONE to another status)
-          else if (oldStatus === "DONE" && newStatus !== "DONE") {
+          else if (
+            oldStatus === "DONE" &&
+            newStatus !== "DONE" &&
+            !processedRemove.has(update.id)
+          ) {
             gamificationChanges.push({
               taskId: update.id,
               assigneeId: existingTask.assigneeId,
-              action: 'remove'
+              action: "remove",
             });
+            processedRemove.add(update.id);
           }
         }
       }
@@ -414,22 +466,27 @@ const app = new Hono()
       // Apply gamification changes
       let totalPointsAwarded = 0;
       for (const change of gamificationChanges) {
-        if (change.action === 'award') {
-          await GamificationService.awardPointsForTaskCompletion(change.taskId, change.assigneeId);
+        if (change.action === "award") {
+          await GamificationService.awardPointsForTaskCompletion(
+            change.taskId,
+            change.assigneeId
+          );
           totalPointsAwarded++;
-        } else if (change.action === 'remove') {
-          await GamificationService.removePointsForTaskUncompletion(change.taskId, change.assigneeId);
+        } else if (change.action === "remove") {
+          await GamificationService.removePointsForTaskUncompletion(
+            change.taskId,
+            change.assigneeId
+          );
           totalPointsAwarded--;
         }
       }
 
-      return c.json({ 
-        data: updated, 
+      return c.json({
+        data: updated,
         gamificationChanges: gamificationChanges.length,
-        message: `Updated ${updates.length} tasks with ${gamificationChanges.length} point changes`
+        message: `Updated ${updates.length} tasks with ${gamificationChanges.length} point changes`,
       });
     }
   );
-
 
 export default app;

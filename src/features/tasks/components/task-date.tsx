@@ -1,4 +1,4 @@
-import { differenceInDays, format } from "date-fns";
+import { differenceInDays, format, isValid, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 
 interface TaskDateProps {
@@ -7,8 +7,22 @@ interface TaskDateProps {
 }
 
 export const TaskDate = ({ value, className }: TaskDateProps) => {
+  // Try to parse the value as ISO, fallback to Date constructor
+  let endDate: Date | null = null;
+  if (value) {
+    endDate = isValid(parseISO(value)) ? parseISO(value) : new Date(value);
+    if (!isValid(endDate)) endDate = null;
+  }
+
+  if (!endDate) {
+    return (
+      <div className="text-muted-foreground">
+        <span className={cn("truncate", className)}>Sin fecha</span>
+      </div>
+    );
+  }
+
   const today = new Date();
-  const endDate = new Date(value);
   const diffInDays = differenceInDays(endDate, today);
 
   let textColor = "text-muted-foreground";
@@ -22,7 +36,9 @@ export const TaskDate = ({ value, className }: TaskDateProps) => {
 
   return (
     <div className={textColor}>
-      <span className={cn("truncate", className)}>{format(value, "PPP")}</span>
+      <span className={cn("truncate", className)}>
+        {format(endDate, "PPP")}
+      </span>
     </div>
   );
 };
