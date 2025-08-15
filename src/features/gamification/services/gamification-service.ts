@@ -5,20 +5,20 @@ import { EARNABLE_BADGES } from "../constants/badges";
 
 // Point values based on task difficulty
 const POINTS_BY_DIFFICULTY = {
-  "Facil": 10,   // Easy tasks = 10 points
-  "Medio": 20,   // Medium tasks = 20 points
-  "Dificil": 30, // Hard tasks = 30 points
+  Facil: 10, // Easy tasks = 10 points
+  Medio: 20, // Medium tasks = 20 points
+  Dificil: 30, // Hard tasks = 30 points
 } as const;
 
 export class GamificationService {
   /**
    * Awards points and checks badges when a task is completed (moved to DONE)
    */
-  static async awardPointsForTaskCompletion(taskId: string, memberId: string): Promise<void> {
-    const [task] = await db
-      .select()
-      .from(tasks)
-      .where(eq(tasks.id, taskId));
+  static async awardPointsForTaskCompletion(
+    taskId: string,
+    memberId: string
+  ): Promise<void> {
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId));
 
     if (!task || !task.assigneeId) {
       console.log(`⚠️  Task ${taskId} not found or has no assignee`);
@@ -26,29 +26,42 @@ export class GamificationService {
     }
 
     const pointsToAward = POINTS_BY_DIFFICULTY[task.difficulty];
-    console.log(`💰 Awarding ${pointsToAward} points for ${task.difficulty} task ${taskId} to member ${memberId}`);
+    console.log(
+      `💰 Awarding ${pointsToAward} points for ${task.difficulty} task ${taskId} to member ${memberId}`
+    );
 
     // Award points to the member
+
     await db
       .update(members)
-      .set(sql`points = points + ${pointsToAward}`)
+      .set({ points: sql`points + ${pointsToAward}` })
       .where(eq(members.id, memberId));
 
-    // Check for new badge achievements
-    const newBadges = await this.checkAndAwardBadges(memberId, task.workspaceId);
+    // Fetch updated member for accurate badge checks
+    const [updatedMember] = await db
+      .select()
+      .from(members)
+      .where(eq(members.id, memberId));
+
+    // Check for new badge achievements, pass updated member for accurate points
+    const newBadges = await this.checkAndAwardBadges(
+      memberId,
+      task.workspaceId,
+      updatedMember
+    );
     if (newBadges.length > 0) {
-      console.log(`🏆 New badges awarded: ${newBadges.join(', ')}`);
+      console.log(`🏆 New badges awarded: ${newBadges.join(", ")}`);
     }
   }
 
   /**
    * Removes points when a task is moved back from DONE to another status
    */
-  static async removePointsForTaskUncompletion(taskId: string, memberId: string): Promise<void> {
-    const [task] = await db
-      .select()
-      .from(tasks)
-      .where(eq(tasks.id, taskId));
+  static async removePointsForTaskUncompletion(
+    taskId: string,
+    memberId: string
+  ): Promise<void> {
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId));
 
     if (!task) return;
 
@@ -57,26 +70,47 @@ export class GamificationService {
     // Remove points from the member (ensure it doesn't go below 0)
     await db
       .update(members)
-      .set(sql`points = GREATEST(points - ${pointsToRemove}, 0)`)
+      .set({ points: sql`GREATEST(points - ${pointsToRemove}, 0)` })
       .where(eq(members.id, memberId));
   }
 
   /**
    * Checks all badge requirements and awards new badges to a member
    */
-  static async checkAndAwardBadges(memberId: string, workspaceId: string): Promise<string[]> {
-    const [member] = await db
-      .select()
-      .from(members)
-      .where(eq(members.id, memberId));
+  static async checkAndAwardBadges(
+    memberId: string,
+    workspaceId: string,
+    memberOverride?: any
+  ): Promise<string[]> {
+    // Accept updated member as optional param for accurate points
+    let member = memberOverride;
+    if (!member) {
+      [member] = await db
+        .select()
+        .from(members)
+        .where(eq(members.id, memberId));
+    }
 
-    if (!member) return [];
+    if (!member) {
+      console.log(
+        `[Gamification] Member not found for badge check: ${memberId}`
+      );
+      return [];
+    }
 
-    // Parse current earned badges
+    // Parse current earned badges and filter out nulls/invalids
     let earnedBadgeIds: string[] = [];
     try {
-      earnedBadgeIds = member.earnedBadges ? JSON.parse(member.earnedBadges) : [];
-    } catch {
+      const parsed = member.earnedBadges ? JSON.parse(member.earnedBadges) : [];
+      earnedBadgeIds = Array.isArray(parsed)
+        ? parsed.filter((id) => typeof id === "string" && !!id)
+        : [];
+    } catch (e) {
+      console.log(
+        `[Gamification] Failed to parse earnedBadges for member ${memberId}:`,
+        e,
+        member.earnedBadges
+      );
       earnedBadgeIds = [];
     }
 
@@ -96,16 +130,15 @@ export class GamificationService {
         case "tasks_completed":
           earned = stats.totalCompleted >= requirement.value;
           break;
-        
         case "difficulty":
-          const difficultyCount = stats.completedByDifficulty[requirement.difficulty || ""] || 0;
+          const difficultyCount =
+            stats.completedByDifficulty[requirement.difficulty || ""] || 0;
           earned = difficultyCount >= requirement.value;
           break;
-        
         case "points":
+          // Use updated points if available
           earned = member.points >= requirement.value;
           break;
-        
         case "speed":
           // Check tasks completed today
           const today = new Date();
@@ -113,13 +146,11 @@ export class GamificationService {
           const tasksToday = await this.getTasksCompletedSince(memberId, today);
           earned = tasksToday >= requirement.value;
           break;
-        
         case "streak":
           // Check consecutive days with task completion
           const streak = await this.getConsecutiveDaysStreak(memberId);
           earned = streak >= requirement.value;
           break;
-        
         case "collaboration":
           // For now, count all completed tasks as collaboration
           // In the future, this could check for tasks assigned by others
@@ -130,17 +161,33 @@ export class GamificationService {
       if (earned) {
         newBadges.push(badge.id);
         earnedBadgeIds.push(badge.id);
+        console.log(
+          `[Gamification] Badge earned: ${badge.id} for member ${memberId}`
+        );
       }
     }
 
     // Update member's earned badges if there are new ones
     if (newBadges.length > 0) {
+      // Filter out nulls/invalids before saving
+      const filteredBadges = earnedBadgeIds.filter(
+        (id) => typeof id === "string" && !!id
+      );
       await db
         .update(members)
         .set({
-          earnedBadges: JSON.stringify(earnedBadgeIds)
+          earnedBadges: JSON.stringify(filteredBadges),
         })
         .where(eq(members.id, memberId));
+      console.log(
+        `[Gamification] Updated earnedBadges for member ${memberId}:`,
+        filteredBadges
+      );
+    } else {
+      console.log(
+        `[Gamification] No new badges for member ${memberId}. Current badges:`,
+        earnedBadgeIds
+      );
     }
 
     return newBadges;
@@ -149,7 +196,10 @@ export class GamificationService {
   /**
    * Gets comprehensive task statistics for a member
    */
-  private static async getMemberTaskStats(memberId: string, workspaceId: string) {
+  private static async getMemberTaskStats(
+    memberId: string,
+    workspaceId: string
+  ) {
     // Get all completed tasks by this member
     const completedTasks = await db
       .select()
@@ -177,7 +227,10 @@ export class GamificationService {
   /**
    * Gets the number of tasks completed since a specific date
    */
-  private static async getTasksCompletedSince(memberId: string, sinceDate: Date): Promise<number> {
+  private static async getTasksCompletedSince(
+    memberId: string,
+    sinceDate: Date
+  ): Promise<number> {
     const result = await db
       .select({ count: sql<number>`count(*)` })
       .from(tasks)
@@ -195,14 +248,16 @@ export class GamificationService {
   /**
    * Calculates consecutive days with at least one task completed
    */
-  private static async getConsecutiveDaysStreak(memberId: string): Promise<number> {
+  private static async getConsecutiveDaysStreak(
+    memberId: string
+  ): Promise<number> {
     // Get all completion dates for this member (last 30 days to optimize)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     const completions = await db
       .select({
-        date: sql<string>`DATE(${tasks.updatedAt})`
+        date: sql<string>`DATE(${tasks.updatedAt})`,
       })
       .from(tasks)
       .where(
@@ -225,7 +280,7 @@ export class GamificationService {
     for (let i = 0; i < completions.length; i++) {
       const completionDate = new Date(completions[i].date);
       completionDate.setHours(0, 0, 0, 0);
-      
+
       const expectedDate = new Date(today);
       expectedDate.setDate(expectedDate.getDate() - streak);
 
@@ -263,7 +318,7 @@ export class GamificationService {
       .select({
         managerId: projects.projectManagerId,
         managerName: sql<string>`CONCAT(users.name, ' ', users.last_name)`,
-        managerEmail: sql<string>`users.email`
+        managerEmail: sql<string>`users.email`,
       })
       .from(projects)
       .leftJoin(members, eq(projects.projectManagerId, members.id))
