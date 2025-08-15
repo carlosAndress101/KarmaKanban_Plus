@@ -15,11 +15,21 @@ const updateStoreItemSchema = z.object({
 
 type UpdateStoreItemData = z.infer<typeof updateStoreItemSchema>;
 
-export const useUpdateStoreItem = ({ workspaceId }: { workspaceId: string }) => {
+export const useUpdateStoreItem = ({
+  workspaceId,
+}: {
+  workspaceId: string;
+}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ storeItemId, data }: { storeItemId: string; data: UpdateStoreItemData }) => {
+    mutationFn: async ({
+      storeItemId,
+      data,
+    }: {
+      storeItemId: string;
+      data: UpdateStoreItemData;
+    }) => {
       const response = await client.api.store[":storeItemId"]["$patch"]({
         param: { storeItemId },
         json: data,
@@ -27,7 +37,16 @@ export const useUpdateStoreItem = ({ workspaceId }: { workspaceId: string }) => 
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to update store item");
+        let errorMessage = "Failed to update store item";
+        if (
+          typeof error === "object" &&
+          error !== null &&
+          "error" in error &&
+          typeof error.error === "string"
+        ) {
+          errorMessage = error.error;
+        }
+        throw new Error(errorMessage);
       }
 
       return response.json();

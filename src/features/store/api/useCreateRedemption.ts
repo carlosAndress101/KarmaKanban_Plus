@@ -30,9 +30,19 @@ export const useCreateRedemption = ({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          errorData.error || "Failed to create redemption request"
-        );
+        let errorMessage = "Failed to create redemption request";
+        if (typeof errorData === "object" && errorData !== null) {
+          if ("error" in errorData && typeof errorData.error === "string") {
+            errorMessage = errorData.error;
+          } else if (
+            "data" in errorData &&
+            errorData.data &&
+            typeof errorData.data.message === "string"
+          ) {
+            errorMessage = errorData.data.message;
+          }
+        }
+        throw new Error(errorMessage);
       }
 
       return await response.json();

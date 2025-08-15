@@ -19,7 +19,11 @@ export const useGetStoreItems = ({ workspaceId }: UseGetStoreItemsProps) => {
       }
 
       const { data } = await response.json();
-      return data as StoreItem[];
+      return (data as any[]).map((item) => ({
+        ...item,
+        createdAt: new Date(item.createdAt),
+        updatedAt: new Date(item.updatedAt),
+      })) as StoreItem[];
     },
   });
 

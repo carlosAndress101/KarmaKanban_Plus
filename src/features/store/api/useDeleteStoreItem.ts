@@ -2,7 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 import { toast } from "sonner";
 
-export const useDeleteStoreItem = ({ workspaceId }: { workspaceId: string }) => {
+export const useDeleteStoreItem = ({
+  workspaceId,
+}: {
+  workspaceId: string;
+}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -13,7 +17,16 @@ export const useDeleteStoreItem = ({ workspaceId }: { workspaceId: string }) => 
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to delete store item");
+        let errorMessage = "Failed to delete store item";
+        if (
+          typeof error === "object" &&
+          error !== null &&
+          "error" in error &&
+          typeof error.error === "string"
+        ) {
+          errorMessage = error.error;
+        }
+        throw new Error(errorMessage);
       }
 
       return response.json();

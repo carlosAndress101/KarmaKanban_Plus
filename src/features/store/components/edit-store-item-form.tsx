@@ -4,11 +4,29 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useUpdateStoreItem } from "../api/useUpdateStoreItem";
 import { StoreItem } from "../types";
@@ -31,7 +49,12 @@ interface EditStoreItemFormProps {
   onClose: () => void;
 }
 
-export const EditStoreItemForm = ({ workspaceId, item, isOpen, onClose }: EditStoreItemFormProps) => {
+export const EditStoreItemForm = ({
+  workspaceId,
+  item,
+  isOpen,
+  onClose,
+}: EditStoreItemFormProps) => {
   const updateStoreItemMutation = useUpdateStoreItem({ workspaceId });
 
   const form = useForm<EditStoreItemFormData>({
@@ -52,8 +75,8 @@ export const EditStoreItemForm = ({ workspaceId, item, isOpen, onClose }: EditSt
         storeItemId: item.id,
         data: {
           ...data,
-          stock: data.stock || null,
-          imageUrl: data.imageUrl || null,
+          stock: data.stock ?? undefined,
+          imageUrl: data.imageUrl ?? undefined,
         },
       },
       {
@@ -83,7 +106,7 @@ export const EditStoreItemForm = ({ workspaceId, item, isOpen, onClose }: EditSt
         <DialogHeader>
           <DialogTitle>Edit Store Item</DialogTitle>
         </DialogHeader>
-        
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -99,7 +122,7 @@ export const EditStoreItemForm = ({ workspaceId, item, isOpen, onClose }: EditSt
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="description"
@@ -113,7 +136,7 @@ export const EditStoreItemForm = ({ workspaceId, item, isOpen, onClose }: EditSt
                 </FormItem>
               )}
             />
-            
+
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -128,7 +151,7 @@ export const EditStoreItemForm = ({ workspaceId, item, isOpen, onClose }: EditSt
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="stock"
@@ -143,7 +166,7 @@ export const EditStoreItemForm = ({ workspaceId, item, isOpen, onClose }: EditSt
                 )}
               />
             </div>
-            
+
             <FormField
               control={form.control}
               name="category"
@@ -167,7 +190,7 @@ export const EditStoreItemForm = ({ workspaceId, item, isOpen, onClose }: EditSt
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="imageUrl"
@@ -175,19 +198,27 @@ export const EditStoreItemForm = ({ workspaceId, item, isOpen, onClose }: EditSt
                 <FormItem>
                   <FormLabel>Image URL (optional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com/image.jpg" {...field} />
+                    <Input
+                      placeholder="https://example.com/image.jpg"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <div className="flex justify-end space-x-2">
               <Button type="button" variant="outline" onClick={handleClose}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={updateStoreItemMutation.isPending}>
-                {updateStoreItemMutation.isPending ? "Updating..." : "Update Item"}
+              <Button
+                type="submit"
+                disabled={updateStoreItemMutation.isPending}
+              >
+                {updateStoreItemMutation.isPending
+                  ? "Updating..."
+                  : "Update Item"}
               </Button>
             </div>
           </form>

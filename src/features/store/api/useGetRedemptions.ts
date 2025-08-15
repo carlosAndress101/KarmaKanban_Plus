@@ -19,7 +19,10 @@ export const useGetRedemptions = ({ workspaceId }: UseGetRedemptionsProps) => {
       }
 
       const { data } = await response.json();
-      return data as RedemptionRequest[];
+      return (data as any[]).map((item) => ({
+        ...item,
+        reviewedAt: item.reviewedAt ? new Date(item.reviewedAt) : undefined,
+      })) as RedemptionRequest[];
     },
   });
 

@@ -15,7 +15,11 @@ const storeItemSchema = z.object({
 
 type StoreItemData = z.infer<typeof storeItemSchema>;
 
-export const useCreateStoreItem = ({ workspaceId }: { workspaceId: string }) => {
+export const useCreateStoreItem = ({
+  workspaceId,
+}: {
+  workspaceId: string;
+}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -29,7 +33,16 @@ export const useCreateStoreItem = ({ workspaceId }: { workspaceId: string }) => 
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to create store item");
+        let errorMessage = "Failed to create store item";
+        if (
+          typeof error === "object" &&
+          error !== null &&
+          "error" in error &&
+          typeof error.error === "string"
+        ) {
+          errorMessage = error.error;
+        }
+        throw new Error(errorMessage);
       }
 
       return response.json();
