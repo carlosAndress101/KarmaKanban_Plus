@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { GamificationProfile } from "@/features/gamification/components/gamification-profile";
+import { GamificationStats } from "@/features/gamification/components/gamification-stats";
 import { BadgeDisplay } from "@/features/gamification/components/badge-display";
 import { GamificationHistoryTabs } from "@/features/gamification/components/GamificationHistoryTabs";
 import { useGetMember } from "@/features/members/api/useGetMember";
@@ -154,6 +155,7 @@ export const GamificationClient = ({
     currentStreak: gamificationStats?.currentStreak ?? 0,
     collaborativeTasks: gamificationStats?.collaborativeTasks ?? 0,
     earnedBadges: realEarnedBadges,
+    // averageCompletionTime is not part of MemberStats interface, but we pass it separately
   };
 
   // Update the gamificationData to use real points from the API
@@ -196,6 +198,16 @@ export const GamificationClient = ({
             gamificationData={updatedGamificationData}
             onUpdate={handleUpdateGamification}
             onPurchaseBadge={handlePurchaseBadge}
+          />
+          <GamificationStats
+            totalTasksCompleted={memberStats.totalTasksCompleted}
+            tasksCompletedByDifficulty={memberStats.tasksCompletedByDifficulty}
+            tasksCompletedToday={memberStats.tasksCompletedToday}
+            currentStreak={memberStats.currentStreak}
+            averageCompletionTime={gamificationStats?.averageCompletionTime}
+            averageCompletionTimeByDifficulty={
+              gamificationStats?.averageCompletionTimeByDifficulty
+            }
           />
         </TabsContent>
 

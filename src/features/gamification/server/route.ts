@@ -26,6 +26,52 @@ const app = new Hono()
       const [member] = await getMember(workspaceId, user.id);
       if (!member) return c.json({ error: "Unauthorized" }, 401);
       const targetMemberId = memberId || member.id;
+
+      // Calculate average task completion time (in seconds) overall
+      const avgCompletionResult = await db
+        .select({
+          avgSeconds: sql<number>`AVG(EXTRACT(EPOCH FROM (${tasks.updatedAt} - ${tasks.createdAt})))`,
+        })
+        .from(tasks)
+        .where(
+          and(
+            eq(tasks.assigneeId, targetMemberId),
+            eq(tasks.workspaceId, workspaceId),
+            eq(tasks.status, "DONE"),
+            sql`(${tasks.createdAt} IS NOT NULL AND ${tasks.updatedAt} IS NOT NULL)`
+          )
+        );
+      const averageCompletionTime = avgCompletionResult[0]?.avgSeconds || 0;
+
+      // Calculate average completion time by difficulty
+      const difficulties: Array<"Facil" | "Medio" | "Dificil"> = [
+        "Facil",
+        "Medio",
+        "Dificil",
+      ];
+      const avgByDifficulty: Record<"Facil" | "Medio" | "Dificil", number> = {
+        Facil: 0,
+        Medio: 0,
+        Dificil: 0,
+      };
+      for (const diff of difficulties) {
+        const res = await db
+          .select({
+            avgSeconds: sql<number>`AVG(EXTRACT(EPOCH FROM (${tasks.updatedAt} - ${tasks.createdAt})))`,
+          })
+          .from(tasks)
+          .where(
+            and(
+              eq(tasks.assigneeId, targetMemberId),
+              eq(tasks.workspaceId, workspaceId),
+              eq(tasks.status, "DONE"),
+              eq(tasks.difficulty, diff),
+              sql`(${tasks.createdAt} IS NOT NULL AND ${tasks.updatedAt} IS NOT NULL)`
+            )
+          );
+        avgByDifficulty[diff] = res[0]?.avgSeconds || 0;
+      }
+
       // Query completed tasks for this member
       const completedTasks = await db
         .select({
@@ -197,6 +243,52 @@ const app = new Hono()
         earnedBadges = [];
       }
 
+      // Calculate average task completion time (in seconds)
+      // Only consider tasks with both createdAt and updatedAt
+      const avgCompletionResult = await db
+        .select({
+          avgSeconds: sql<number>`AVG(EXTRACT(EPOCH FROM (${tasks.updatedAt} - ${tasks.createdAt})))`,
+        })
+        .from(tasks)
+        .where(
+          and(
+            eq(tasks.assigneeId, targetMemberId),
+            eq(tasks.workspaceId, workspaceId),
+            eq(tasks.status, "DONE"),
+            sql`(${tasks.createdAt} IS NOT NULL AND ${tasks.updatedAt} IS NOT NULL)`
+          )
+        );
+      const averageCompletionTime = avgCompletionResult[0]?.avgSeconds || 0;
+
+      // Calculate average completion time by difficulty
+      const difficulties: Array<"Facil" | "Medio" | "Dificil"> = [
+        "Facil",
+        "Medio",
+        "Dificil",
+      ];
+      const avgByDifficulty: Record<"Facil" | "Medio" | "Dificil", number> = {
+        Facil: 0,
+        Medio: 0,
+        Dificil: 0,
+      };
+      for (const diff of difficulties) {
+        const res = await db
+          .select({
+            avgSeconds: sql<number>`AVG(EXTRACT(EPOCH FROM (${tasks.updatedAt} - ${tasks.createdAt})))`,
+          })
+          .from(tasks)
+          .where(
+            and(
+              eq(tasks.assigneeId, targetMemberId),
+              eq(tasks.workspaceId, workspaceId),
+              eq(tasks.status, "DONE"),
+              eq(tasks.difficulty, diff),
+              sql`(${tasks.createdAt} IS NOT NULL AND ${tasks.updatedAt} IS NOT NULL)`
+            )
+          );
+        avgByDifficulty[diff] = res[0]?.avgSeconds || 0;
+      }
+
       return c.json({
         data: {
           totalTasksCompleted: totalCompleted,
@@ -206,6 +298,8 @@ const app = new Hono()
           currentStreak,
           collaborativeTasks,
           earnedBadges,
+          averageCompletionTime, // in seconds
+          averageCompletionTimeByDifficulty: avgByDifficulty,
         },
       });
     }

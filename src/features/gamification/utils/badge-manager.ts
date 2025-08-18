@@ -12,6 +12,12 @@ export interface MemberStats {
   currentStreak: number;
   collaborativeTasks: number;
   earnedBadges: string[];
+  averageCompletionTime?: number; // in seconds, optional
+  averageCompletionTimeByDifficulty?: {
+    Facil: number;
+    Medio: number;
+    Dificil: number;
+  };
 }
 
 export interface BadgeCheckResult {
@@ -35,7 +41,10 @@ export function checkEarnedBadges(stats: MemberStats): BadgeCheckResult[] {
 
     switch (badge.requirement.type) {
       case "tasks_completed":
-        progress = Math.min(stats.totalTasksCompleted / badge.requirement.value, 1);
+        progress = Math.min(
+          stats.totalTasksCompleted / badge.requirement.value,
+          1
+        );
         earned = stats.totalTasksCompleted >= badge.requirement.value;
         break;
 
@@ -46,14 +55,21 @@ export function checkEarnedBadges(stats: MemberStats): BadgeCheckResult[] {
 
       case "difficulty":
         if (badge.requirement.difficulty) {
-          const difficultyCount = stats.tasksCompletedByDifficulty[badge.requirement.difficulty as keyof typeof stats.tasksCompletedByDifficulty] || 0;
+          const difficultyCount =
+            stats.tasksCompletedByDifficulty[
+              badge.requirement
+                .difficulty as keyof typeof stats.tasksCompletedByDifficulty
+            ] || 0;
           progress = Math.min(difficultyCount / badge.requirement.value, 1);
           earned = difficultyCount >= badge.requirement.value;
         }
         break;
 
       case "speed":
-        progress = Math.min(stats.tasksCompletedToday / badge.requirement.value, 1);
+        progress = Math.min(
+          stats.tasksCompletedToday / badge.requirement.value,
+          1
+        );
         earned = stats.tasksCompletedToday >= badge.requirement.value;
         break;
 
@@ -63,7 +79,10 @@ export function checkEarnedBadges(stats: MemberStats): BadgeCheckResult[] {
         break;
 
       case "collaboration":
-        progress = Math.min(stats.collaborativeTasks / badge.requirement.value, 1);
+        progress = Math.min(
+          stats.collaborativeTasks / badge.requirement.value,
+          1
+        );
         earned = stats.collaborativeTasks >= badge.requirement.value;
         break;
     }
@@ -73,13 +92,13 @@ export function checkEarnedBadges(stats: MemberStats): BadgeCheckResult[] {
       results.push({
         badge,
         earned: true,
-        progress: 1
+        progress: 1,
       });
     } else {
       results.push({
         badge,
         earned: false,
-        progress
+        progress,
       });
     }
   }
@@ -92,7 +111,9 @@ export function checkEarnedBadges(stats: MemberStats): BadgeCheckResult[] {
  */
 export function getNewlyEarnedBadges(stats: MemberStats): Badge[] {
   const results = checkEarnedBadges(stats);
-  return results.filter(result => result.earned).map(result => result.badge);
+  return results
+    .filter((result) => result.earned)
+    .map((result) => result.badge);
 }
 
 /**
@@ -100,7 +121,7 @@ export function getNewlyEarnedBadges(stats: MemberStats): Badge[] {
  */
 export function getNearlyEarnedBadges(stats: MemberStats): BadgeCheckResult[] {
   const results = checkEarnedBadges(stats);
-  return results.filter(result => !result.earned && result.progress >= 0.75);
+  return results.filter((result) => !result.earned && result.progress >= 0.75);
 }
 
 /**
@@ -117,7 +138,11 @@ export function getBadgeProgress(badgeId: string, stats: MemberStats): number {
       return Math.min(stats.totalPoints / badge.requirement.value, 1);
     case "difficulty":
       if (badge.requirement.difficulty) {
-        const difficultyCount = stats.tasksCompletedByDifficulty[badge.requirement.difficulty as keyof typeof stats.tasksCompletedByDifficulty] || 0;
+        const difficultyCount =
+          stats.tasksCompletedByDifficulty[
+            badge.requirement
+              .difficulty as keyof typeof stats.tasksCompletedByDifficulty
+          ] || 0;
         return Math.min(difficultyCount / badge.requirement.value, 1);
       }
       return 0;
@@ -135,28 +160,51 @@ export function getBadgeProgress(badgeId: string, stats: MemberStats): number {
 /**
  * Format progress text for badge requirements
  */
-export function formatBadgeProgressText(badge: Badge, stats: MemberStats): string {
+export function formatBadgeProgressText(
+  badge: Badge,
+  stats: MemberStats
+): string {
   if (!badge.requirement) return "";
 
   switch (badge.requirement.type) {
     case "tasks_completed":
-      return `${Math.min(stats.totalTasksCompleted, badge.requirement.value)}/${badge.requirement.value} tasks completed`;
+      return `${Math.min(stats.totalTasksCompleted, badge.requirement.value)}/${
+        badge.requirement.value
+      } tasks completed`;
     case "points":
-      return `${Math.min(stats.totalPoints, badge.requirement.value)}/${badge.requirement.value} points earned`;
+      return `${Math.min(stats.totalPoints, badge.requirement.value)}/${
+        badge.requirement.value
+      } points earned`;
     case "difficulty":
       if (badge.requirement.difficulty) {
-        const difficultyCount = stats.tasksCompletedByDifficulty[badge.requirement.difficulty as keyof typeof stats.tasksCompletedByDifficulty] || 0;
-        const difficultyName = badge.requirement.difficulty === "Facil" ? "easy" : 
-                              badge.requirement.difficulty === "Medio" ? "medium" : "hard";
-        return `${Math.min(difficultyCount, badge.requirement.value)}/${badge.requirement.value} ${difficultyName} tasks completed`;
+        const difficultyCount =
+          stats.tasksCompletedByDifficulty[
+            badge.requirement
+              .difficulty as keyof typeof stats.tasksCompletedByDifficulty
+          ] || 0;
+        const difficultyName =
+          badge.requirement.difficulty === "Facil"
+            ? "easy"
+            : badge.requirement.difficulty === "Medio"
+            ? "medium"
+            : "hard";
+        return `${Math.min(difficultyCount, badge.requirement.value)}/${
+          badge.requirement.value
+        } ${difficultyName} tasks completed`;
       }
       return "";
     case "speed":
-      return `${Math.min(stats.tasksCompletedToday, badge.requirement.value)}/${badge.requirement.value} tasks completed today`;
+      return `${Math.min(stats.tasksCompletedToday, badge.requirement.value)}/${
+        badge.requirement.value
+      } tasks completed today`;
     case "streak":
-      return `${Math.min(stats.currentStreak, badge.requirement.value)}/${badge.requirement.value} day streak`;
+      return `${Math.min(stats.currentStreak, badge.requirement.value)}/${
+        badge.requirement.value
+      } day streak`;
     case "collaboration":
-      return `${Math.min(stats.collaborativeTasks, badge.requirement.value)}/${badge.requirement.value} collaborative tasks`;
+      return `${Math.min(stats.collaborativeTasks, badge.requirement.value)}/${
+        badge.requirement.value
+      } collaborative tasks`;
     default:
       return "";
   }
