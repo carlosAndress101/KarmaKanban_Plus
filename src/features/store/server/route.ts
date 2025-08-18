@@ -121,7 +121,26 @@ const app = new Hono()
       const user = c.get("user");
       if (!user) return c.json({ error: "Unauthorized" }, 401);
       const { storeItemId } = c.req.valid("param");
-      const data = c.req.valid("json");
+      let data;
+      try {
+        data = c.req.valid("json");
+      } catch (err) {
+        console.error(
+          "[PATCH /store/:storeItemId] JSON validation error:",
+          err
+        );
+        return c.json(
+          {
+            error:
+              "Invalid data: " +
+              (typeof err === "object" && err !== null && "message" in err
+                ? (err as any).message
+                : String(err)),
+          },
+          400
+        );
+      }
+      console.log("[PATCH /store/:storeItemId] Incoming data:", data);
       // workspaceId must be inferred from the store item
       // Get the store item first
       const [item] = await db
