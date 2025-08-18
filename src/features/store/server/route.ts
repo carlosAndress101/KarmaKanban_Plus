@@ -27,6 +27,9 @@ const app = new Hono()
       if (!user) return c.json({ error: "Unauthorized" }, 401);
 
       const { workspaceId } = c.req.valid("query");
+      if (!workspaceId || workspaceId === "undefined") {
+        return c.json({ error: "Missing or invalid workspaceId" }, 400);
+      }
       const [member] = await getMember(workspaceId, user.id);
       if (!member) return c.json({ error: "Unauthorized" }, 401);
 
