@@ -1,6 +1,6 @@
 import { db } from "@/lib/drizzle";
 import { eq, and, gte, desc, sql } from "drizzle-orm";
-import { members, tasks, projects } from "@/lib/schemas_drizzle";
+import { members, tasks, projects, memberBadges } from "@/lib/schemas_drizzle";
 import { EARNABLE_BADGES } from "../constants/badges";
 
 // Point values based on task difficulty
@@ -152,6 +152,12 @@ export class GamificationService {
       if (earned) {
         newBadges.push(badge.id);
         earnedBadgeIds.push(badge.id);
+        // Insert into member_badges table for date tracking
+        await db.insert(memberBadges).values({
+          memberId,
+          badgeId: badge.id,
+          // earnedAt will default to now
+        });
         console.log(
           `[Gamification] Badge earned: ${badge.id} for member ${memberId}`
         );
