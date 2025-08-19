@@ -131,11 +131,6 @@ export const GamificationClient = ({
     console.log("Updating gamification data:", updatedData);
   };
 
-  const handlePurchaseBadge = (badgeId: string) => {
-    // TODO: Implement badge purchase logic
-    console.log("Purchasing badge:", badgeId);
-  };
-
   // Create member stats for badge system using real statistics
   const realPoints = gamificationStats?.totalPoints ?? memberData?.points ?? 0;
 
@@ -197,7 +192,6 @@ export const GamificationClient = ({
             user={user}
             gamificationData={updatedGamificationData}
             onUpdate={handleUpdateGamification}
-            onPurchaseBadge={handlePurchaseBadge}
           />
           <GamificationStats
             totalTasksCompleted={memberStats.totalTasksCompleted}
@@ -212,10 +206,7 @@ export const GamificationClient = ({
         </TabsContent>
 
         <TabsContent value="badges" className="mt-6">
-          <BadgeDisplay
-            memberStats={memberStats}
-            onPurchaseBadge={handlePurchaseBadge}
-          />
+          <BadgeDisplay memberStats={memberStats} />
         </TabsContent>
 
         <TabsContent value="history" className="mt-6">

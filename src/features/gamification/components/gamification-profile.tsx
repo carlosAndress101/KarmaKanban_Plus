@@ -109,14 +109,12 @@ interface GamificationProfileProps {
     selectedIcons: string[];
     aboutMe?: string;
   }) => void;
-  onPurchaseBadge?: (badgeId: string) => void;
 }
 
 export const GamificationProfile = ({
   user,
   gamificationData,
   onUpdate,
-  onPurchaseBadge,
 }: GamificationProfileProps) => {
   const [isEditingAbout, setIsEditingAbout] = useState(false);
   const [aboutText, setAboutText] = useState(gamificationData.aboutMe || "");
@@ -474,7 +472,6 @@ export const GamificationProfile = ({
         isOpen={isBadgeModalOpen}
         onClose={() => setIsBadgeModalOpen(false)}
         memberStats={memberStats}
-        onPurchaseBadge={onPurchaseBadge}
       />
     </>
   );
