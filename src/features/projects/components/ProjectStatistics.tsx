@@ -1,4 +1,3 @@
-
 import { useGetProjectAnalytics } from "@/features/projects/api/useGetProjectAnalytics";
 import { useProjectPerformance } from "@/features/projects/hooks/useProjectPerformance";
 import { Card } from "@/components/ui/card";
@@ -16,14 +15,30 @@ function formatDuration(ms: number | null) {
   return `${days.toFixed(1)} days`;
 }
 
-export function ProjectStatistics({ projectId, workspaceId }: { projectId: string, workspaceId: string }) {
+export function ProjectStatistics({
+  projectId,
+  workspaceId,
+}: {
+  projectId: string;
+  workspaceId: string;
+}) {
   // Fetch analytics (basic stats)
-  const { data: analytics, isLoading: isLoadingAnalytics, error: errorAnalytics } = useGetProjectAnalytics({ projectId });
+  const {
+    data: analytics,
+    isLoading: isLoadingAnalytics,
+    error: errorAnalytics,
+  } = useGetProjectAnalytics({ projectId });
   // Fetch performance (detailed stats)
-  const { data: performance, isLoading: isLoadingPerformance, error: errorPerformance } = useProjectPerformance(workspaceId);
+  const {
+    data: performance,
+    isLoading: isLoadingPerformance,
+    error: errorPerformance,
+  } = useProjectPerformance(workspaceId);
 
-  if (isLoadingAnalytics || isLoadingPerformance) return <Skeleton className="h-40 w-full" />;
-  if (errorAnalytics || errorPerformance) return <div className="text-red-500">Error loading stats</div>;
+  if (isLoadingAnalytics || isLoadingPerformance)
+    return <Skeleton className="h-40 w-full" />;
+  if (errorAnalytics || errorPerformance)
+    return <div className="text-red-500">Error loading stats</div>;
   if (!analytics) return null;
 
   // Find the stats for this project
@@ -46,23 +61,30 @@ export function ProjectStatistics({ projectId, workspaceId }: { projectId: strin
           Total Tasks: <span className="font-bold">{analytics.taskCount}</span>
         </Badge>
         <Badge variant={TaskStatus.DONE}>
-          Completed: <span className="font-bold">{analytics.completedTaskCount}</span>
+          Completed:{" "}
+          <span className="font-bold">{analytics.completedTaskCount}</span>
         </Badge>
         <Badge variant="outline">
-          Incomplete: <span className="font-bold">{analytics.inCompleteTaskCount}</span>
+          Incomplete:{" "}
+          <span className="font-bold">{analytics.inCompleteTaskCount}</span>
         </Badge>
         <Badge variant="outline">
-          Overdue: <span className="font-bold">{analytics.overDueTaskCount}</span>
+          Overdue:{" "}
+          <span className="font-bold">{analytics.overDueTaskCount}</span>
         </Badge>
         <Badge variant="outline">
-          Assigned to you: <span className="font-bold">{analytics.assignedTaskCount}</span>
+          Assigned to you:{" "}
+          <span className="font-bold">{analytics.assignedTaskCount}</span>
         </Badge>
       </div>
       {stat && (
         <>
           <div className="flex flex-wrap gap-4 mb-4">
             <Badge variant="outline">
-              Avg Time: <span className="font-bold">{formatDuration(stat.avgCompletionTime)}</span>
+              Avg Time:{" "}
+              <span className="font-bold">
+                {formatDuration(stat.avgCompletionTime)}
+              </span>
             </Badge>
           </div>
           <div className="mb-4">
@@ -109,9 +131,7 @@ export function ProjectStatistics({ projectId, workspaceId }: { projectId: strin
                   key={member.name}
                   className="bg-muted border border-border rounded px-3 py-2 flex flex-col"
                 >
-                  <span className="font-bold text-primary">
-                    {member.name}
-                  </span>
+                  <span className="font-bold text-primary">{member.name}</span>
                   <span className="text-xs text-muted-foreground">
                     Total: {member.total} tasks
                   </span>

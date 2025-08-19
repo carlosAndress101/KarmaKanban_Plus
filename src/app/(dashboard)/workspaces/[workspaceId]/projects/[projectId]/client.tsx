@@ -17,11 +17,10 @@ import { TaskViewSwticher } from "@/features/tasks/components/task-view-swticher
 
 import { ProjectStatistics } from "@/features/projects/components/ProjectStatistics";
 
-
 export const ProjectIdClient = () => {
   const projectId = useProjectId();
   const { data: project, isLoading: isLoadingProject } = useGetProject({
-    projectId: projectId ?? '', // Provide fallback for type safety
+    projectId: projectId ?? "", // Provide fallback for type safety
   });
 
   if (!projectId) {
@@ -38,10 +37,7 @@ export const ProjectIdClient = () => {
     <div className="flex flex-col gap-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-x-2">
-          <ProjectAvatar
-            name={project.name}
-            className="size-8"
-          />
+          <ProjectAvatar name={project.name} className="size-8" />
           <p className="text-lg font-semibold">{project.name}</p>
         </div>
 
@@ -57,7 +53,10 @@ export const ProjectIdClient = () => {
         </div>
       </div>
       <TaskViewSwticher hideProjectFilter />
-      <ProjectStatistics projectId={project.id} workspaceId={project.workspaceId} />
+      <ProjectStatistics
+        projectId={project.id}
+        workspaceId={project.workspaceId}
+      />
     </div>
   );
 };
