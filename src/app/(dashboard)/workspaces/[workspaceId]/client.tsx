@@ -16,6 +16,7 @@ import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
 import { useCreateTaskModal } from "@/features/tasks/hooks/use-create-task-modal";
 import { useCreateProjectModal } from "@/features/projects/hooks/useCreateProjectModal";
 import { useGetWorkspaceAnalytics } from "@/features/workspaces/api/use-get-workspace-analytics";
+import ProjectPerformanceSection from "@/features/projects/components/ProjectPerformanceSection";
 
 import { Button } from "@/components/ui/button";
 import { Analytics } from "@/components/analytics";
@@ -30,7 +31,7 @@ export const WorkspaceIdClient = () => {
   const { data: analytics, isLoading: isLoadingAnalytics } =
     useGetWorkspaceAnalytics({ workspaceId });
   const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
-    workspaceId
+    workspaceId,
   });
   const { data: projects, isLoading: isLoadingProjects } = useGetProjects({
     workspaceId,
@@ -53,9 +54,12 @@ export const WorkspaceIdClient = () => {
   return (
     <div className="h-full flex flex-col space-y-4">
       <Analytics data={analytics} />
-
+      <ProjectPerformanceSection />
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <TaskList data={tasks.documents as Task[]} total={tasks.documents.length} />
+        <TaskList
+          data={tasks.documents as Task[]}
+          total={tasks.documents.length}
+        />
         <ProjectList data={projects} total={projects.length} />
         <MemberList data={members} total={members.length} />
       </div>

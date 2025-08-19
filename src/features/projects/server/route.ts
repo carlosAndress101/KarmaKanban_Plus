@@ -9,7 +9,18 @@ import { getMember } from "@/features/workspaces/members/utils";
 import { createProjectSchema, updateProjectSchema } from "../schemas";
 import { endOfMonth, startOfMonth, subMonths } from "date-fns";
 
+import { GET as getPerformance } from "../api/performance";
+
 const app = new Hono()
+  // Static route for project performance stats (must be before :projectId)
+  .get("/performance", async (c) => {
+    // Proxy to the handler in api/performance.ts
+    // Reconstruct a NextRequest-like object
+    const url = new URL(c.req.url, "http://localhost");
+    // Call the handler and return the response
+    // @ts-ignore
+    return await getPerformance({ url: url.toString() });
+  })
   .get(
     "/",
     sessionMiddleware,

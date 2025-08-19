@@ -12,8 +12,10 @@ import { ProjectAvatar } from "@/features/projects/components/projectAvatar";
 import { Button } from "@/components/ui/button";
 import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";
+
 import { TaskViewSwticher } from "@/features/tasks/components/task-view-swticher";
-//import { Analytics } from "@/components/analytics";
+
+import { ProjectStatistics } from "@/features/projects/components/ProjectStatistics";
 
 
 export const ProjectIdClient = () => {
@@ -54,8 +56,8 @@ export const ProjectIdClient = () => {
           </Button>
         </div>
       </div>
-      {/* {analytics && <Analytics data={analytics} />} */}
       <TaskViewSwticher hideProjectFilter />
+      <ProjectStatistics projectId={project.id} workspaceId={project.workspaceId} />
     </div>
   );
 };
