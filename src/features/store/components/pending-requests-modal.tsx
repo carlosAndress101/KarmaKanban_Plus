@@ -63,8 +63,14 @@ export const PendingRequestsModal = ({
           setAdminNotes((prev) => ({ ...prev, [requestId]: "" }));
           refetch();
         },
-        onError: (e: any) => {
-          toast.error(e.message || "Failed to update request");
+        onError: (e: unknown) => {
+          if (e && typeof e === "object" && "message" in e) {
+            toast.error(
+              (e as { message?: string }).message || "Failed to update request"
+            );
+          } else {
+            toast.error("Failed to update request");
+          }
         },
         onSettled: () => setProcessingId(null),
       }

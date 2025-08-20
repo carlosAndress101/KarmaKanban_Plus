@@ -1,28 +1,17 @@
 "use client";
 
 import React from "react";
-import {
-  Badge as BadgeType,
-  getBadgeById,
-  EARNABLE_BADGES,
-} from "../constants/badges";
+import { Badge as BadgeType, EARNABLE_BADGES } from "../constants/badges";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+// ...existing code...
 import { Progress } from "@/components/ui/progress";
 import {
   formatBadgeProgressText,
   MemberStats,
   getBadgeProgress,
 } from "../utils/badge-manager";
-import { ShoppingCart, Trophy, Lock, CheckCircle } from "lucide-react";
+import { Trophy, CheckCircle } from "lucide-react";
 
 interface BadgeDisplayProps {
   memberStats: MemberStats;

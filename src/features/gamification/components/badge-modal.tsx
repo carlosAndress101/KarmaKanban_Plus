@@ -22,17 +22,15 @@ interface BadgeModalProps {
   isOpen: boolean;
   onClose: () => void;
   memberStats: MemberStats;
-  onPurchaseBadge?: (badgeId: string) => void;
 }
 
 export const BadgeModal: React.FC<BadgeModalProps> = ({
   isOpen,
   onClose,
   memberStats,
-  onPurchaseBadge,
 }) => {
   const [selectedBadge, setSelectedBadge] = useState<BadgeType | null>(null);
-  const [activeTab, setActiveTab] = useState<"earnable">("earnable");
+  // Only one tab, so no need for activeTab state
 
   const earnedBadgeIds = memberStats.earnedBadges;
 
@@ -213,7 +211,7 @@ export const BadgeModal: React.FC<BadgeModalProps> = ({
           <button
             className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${"bg-blue-100 text-blue-700 border-b-2 border-blue-500"}`}
             // Only one tab now
-            onClick={() => setActiveTab("earnable")}
+            // Only one tab, so no-op
           >
             Achievement Badges (
             {

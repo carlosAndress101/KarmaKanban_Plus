@@ -53,7 +53,14 @@ export const GamificationClient = ({
         .then((res) => res.json())
         .then((data) => {
           if (Array.isArray(data.data)) {
-            setEarnedBadges(data.data.map((b: any) => b.id));
+            setEarnedBadges(
+              data.data.map((b: unknown) => {
+                if (b && typeof b === "object" && "id" in b) {
+                  return (b as { id: string }).id;
+                }
+                return "";
+              })
+            );
           }
         });
     }

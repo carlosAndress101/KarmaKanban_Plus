@@ -18,7 +18,7 @@ const app = new Hono()
     // Reconstruct a NextRequest-like object
     const url = new URL(c.req.url, "http://localhost");
     // Call the handler and return the response
-    // @ts-ignore
+    // @ts-expect-error Proxying Next.js API handler, type mismatch is expected
     return await getPerformance({ url: url.toString() });
   })
   .get(

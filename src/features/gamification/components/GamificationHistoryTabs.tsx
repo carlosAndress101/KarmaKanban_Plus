@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableCell,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+// ...existing code...
 import { getBadgeById } from "../constants/badges";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +24,7 @@ interface BuyHistoryItem {
   itemName: string;
   status: string;
   createdAt: string;
+  requesterId?: string; // Added for filtering
 }
 
 interface GamificationHistoryTabsProps {
@@ -74,7 +67,9 @@ export const GamificationHistoryTabs: React.FC<
         .then((data) => {
           let items = data.data || [];
           if (memberId)
-            items = items.filter((item: any) => item.requesterId === memberId);
+            items = items.filter(
+              (item: BuyHistoryItem) => item.requesterId === memberId
+            );
           setBuyHistory(items);
         })
         .finally(() => setLoading(false));

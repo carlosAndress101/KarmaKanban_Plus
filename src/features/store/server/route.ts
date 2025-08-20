@@ -137,7 +137,7 @@ const app = new Hono()
             error:
               "Invalid data: " +
               (typeof err === "object" && err !== null && "message" in err
-                ? (err as any).message
+                ? (err as { message?: string }).message
                 : String(err)),
           },
           400

@@ -41,7 +41,7 @@ export const useReviewRedemption = ({
       }
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Redemption request updated successfully!");
       queryClient.invalidateQueries({
         queryKey: ["store-redemptions", workspaceId],
