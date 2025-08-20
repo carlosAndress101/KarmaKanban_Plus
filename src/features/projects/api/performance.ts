@@ -1,6 +1,6 @@
 import { db } from "@/lib/drizzle";
 import { tasks, projects, members, users } from "@/lib/schemas_drizzle";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/projects/performance?workspaceId=...

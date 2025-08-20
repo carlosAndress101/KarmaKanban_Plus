@@ -42,9 +42,24 @@ export function ProjectStatistics({
   if (!analytics) return null;
 
   // Find the stats for this project
-  const stat = performance?.find((s: any) => s.projectId === projectId);
+  const stat = performance?.find(
+    (s: {
+      projectId: string;
+      projectName: string;
+      totalTasks: number;
+      completedCount: number;
+      avgCompletionTime: number | null;
+      avgCompletionTimeByType: Record<string, number | null>;
+      completedCountByType: Record<string, number>;
+      memberStats: Array<{
+        name: string;
+        total: number;
+        byType: Record<string, number>;
+      }>;
+    }) => s.projectId === projectId
+  );
 
-  const difficultyBadge: Record<string, any> = {
+  const difficultyBadge: Record<string, string> = {
     Facil: "Facil",
     Medio: "Medio",
     Dificil: "Dificil",
@@ -96,7 +111,16 @@ export function ProjectStatistics({
                 ([type, avg]) => (
                   <Badge
                     key={type}
-                    variant={difficultyBadge[type] || "outline"}
+                    variant={
+                      ["Facil", "Medio", "Dificil"].includes(
+                        difficultyBadge[type]
+                      )
+                        ? (difficultyBadge[type] as
+                            | "Facil"
+                            | "Medio"
+                            | "Dificil")
+                        : "outline"
+                    }
                   >
                     {type}: {formatDuration(avg as number | null)}
                   </Badge>
@@ -113,7 +137,16 @@ export function ProjectStatistics({
                 ([type, count]) => (
                   <Badge
                     key={type}
-                    variant={difficultyBadge[type] || "outline"}
+                    variant={
+                      ["Facil", "Medio", "Dificil"].includes(
+                        difficultyBadge[type]
+                      )
+                        ? (difficultyBadge[type] as
+                            | "Facil"
+                            | "Medio"
+                            | "Dificil")
+                        : "outline"
+                    }
                   >
                     {type}: {String(count)}
                   </Badge>
@@ -126,27 +159,44 @@ export function ProjectStatistics({
               Completions by Member
             </div>
             <div className="space-y-2">
-              {stat.memberStats.map((member: any) => (
-                <div
-                  key={member.name}
-                  className="bg-muted border border-border rounded px-3 py-2 flex flex-col"
-                >
-                  <span className="font-bold text-primary">{member.name}</span>
-                  <span className="text-xs text-muted-foreground">
-                    Total: {member.total} tasks
-                  </span>
-                  <div className="flex gap-2 mt-1 flex-wrap">
-                    {Object.entries(member.byType).map(([type, count]) => (
-                      <Badge
-                        key={type}
-                        variant={difficultyBadge[type] || "outline"}
-                      >
-                        {type}: {String(count)}
-                      </Badge>
-                    ))}
+              {stat.memberStats.map(
+                (member: {
+                  name: string;
+                  total: number;
+                  byType: Record<string, number>;
+                }) => (
+                  <div
+                    key={member.name}
+                    className="bg-muted border border-border rounded px-3 py-2 flex flex-col"
+                  >
+                    <span className="font-bold text-primary">
+                      {member.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      Total: {member.total} tasks
+                    </span>
+                    <div className="flex gap-2 mt-1 flex-wrap">
+                      {Object.entries(member.byType).map(([type, count]) => (
+                        <Badge
+                          key={type}
+                          variant={
+                            ["Facil", "Medio", "Dificil"].includes(
+                              difficultyBadge[type]
+                            )
+                              ? (difficultyBadge[type] as
+                                  | "Facil"
+                                  | "Medio"
+                                  | "Dificil")
+                              : "outline"
+                          }
+                        >
+                          {type}: {String(count)}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           </div>
         </>

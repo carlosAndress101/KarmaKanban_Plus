@@ -31,21 +31,7 @@ export const GamificationStats: React.FC<GamificationStatsProps> = ({
     if (m > 0) return `${m}m ${s}s`;
     return `${s}s`;
   }
-  const chartData = [
-    {
-      name: "Easy",
-      value: averageCompletionTimeByDifficulty?.Facil ?? 0,
-    },
-    {
-      name: "Medium",
-      value: averageCompletionTimeByDifficulty?.Medio ?? 0,
-    },
-    {
-      name: "Hard",
-      value: averageCompletionTimeByDifficulty?.Dificil ?? 0,
-    },
-  ];
-  const COLORS = ["#22c55e", "#eab308", "#ef4444"];
+  // ...existing code...
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 w-full items-stretch justify-center h-full">

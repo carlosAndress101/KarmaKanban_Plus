@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { eq, and, gte, desc, sql } from "drizzle-orm";
 import { db } from "@/lib/drizzle";
-import { members, tasks, users, memberBadges } from "@/lib/schemas_drizzle";
+import { members, tasks, memberBadges } from "@/lib/schemas_drizzle";
 import { sessionMiddleware } from "@/lib/session";
 import { getMember } from "@/features/members/utils";
 import { zValidator } from "@hono/zod-validator";
@@ -28,20 +28,7 @@ const app = new Hono()
       const targetMemberId = memberId || member.id;
 
       // Calculate average task completion time (in seconds) overall
-      const avgCompletionResult = await db
-        .select({
-          avgSeconds: sql<number>`AVG(EXTRACT(EPOCH FROM (${tasks.updatedAt} - ${tasks.createdAt})))`,
-        })
-        .from(tasks)
-        .where(
-          and(
-            eq(tasks.assigneeId, targetMemberId),
-            eq(tasks.workspaceId, workspaceId),
-            eq(tasks.status, "DONE"),
-            sql`(${tasks.createdAt} IS NOT NULL AND ${tasks.updatedAt} IS NOT NULL)`
-          )
-        );
-      const averageCompletionTime = avgCompletionResult[0]?.avgSeconds || 0;
+      // (Result not used in this endpoint)
 
       // Calculate average completion time by difficulty
       const difficulties: Array<"Facil" | "Medio" | "Dificil"> = [
@@ -132,7 +119,9 @@ const app = new Hono()
 
       const { EARNABLE_BADGES } = await import("../constants/badges");
       const badgeHistory = badgeRows.map((row) => {
-        const badge = EARNABLE_BADGES.find((b: any) => b.id === row.badgeId);
+        const badge = EARNABLE_BADGES.find(
+          (b: { id: string }) => b.id === row.badgeId
+        );
         return badge
           ? { id: badge.id, name: badge.name, earnedAt: row.earnedAt }
           : { id: row.badgeId, name: "Unknown Badge", earnedAt: row.earnedAt };

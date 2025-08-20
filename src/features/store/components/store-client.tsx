@@ -13,7 +13,7 @@ import { EditStoreItemForm } from "./edit-store-item-form";
 import { StoreItem } from "../types";
 import { StoreItemForm } from "./store-item-form";
 import { PendingRequestsModal } from "./pending-requests-modal";
-import { Loader, ShoppingBag, Plus, Settings, Coins } from "lucide-react";
+import { Loader, ShoppingBag, Settings, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -94,7 +94,7 @@ export const StoreClient = () => {
   const handleDelete = (item: StoreItem) => {
     if (
       confirm(
-        `Are you sure you want to delete "${item.name}"? This action cannot be undone.`
+        `Are you sure you want to delete &#39;${item.name}&#39;? This action cannot be undone.`
       )
     ) {
       deleteStoreItemMutation.mutate(item.id);
@@ -350,7 +350,7 @@ export const StoreClient = () => {
           <CardHeader>
             <CardTitle>Store Items History</CardTitle>
             <CardDescription>
-              Manage and view all store items you've created for the team.
+              Manage and view all store items you&apos;ve created for the team.
             </CardDescription>
           </CardHeader>
           <CardContent>

@@ -19,10 +19,20 @@ export const useGetRedemptions = ({ workspaceId }: UseGetRedemptionsProps) => {
       }
 
       const { data } = await response.json();
-      return (data as any[]).map((item) => ({
+      type RedemptionRequestApi = Omit<
+        RedemptionRequest,
+        "reviewedAt" | "createdAt" | "updatedAt"
+      > & {
+        reviewedAt: string | null;
+        createdAt: string;
+        updatedAt: string;
+      };
+      return (data as RedemptionRequestApi[]).map((item) => ({
         ...item,
         reviewedAt: item.reviewedAt ? new Date(item.reviewedAt) : undefined,
-      })) as RedemptionRequest[];
+        createdAt: new Date(item.createdAt),
+        updatedAt: new Date(item.updatedAt),
+      }));
     },
   });
 

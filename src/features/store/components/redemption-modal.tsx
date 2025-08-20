@@ -52,15 +52,18 @@ export const RedemptionModal = ({
         <DialogHeader>
           <DialogTitle>Confirm Redemption</DialogTitle>
           <DialogDescription>
-            You're about to redeem {item.name} for {item.pointsCost} points.
+            You&apos;re about to redeem {item.name} for {item.pointsCost}{" "}
+            points.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="p-4 bg-muted rounded-lg">
             <h4 className="font-semibold">{item.name}</h4>
-            <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-            
+            <p className="text-sm text-muted-foreground mt-1">
+              {item.description}
+            </p>
+
             <div className="flex items-center gap-1 mt-3">
               <Star className="h-4 w-4 text-yellow-500" />
               <span className="font-semibold">{item.pointsCost}</span>
@@ -75,7 +78,9 @@ export const RedemptionModal = ({
             </div>
             <div className="flex justify-between text-sm">
               <span>After Redemption:</span>
-              <span className="font-semibold">{userPoints - item.pointsCost}</span>
+              <span className="font-semibold">
+                {userPoints - item.pointsCost}
+              </span>
             </div>
           </div>
 

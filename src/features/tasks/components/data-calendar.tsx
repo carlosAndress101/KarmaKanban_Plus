@@ -17,7 +17,7 @@ import {
   subMonths,
 } from "date-fns";
 
-import { Task } from "../types";
+import { Task, TaskDifficulty } from "../types";
 import { EventCard } from "./event-card";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -39,7 +39,7 @@ const localizer = dateFnsLocalizer({
 
 interface DataCalendarProps {
   data: Task[];
-  projects: Project[] | undefined; 
+  projects: Project[] | undefined;
 }
 
 interface CustomToolbarProps {
@@ -82,7 +82,7 @@ export const DataCalendar = ({ data, projects }: DataCalendarProps) => {
 
     // Filtrar tareas duplicadas usando Set
     const uniqueTasks = Array.from(
-      new Map(data.map(task => [task.id, task])).values()
+      new Map(data.map((task) => [task.id, task])).values()
     );
 
     return uniqueTasks
@@ -138,7 +138,9 @@ export const DataCalendar = ({ data, projects }: DataCalendarProps) => {
               assignee={event.assignee}
               project={event.project}
               status={event.status}
-              difficulty={event.difficulty}
+              difficulty={
+                TaskDifficulty[event.difficulty as keyof typeof TaskDifficulty]
+              }
             />
           );
         },

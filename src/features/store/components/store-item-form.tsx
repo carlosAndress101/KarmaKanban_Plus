@@ -7,10 +7,23 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+// ...existing code...
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Plus, Package, Monitor, Calendar, Star } from "lucide-react";
 import { useCreateStoreItem } from "../api/useCreateStoreItem";
 
@@ -31,37 +44,40 @@ interface StoreItemFormProps {
 }
 
 const categoryOptions = [
-  { 
-    value: "Physical", 
-    label: "Physical Item", 
+  {
+    value: "Physical",
+    label: "Physical Item",
     icon: Package,
     description: "Gift cards, merchandise, office supplies",
-    examples: "Coffee vouchers, branded mugs, tech gadgets"
+    examples: "Coffee vouchers, branded mugs, tech gadgets",
   },
-  { 
-    value: "Digital", 
-    label: "Digital Perk", 
+  {
+    value: "Digital",
+    label: "Digital Perk",
     icon: Monitor,
     description: "Software licenses, online courses, subscriptions",
-    examples: "Adobe license, Udemy course, Spotify premium"
+    examples: "Adobe license, Udemy course, Spotify premium",
   },
-  { 
-    value: "Experience", 
-    label: "Experience", 
+  {
+    value: "Experience",
+    label: "Experience",
     icon: Calendar,
     description: "Team events, workshops, conference tickets",
-    examples: "Team lunch, coding workshop, conference pass"
+    examples: "Team lunch, coding workshop, conference pass",
   },
-  { 
-    value: "Perk", 
-    label: "Team Perk", 
+  {
+    value: "Perk",
+    label: "Team Perk",
     icon: Star,
     description: "Work benefits and privileges",
-    examples: "Extra day off, premium parking, flexible hours"
+    examples: "Extra day off, premium parking, flexible hours",
   },
 ];
 
-export const StoreItemForm = ({ workspaceId, onSuccess }: StoreItemFormProps) => {
+export const StoreItemForm = ({
+  workspaceId,
+  onSuccess,
+}: StoreItemFormProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const createStoreItemMutation = useCreateStoreItem({ workspaceId });
@@ -85,7 +101,7 @@ export const StoreItemForm = ({ workspaceId, onSuccess }: StoreItemFormProps) =>
       setIsOpen(false);
       setSelectedCategory("");
       onSuccess?.();
-    } catch (error) {
+    } catch {
       // Error handling is done in the mutation
     }
   };
@@ -95,16 +111,19 @@ export const StoreItemForm = ({ workspaceId, onSuccess }: StoreItemFormProps) =>
       {categoryOptions.map((option) => {
         const Icon = option.icon;
         return (
-          <Card 
-            key={option.value} 
+          <Card
+            key={option.value}
             className={`cursor-pointer transition-all ${
-              selectedCategory === option.value 
-                ? "ring-2 ring-blue-500 bg-blue-50" 
+              selectedCategory === option.value
+                ? "ring-2 ring-blue-500 bg-blue-50"
                 : "hover:bg-gray-50"
             }`}
             onClick={() => {
               setSelectedCategory(option.value);
-              form.setValue("category", option.value as any);
+              form.setValue(
+                "category",
+                option.value as StoreItemFormData["category"]
+              );
             }}
           >
             <CardContent className="p-4">
@@ -112,8 +131,12 @@ export const StoreItemForm = ({ workspaceId, onSuccess }: StoreItemFormProps) =>
                 <Icon className="h-5 w-5 text-blue-600 mt-0.5" />
                 <div className="flex-1">
                   <h4 className="font-medium text-gray-900">{option.label}</h4>
-                  <p className="text-sm text-gray-600 mt-1">{option.description}</p>
-                  <p className="text-xs text-gray-500 mt-2">Examples: {option.examples}</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {option.description}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Examples: {option.examples}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -135,7 +158,7 @@ export const StoreItemForm = ({ workspaceId, onSuccess }: StoreItemFormProps) =>
         <DialogHeader>
           <DialogTitle>Create New Store Item</DialogTitle>
         </DialogHeader>
-        
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Category Selection */}
@@ -155,7 +178,10 @@ export const StoreItemForm = ({ workspaceId, onSuccess }: StoreItemFormProps) =>
                   <FormItem>
                     <FormLabel>Item Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g. $50 Coffee Shop Gift Card" {...field} />
+                      <Input
+                        placeholder="e.g. $50 Coffee Shop Gift Card"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -169,10 +195,10 @@ export const StoreItemForm = ({ workspaceId, onSuccess }: StoreItemFormProps) =>
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea 
+                      <Textarea
                         placeholder="Describe what the team member will receive and any terms or conditions..."
                         className="min-h-20"
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -188,12 +214,14 @@ export const StoreItemForm = ({ workspaceId, onSuccess }: StoreItemFormProps) =>
                     <FormItem>
                       <FormLabel>Points Cost</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
+                        <Input
+                          type="number"
                           min="1"
                           placeholder="100"
                           {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value) || 0)
+                          }
                         />
                       </FormControl>
                       <FormMessage />
@@ -208,12 +236,18 @@ export const StoreItemForm = ({ workspaceId, onSuccess }: StoreItemFormProps) =>
                     <FormItem>
                       <FormLabel>Stock (Optional)</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
+                        <Input
+                          type="number"
                           min="0"
                           placeholder="Unlimited"
                           {...field}
-                          onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value
+                                ? parseInt(e.target.value)
+                                : undefined
+                            )
+                          }
                         />
                       </FormControl>
                       <FormMessage />
@@ -229,10 +263,10 @@ export const StoreItemForm = ({ workspaceId, onSuccess }: StoreItemFormProps) =>
                   <FormItem>
                     <FormLabel>Image URL (Optional)</FormLabel>
                     <FormControl>
-                      <Input 
+                      <Input
                         type="url"
                         placeholder="https://example.com/image.jpg"
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -243,15 +277,24 @@ export const StoreItemForm = ({ workspaceId, onSuccess }: StoreItemFormProps) =>
 
             {/* Form Actions */}
             <div className="flex justify-end space-x-3 pt-4 border-t">
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={() => setIsOpen(false)}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={form.formState.isSubmitting || createStoreItemMutation.isPending}>
-                {(form.formState.isSubmitting || createStoreItemMutation.isPending) ? "Creating..." : "Create Item"}
+              <Button
+                type="submit"
+                disabled={
+                  form.formState.isSubmitting ||
+                  createStoreItemMutation.isPending
+                }
+              >
+                {form.formState.isSubmitting ||
+                createStoreItemMutation.isPending
+                  ? "Creating..."
+                  : "Create Item"}
               </Button>
             </div>
           </form>

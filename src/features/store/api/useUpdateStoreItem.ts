@@ -1,19 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
-import { z } from "zod";
 import { toast } from "sonner";
 
-const updateStoreItemSchema = z.object({
-  name: z.string().min(1).optional(),
-  description: z.string().min(1).optional(),
-  pointsCost: z.number().min(1).optional(),
-  category: z.enum(["Physical", "Digital", "Experience", "Perk"]).optional(),
-  stock: z.number().optional(),
-  imageUrl: z.string().url().optional(),
-  isActive: z.boolean().optional(),
-});
-
-type UpdateStoreItemData = z.infer<typeof updateStoreItemSchema>;
+type UpdateStoreItemData = {
+  name?: string;
+  description?: string;
+  pointsCost?: number;
+  category?: "Physical" | "Digital" | "Experience" | "Perk";
+  stock?: number;
+  imageUrl?: string;
+  isActive?: boolean;
+};
 
 export const useUpdateStoreItem = ({
   workspaceId,
@@ -51,7 +48,7 @@ export const useUpdateStoreItem = ({
 
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["store-items", workspaceId] });
       toast.success("Store item updated successfully!");
     },

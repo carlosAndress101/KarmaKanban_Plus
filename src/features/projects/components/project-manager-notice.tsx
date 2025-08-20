@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Settings } from "lucide-react";
 import Link from "next/link";
@@ -11,19 +11,22 @@ interface ProjectManagerNoticeProps {
   isAdmin: boolean; // Only admins can assign project managers
 }
 
-export const ProjectManagerNotice = ({ 
-  projectId, 
-  workspaceId, 
-  isAdmin 
+export const ProjectManagerNotice = ({
+  projectId,
+  workspaceId,
+  isAdmin,
 }: ProjectManagerNoticeProps) => {
   if (!isAdmin) {
     return (
       <Alert className="border-yellow-200 bg-yellow-50">
         <AlertTriangle className="h-4 w-4" />
-        <AlertTitle>No Project Manager Assigned</AlertTitle>
+        <div className="font-bold text-base mb-1">
+          No Project Manager Assigned
+        </div>
         <AlertDescription>
-          This project doesn't have a Project Manager assigned. Some store features may be limited.
-          Contact an administrator to assign a Project Manager.
+          This project doesn&apos;t have a Project Manager assigned. Some store
+          features may be limited. Contact an administrator to assign a Project
+          Manager.
         </AlertDescription>
       </Alert>
     );
@@ -32,13 +35,16 @@ export const ProjectManagerNotice = ({
   return (
     <Alert className="border-yellow-200 bg-yellow-50">
       <AlertTriangle className="h-4 w-4" />
-      <AlertTitle>No Project Manager Assigned</AlertTitle>
+      <div className="font-bold text-base mb-1">
+        No Project Manager Assigned
+      </div>
       <AlertDescription className="flex items-center justify-between">
         <span>
-          This project needs a Project Manager to manage store items and redemption requests.
+          This project needs a Project Manager to manage store items and
+          redemption requests.
         </span>
         <Button size="sm" asChild className="ml-4">
-          <Link 
+          <Link
             href={`/workspaces/${workspaceId}/projects/${projectId}/settings`}
           >
             <Settings className="h-4 w-4 mr-2" />

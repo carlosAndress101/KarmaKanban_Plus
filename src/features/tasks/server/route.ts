@@ -464,20 +464,17 @@ const app = new Hono()
       );
 
       // Apply gamification changes
-      let totalPointsAwarded = 0;
       for (const change of gamificationChanges) {
         if (change.action === "award") {
           await GamificationService.awardPointsForTaskCompletion(
             change.taskId,
             change.assigneeId
           );
-          totalPointsAwarded++;
         } else if (change.action === "remove") {
           await GamificationService.removePointsForTaskUncompletion(
             change.taskId,
             change.assigneeId
           );
-          totalPointsAwarded--;
         }
       }
 

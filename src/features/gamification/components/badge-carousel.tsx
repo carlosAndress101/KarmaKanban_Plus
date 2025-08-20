@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge as BadgeType, EARNABLE_BADGES } from "../constants/badges";
+import { EARNABLE_BADGES } from "../constants/badges";
 
 interface BadgeCarouselProps {
   earnedBadgeIds: string[];
