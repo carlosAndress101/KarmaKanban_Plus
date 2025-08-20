@@ -9,7 +9,7 @@ import tasks from "@/features/tasks/server/route";
 import { app as store } from "@/features/store/server/route";
 import gamification from "@/features/gamification/server/route";
 
-const app = new Hono().basePath("/api");
+const app = new Hono().basePath("KarmaKanban/api");
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routes = app
