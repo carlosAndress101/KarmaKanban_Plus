@@ -12,8 +12,8 @@ export const Sidebar = () => {
         <Image
           src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo.svg`}
           alt="KarmaKanban Plus Logo"
-          width={40}
-          height={40}
+          width={300}
+          height={300}
         />
       </Link>
       <Separator className="my-4" />
