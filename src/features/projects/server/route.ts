@@ -10,13 +10,13 @@ import { createProjectSchema, updateProjectSchema } from "../schemas";
 import { endOfMonth, startOfMonth, subMonths } from "date-fns";
 
 import { GET as getPerformance } from "../api/performance";
-
+const baseUrl = `${process.env.NEXT_PUBLIC_APP_URL}`;
 const app = new Hono()
   // Static route for project performance stats (must be before :projectId)
   .get("/performance", async (c) => {
     // Proxy to the handler in api/performance.ts
     // Reconstruct a NextRequest-like object
-    const url = new URL(c.req.url, "http://localhost");
+    const url = new URL(c.req.url, baseUrl);
     // Call the handler and return the response
     // @ts-expect-error Proxying Next.js API handler, type mismatch is expected
     return await getPerformance({ url: url.toString() });
