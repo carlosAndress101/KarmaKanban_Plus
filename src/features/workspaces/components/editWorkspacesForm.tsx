@@ -90,7 +90,7 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
     );
   };
 
-  const baseUrl = `${process.env.NEXT_PUBLIC_APP_URL}${process.env.NEXT_PUBLIC_BASE_PATH}`;
+  const baseUrl = `${process.env.NEXT_PUBLIC_APP_URL}`;
   const fullInviteLink = `${baseUrl}/workspaces/${initialValues.id}/join/${initialValues.inviteCode}`;
 
   const handleCopyInviteLink = () => {
