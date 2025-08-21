@@ -15,9 +15,21 @@ const app = new Hono()
   // Static route for project performance stats (must be before :projectId)
   .get("/performance", async (c) => {
     // Proxy to the handler in api/performance.ts
-    // Reconstruct a NextRequest-like object
-    const url = new URL(c.req.url, "https://localhost");
-    // Call the handler and return the response
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
+    // Obtener protocolo + host desde el request
+    const host = c.req.header("host")!;
+    const protocol = c.req.url.startsWith("https") ? "https" : "http";
+
+    // Construir la URL con basePath, path y querystring
+    const url = new URL(
+      `${protocol}://${host}${basePath}${c.req.path}${
+        Object.keys(c.req.query()).length
+          ? "?" + new URLSearchParams(c.req.query()).toString()
+          : ""
+      }`
+    );
+
     // @ts-expect-error Proxying Next.js API handler, type mismatch is expected
     return await getPerformance({ url: url.toString() });
   })
