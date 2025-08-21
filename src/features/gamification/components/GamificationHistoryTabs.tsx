@@ -45,7 +45,9 @@ export const GamificationHistoryTabs: React.FC<
     setLoading(true);
     if (tab === "badges") {
       fetch(
-        `/api/gamification/badges-history?workspaceId=${workspaceId}${
+        `${
+          process.env.NEXT_PUBLIC_BASE_PATH || ""
+        }/api/gamification/badges-history?workspaceId=${workspaceId}${
           memberId ? `&memberId=${memberId}` : ""
         }`
       )
@@ -80,7 +82,9 @@ export const GamificationHistoryTabs: React.FC<
     if (tab === "badges") {
       setLoading(true);
       fetch(
-        `/api/gamification/badges-history?workspaceId=${workspaceId}${
+        `${
+          process.env.NEXT_PUBLIC_BASE_PATH || ""
+        }/api/gamification/badges-history?workspaceId=${workspaceId}${
           memberId ? `&memberId=${memberId}` : ""
         }`
       )

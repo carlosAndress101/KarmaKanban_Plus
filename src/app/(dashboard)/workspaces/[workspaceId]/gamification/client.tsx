@@ -48,7 +48,11 @@ export const GamificationClient = ({
   useEffect(() => {
     if (memberData?.id && workspaceId) {
       fetch(
-        `/api/gamification/badges-history?workspaceId=${workspaceId}&memberId=${memberData.id}`
+        `${
+          process.env.NEXT_PUBLIC_BASE_PATH || ""
+        }/api/gamification/badges-history?workspaceId=${workspaceId}&memberId=${
+          memberData.id
+        }`
       )
         .then((res) => res.json())
         .then((data) => {
