@@ -5,7 +5,9 @@ export const useProjectPerformance = (workspaceId: string) => {
     queryKey: ["project-performance", workspaceId],
     queryFn: async () => {
       const res = await fetch(
-        `/api/projects/performance?workspaceId=${workspaceId}`
+        `${
+          process.env.NEXT_PUBLIC_BASE_PATH || ""
+        }/api/projects/performance?workspaceId=${workspaceId}`
       );
       if (!res.ok) throw new Error("Failed to fetch project performance stats");
       const data = await res.json();
