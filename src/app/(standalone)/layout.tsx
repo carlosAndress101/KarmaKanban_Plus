@@ -12,7 +12,12 @@ const StandaloneLayout = ({ children }: StandaloneLayoutProps) => {
       <div className="mx-auto max-w-screen-2xl p-4">
         <nav className="flex justify-between items-center h-[73px]">
           <Link href="/">
-            <Image src="/logo.svg" alt="logo" height={56} width={152} />
+            <Image
+              src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo.svg`}
+              alt="KarmaKanban Plus Logo"
+              width={300}
+              height={300}
+            />
           </Link>
           <UserButton />
         </nav>
