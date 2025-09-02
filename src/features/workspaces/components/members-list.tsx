@@ -4,26 +4,25 @@ import Link from "next/link";
 import MemberAvatar from "../members/components/member-avatar";
 
 import { useWorkspaceId } from "../hooks/useWorkspaceId";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, MoreVerticalIcon } from "lucide-react";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Fragment } from "react";
 import { Separator } from "@/components/ui/separator";
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
- } from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 export const MembersList = () => {
-
   const workspaceId = useWorkspaceId();
   //const { data } = useGetMembers({  workspaceId });
   const data = {
     document: [
-      { $id: "1", name: "Jim Díaz", email: "jimdiaz@gmail.com"},
+      { $id: "1", name: "Jim Díaz", email: "jimdiaz@gmail.com" },
       { $id: "2", name: "Carlos Hinestroza", email: "carlos@gmail.com" },
       { $id: "3", name: "Samuel Aroca", email: "samuel@gmail.com" },
     ],
@@ -38,9 +37,7 @@ export const MembersList = () => {
             Back
           </Link>
         </Button>
-        <CardTitle className="text-xl font-bold">
-          Members list
-        </CardTitle>
+        <CardTitle className="text-xl font-bold">Members list</CardTitle>
       </CardHeader>
       <div className="px-7">
         <DottedSeparator />
@@ -49,7 +46,7 @@ export const MembersList = () => {
         {data?.document.map((member, index) => (
           <Fragment key={member.$id}>
             <div className="flex items-center gap-2">
-              <MemberAvatar 
+              <MemberAvatar
                 className="size-10"
                 fallbackClassName="text-lg"
                 name={member.name}
@@ -60,11 +57,7 @@ export const MembersList = () => {
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    className="ml-auto"
-                    variant="secondary"
-                    size="icon"	
-                  >
+                  <Button className="ml-auto" variant="secondary" size="icon">
                     <MoreVerticalIcon className="size-4 text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -101,4 +94,4 @@ export const MembersList = () => {
       </CardContent>
     </Card>
   );
-}
+};

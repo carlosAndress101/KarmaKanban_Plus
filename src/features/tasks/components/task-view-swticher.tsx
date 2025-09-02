@@ -55,19 +55,22 @@ export const TaskViewSwticher = ({
     [bulkUpdate]
   );
 
-const normalizedTasks = tasks?.documents.map(task => ({
-  ...task,
-  status: TaskStatus[task.status as keyof typeof TaskStatus],
-  description: task.description ?? null,
-  dueDate: task.dueDate ?? "",
-  assignee: task.assignee ?? null,
-  project: {
-    id: task.project?.id ?? "",
-    name: task.project?.name ?? "N/A", // ✅ evita null
-  },
-  // Map enum value to its string representation
-  difficulty: TaskDifficulty[task.difficulty as keyof typeof TaskDifficulty] as "Facil" | "Medio" | "Dificil",
-})) ?? [];
+  const normalizedTasks =
+    tasks?.documents.map((task) => ({
+      ...task,
+      status: TaskStatus[task.status as keyof typeof TaskStatus],
+      description: task.description ?? null,
+      dueDate: task.dueDate ?? "",
+      assignee: task.assignee ?? null,
+      project: {
+        id: task.project?.id ?? "",
+        name: task.project?.name ?? "N/A", // ✅ evita null
+      },
+      // Map enum value to its string representation
+      difficulty: TaskDifficulty[
+        task.difficulty as keyof typeof TaskDifficulty
+      ] as "Facil" | "Medio" | "Dificil",
+    })) ?? [];
 
   return (
     <Tabs
@@ -108,9 +111,9 @@ const normalizedTasks = tasks?.documents.map(task => ({
           </div>
         ) : (
           <>
-            { }
+            {}
             <TabsContent value="table" className="mt-0">
-              <DataTable columns={columns} data={normalizedTasks}/>
+              <DataTable columns={columns} data={normalizedTasks} />
             </TabsContent>
 
             <TabsContent value="kanban" className="mt-0">

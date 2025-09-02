@@ -11,7 +11,7 @@ export const CreateTaskModal = () => {
 
   return (
     <ResponsiveModal open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTitle className="sr-only"/>
+      <DialogTitle className="sr-only" />
       <CreateTaskFormWrapper onCancel={close} />
     </ResponsiveModal>
   );

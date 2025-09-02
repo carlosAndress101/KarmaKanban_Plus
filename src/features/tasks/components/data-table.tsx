@@ -108,7 +108,7 @@ export function DataTable<TData extends { id: string }, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No hay datos
+                  No data
                 </TableCell>
               </TableRow>
             )}
@@ -122,7 +122,7 @@ export function DataTable<TData extends { id: string }, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Anterior
+          Previous
         </Button>
         <Button
           variant="secondary"
@@ -130,7 +130,7 @@ export function DataTable<TData extends { id: string }, TValue>({
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Siguiente
+          Next
         </Button>
       </div>
     </div>

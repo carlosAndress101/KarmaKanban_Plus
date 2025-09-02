@@ -7,18 +7,21 @@ interface UseGamificationStatsProps {
   memberId?: string;
 }
 
-export const useGamificationStats = ({ workspaceId, memberId }: UseGamificationStatsProps) => {
+export const useGamificationStats = ({
+  workspaceId,
+  memberId,
+}: UseGamificationStatsProps) => {
   const query = useQuery({
     queryKey: ["gamification-stats", workspaceId, memberId],
     queryFn: async () => {
       const response = await client.api.gamification.stats.$get({
-        query: { workspaceId, ...(memberId && { memberId }) }
+        query: { workspaceId, ...(memberId && { memberId }) },
       });
-      
+
       if (!response.ok) {
         throw new Error("Failed to fetch gamification stats");
       }
-      
+
       const { data } = await response.json();
       return data as MemberStats;
     },

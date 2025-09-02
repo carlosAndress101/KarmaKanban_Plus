@@ -3,7 +3,7 @@ import { taskSchema } from "./schemas";
 
 export enum TaskStatus {
   BACKLOG = "BACKLOG",
-  TODO = "TODO",
+  TO_DO = "TO_DO",
   IN_PROGRESS = "IN_PROGRESS",
   IN_REVIEW = "IN_REVIEW",
   DONE = "DONE",
@@ -21,7 +21,11 @@ export interface Task {
   description: string | null;
   status: TaskStatus;
   dueDate: string;
-  assignee: { id: string | null; name: string | null; lastName: string | null } | null;
+  assignee: {
+    id: string | null;
+    name: string | null;
+    lastName: string | null;
+  } | null;
   project: { id: string; name: string };
   workspaceId: string;
   position: number;
@@ -30,15 +34,14 @@ export interface Task {
   difficulty: "Facil" | "Medio" | "Dificil"; // <-- Nuevo campo
 }
 
-
 export type TaskFront = {
   id: string;
   name: string;
-  description?: string; 
+  description?: string;
   status: TaskStatus;
   dueDate: string;
   assignee: string | assigneeTId;
-  project: string | ProjectTId ;
+  project: string | ProjectTId;
   position: number;
   workspaceId: string;
   createdAt?: string;
@@ -52,18 +55,18 @@ export type ProjectTId = {
   name: string;
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export type assigneeTId = {
   name: string;
-    email: string;
-    id: string;
-    workspaceId: string;
-    userId: string;
-    role: "member" | "admin";
-    createdAt: string;
-    updatedAt: string;
-}
+  email: string;
+  id: string;
+  workspaceId: string;
+  userId: string;
+  role: "member" | "admin";
+  createdAt: string;
+  updatedAt: string;
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function normalizeAssignee(assignee: any): Task["assignee"] {
   if (!assignee) return null;
@@ -79,7 +82,9 @@ export function normalizeAssignee(assignee: any): Task["assignee"] {
   };
 }
 
-export function normalizeFormValues(initialValues: Task): z.infer<typeof taskSchema> {
+export function normalizeFormValues(
+  initialValues: Task
+): z.infer<typeof taskSchema> {
   return {
     name: initialValues.name,
     status: initialValues.status,
@@ -89,7 +94,9 @@ export function normalizeFormValues(initialValues: Task): z.infer<typeof taskSch
         ? initialValues.project
         : initialValues.project?.id ?? "",
     assignee: initialValues.assignee?.id ?? "",
-    dueDate: initialValues.dueDate ? new Date(initialValues.dueDate) : undefined,
+    dueDate: initialValues.dueDate
+      ? new Date(initialValues.dueDate)
+      : undefined,
     description: initialValues.description ?? "",
     difficulty: initialValues.difficulty ?? "Medio",
   };

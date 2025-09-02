@@ -56,8 +56,8 @@ export const EditProjectForm = ({
   const { data: members } = useGetMember({ workspaceId });
 
   const [DeleteDialog, confirmDelete] = useConfirm(
-    "Eliminar Proyecto",
-    "Esta acción es irreversible y eliminará todos los datos asociados",
+    "Delete Project",
+    "This action is irreversible and will delete all associated data",
     "destructive"
   );
 
@@ -141,7 +141,7 @@ export const EditProjectForm = ({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nombre del Proyecto</FormLabel>
+                      <FormLabel>Project Name</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Enter project name" />
                       </FormControl>
@@ -163,7 +163,7 @@ export const EditProjectForm = ({
                 </Button>
 
                 <Button type="submit" size="lg" disabled={isPending}>
-                  Guardar cambios
+                  Save changes
                 </Button>
               </div>
             </form>
@@ -239,8 +239,8 @@ export const EditProjectForm = ({
           <div className="flex flex-col">
             <h3 className="font-bold">Danger Zone</h3>
             <p className="text-sm text-muted-foreground">
-              La eliminación de un proyecto es irreversible y eliminará todos
-              los datos asociados
+              Deleting a project is irreversible and will remove all associated
+              data
             </p>
             <DottedSeparator className="py-7" />
             <Button
@@ -251,7 +251,7 @@ export const EditProjectForm = ({
               disabled={isPending || isDeletingProject}
               onClick={handleDelete}
             >
-              Eliminar Proyecto
+              Delete Project
             </Button>
           </div>
         </CardContent>

@@ -9,16 +9,33 @@ export const taskSchema = z.object({
   dueDate: z.coerce.date().optional(),
   assignee: z.string().min(1, "Assignee requerido"),
   description: z.string().optional(),
-  difficulty: z.enum(["Facil", "Medio", "Dificil"], { required_error: "Dificultad requerida" }), // <-- Nuevo campo
+  difficulty: z.enum(["Facil", "Medio", "Dificil"], {
+    required_error: "Dificultad requerida",
+  }), // <-- Nuevo campo
 });
 
 export const querySchema = z.object({
   workspaceId: z.string(),
-  projectId: z.string().optional().transform(v => v ?? undefined),
-  assigneeId: z.string().optional().transform(v => v ?? undefined),
-  status: z.nativeEnum(TaskStatus).optional().transform(v => v ?? undefined),
-  search: z.string().optional().transform(v => v ?? undefined),
-  dueDate: z.string().optional().transform(v => v ?? undefined),
+  projectId: z
+    .string()
+    .optional()
+    .transform((v) => v ?? undefined),
+  assigneeId: z
+    .string()
+    .optional()
+    .transform((v) => v ?? undefined),
+  status: z
+    .nativeEnum(TaskStatus)
+    .optional()
+    .transform((v) => v ?? undefined),
+  search: z
+    .string()
+    .optional()
+    .transform((v) => v ?? undefined),
+  dueDate: z
+    .string()
+    .optional()
+    .transform((v) => v ?? undefined),
 });
 
 export const BulkUpdateTasksSchema = z.object({

@@ -46,10 +46,7 @@ export const TaskBreadcrumbs = ({ project, task }: TaskBreadcrumbsProps) => {
   return (
     <div className="flex items-center gap-x-2">
       <ConfirmDialog />
-      <ProjectAvatar
-        name={project.name}
-        className="size-6 lg:size-8"
-      />
+      <ProjectAvatar name={project.name} className="size-6 lg:size-8" />
 
       <Link
         href={`/workspaces/${workspaceId}/projects/${project.id}`}

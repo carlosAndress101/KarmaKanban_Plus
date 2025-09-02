@@ -13,7 +13,7 @@ import { useBulkUpdateTask } from "../api/useBulkUpdateTask"; // Importa tu hook
 
 const boards: TaskStatus[] = [
   TaskStatus.BACKLOG,
-  TaskStatus.TODO,
+  TaskStatus.TO_DO,
   TaskStatus.IN_PROGRESS,
   TaskStatus.IN_REVIEW,
   TaskStatus.DONE,
@@ -25,7 +25,9 @@ export type TasksState = {
 
 interface DataKanbanProps {
   data: Task[];
-  onChange: (tasks: { id: string; status: TaskStatus; position: number }[]) => void;
+  onChange: (
+    tasks: { id: string; status: TaskStatus; position: number }[]
+  ) => void;
 }
 
 // Helper para eliminar duplicados por id
@@ -44,7 +46,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
     const cleanData = removeDuplicateTasks(taskList);
     const initial: TasksState = {
       [TaskStatus.BACKLOG]: [],
-      [TaskStatus.TODO]: [],
+      [TaskStatus.TO_DO]: [],
       [TaskStatus.IN_PROGRESS]: [],
       [TaskStatus.IN_REVIEW]: [],
       [TaskStatus.DONE]: [],
@@ -135,10 +137,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
             key={board}
             className="flex-1 mx-2 bg-muted p-1.5 rounded-md min-w-[200px]"
           >
-            <KanbanColumnHeader
-              board={board}
-              taskCount={tasks[board].length}
-            />
+            <KanbanColumnHeader board={board} taskCount={tasks[board].length} />
             <Droppable droppableId={board}>
               {(provided) => (
                 <div

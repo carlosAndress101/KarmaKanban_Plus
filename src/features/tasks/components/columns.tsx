@@ -24,7 +24,7 @@ export const columns: ColumnDef<Task>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Nombre
+          Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -43,7 +43,7 @@ export const columns: ColumnDef<Task>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Proyecto
+          Project
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -53,10 +53,7 @@ export const columns: ColumnDef<Task>[] = [
 
       return (
         <div className="flex items-center gap-x-2 text-sm font-medium">
-          <ProjectAvatar
-            className="size-6"
-            name={project.name}
-          />
+          <ProjectAvatar className="size-6" name={project.name} />
           <p className="line-clamp-1">{project.name}</p>
         </div>
       );
@@ -70,7 +67,7 @@ export const columns: ColumnDef<Task>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Responsable
+          Assignee
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -98,7 +95,7 @@ export const columns: ColumnDef<Task>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Fecha de vencimiento
+          Due Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -117,7 +114,7 @@ export const columns: ColumnDef<Task>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Estado
+          Status
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -136,7 +133,7 @@ export const columns: ColumnDef<Task>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Puntos
+          Points
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

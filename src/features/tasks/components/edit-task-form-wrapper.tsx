@@ -36,10 +36,12 @@ export const EditTaskFormWrapper = ({
     name: string;
   }
 
-  const projectOptions: ProjectOption[] | undefined = projects?.map((project: { id: string; name: string }) => ({
-    id: project.id,
-    name: project.name
-  }));
+  const projectOptions: ProjectOption[] | undefined = projects?.map(
+    (project: { id: string; name: string }) => ({
+      id: project.id,
+      name: project.name,
+    })
+  );
 
   interface Member {
     id: string;
@@ -51,10 +53,12 @@ export const EditTaskFormWrapper = ({
     name: string;
   }
 
-  const memberOptions: MemberOption[] | undefined = members?.map((member: Member) => ({
-    id: member.id,
-    name: member.name,
-  }));
+  const memberOptions: MemberOption[] | undefined = members?.map(
+    (member: Member) => ({
+      id: member.id,
+      name: member.name,
+    })
+  );
 
   const isLoading = isLoadingMembers || isLoadingProjects || isLoadingTask;
 
@@ -76,12 +80,13 @@ export const EditTaskFormWrapper = ({
     dueDate: initialValues.dueDate ?? null,
     description: initialValues.description ?? null,
     assignee: normalizeAssignee(initialValues.assignee),
-    project: typeof initialValues.project === "string"
-      ? { id: initialValues.project, name: "N/A" } // o un nombre por defecto si lo tienes
-      : {
-        id: initialValues.project?.id ?? "",
-        name: initialValues.project?.name ?? "N/A",
-      },
+    project:
+      typeof initialValues.project === "string"
+        ? { id: initialValues.project, name: "N/A" } // o un nombre por defecto si lo tienes
+        : {
+            id: initialValues.project?.id ?? "",
+            name: initialValues.project?.name ?? "N/A",
+          },
   };
 
   return (

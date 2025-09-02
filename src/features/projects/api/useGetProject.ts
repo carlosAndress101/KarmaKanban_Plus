@@ -10,11 +10,9 @@ export const useGetProject = ({ projectId }: UseGetProjectProps) => {
   const query = useQuery({
     queryKey: ["project", projectId],
     queryFn: async () => {
-      const response = await client.api.projects[":projectId"].$get(
-        {
-          param: { projectId },
-        }
-      );
+      const response = await client.api.projects[":projectId"].$get({
+        param: { projectId },
+      });
 
       if (!response.ok) {
         throw new Error("Fallo al obtener el proyecto");

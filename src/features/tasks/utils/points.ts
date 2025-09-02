@@ -1,7 +1,9 @@
 /**
  * Calculate points based on task difficulty
  */
-export const getTaskPoints = (difficulty: string | null | undefined): number => {
+export const getTaskPoints = (
+  difficulty: string | null | undefined
+): number => {
   switch (difficulty) {
     case "Facil":
       return 10;

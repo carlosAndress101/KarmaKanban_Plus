@@ -4,7 +4,7 @@ import { TaskStatus } from "../types";
 
 export const useTaskFilters = () => {
   return useQueryStates({
-    projectId: parseAsString ,
+    projectId: parseAsString,
     status: parseAsStringEnum(Object.values(TaskStatus)),
     assigneeId: parseAsString,
     search: parseAsString,

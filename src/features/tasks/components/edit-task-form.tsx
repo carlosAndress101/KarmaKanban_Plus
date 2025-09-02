@@ -48,8 +48,8 @@ export const EditTaskForm = ({
 }: EditTaskFormProps) => {
   const { mutate, isPending } = useUpdateTask();
 
-  const schema = taskSchema.omit({ workspaceId: true, description: true })
-  
+  const schema = taskSchema.omit({ workspaceId: true, description: true });
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: normalizeFormValues(initialValues),
@@ -70,7 +70,7 @@ export const EditTaskForm = ({
   return (
     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="flex p-7">
-        <CardTitle className="text-xl font-bold">Editar tarea</CardTitle>
+        <CardTitle className="text-xl font-bold">Edit task</CardTitle>
       </CardHeader>
       <div className="px-7">
         <DottedSeparator />
@@ -84,9 +84,9 @@ export const EditTaskForm = ({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nombre de la tarea</FormLabel>
+                    <FormLabel>Task name</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Ingrese el nombre de la tarea" />
+                      <Input {...field} placeholder="Enter the task name" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -97,9 +97,12 @@ export const EditTaskForm = ({
                 name="dueDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Fecha de vencimiento</FormLabel>
+                    <FormLabel>Due date</FormLabel>
                     <FormControl>
-                      <DatePicker {...field} placeholder="Seleccione la fecha de vencimiento" />
+                      <DatePicker
+                        {...field}
+                        placeholder="Select the due date"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -110,14 +113,14 @@ export const EditTaskForm = ({
                 name="assignee"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Asignado</FormLabel>
+                    <FormLabel>Assigned</FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar asignado" />
+                          <SelectValue placeholder="Select assignee" />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage />
@@ -144,14 +147,14 @@ export const EditTaskForm = ({
                 name="status"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Estado</FormLabel>
+                    <FormLabel>Status</FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar estado" />
+                          <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage />
@@ -159,13 +162,13 @@ export const EditTaskForm = ({
                         <SelectItem value={TaskStatus.BACKLOG}>
                           Backlog
                         </SelectItem>
+                        <SelectItem value={TaskStatus.TO_DO}>To Do</SelectItem>
                         <SelectItem value={TaskStatus.IN_PROGRESS}>
                           In Progress
                         </SelectItem>
                         <SelectItem value={TaskStatus.IN_REVIEW}>
                           In Review
                         </SelectItem>
-                        <SelectItem value={TaskStatus.TODO}>Todo</SelectItem>
                         <SelectItem value={TaskStatus.DONE}>Done</SelectItem>
                       </SelectContent>
                     </Select>
@@ -178,14 +181,14 @@ export const EditTaskForm = ({
                 name="project"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Proyecto</FormLabel>
+                    <FormLabel>Proyect</FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar proyecto" />
+                          <SelectValue placeholder="Select project" />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage />
@@ -217,11 +220,11 @@ export const EditTaskForm = ({
                 disabled={isPending}
                 className={cn(!onCancel && "invisible")}
               >
-                Cancelar
+                Cancel
               </Button>
 
               <Button type="submit" size="lg" disabled={isPending}>
-                Guardar cambios
+                Save changes
               </Button>
             </div>
           </form>

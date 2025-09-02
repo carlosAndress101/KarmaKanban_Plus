@@ -19,9 +19,7 @@ export const useUpdateMember = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param, json }) => {
-      const response = await client.api.members[":memberId"][
-        "$patch"
-      ]({
+      const response = await client.api.members[":memberId"]["$patch"]({
         param,
         json,
       });

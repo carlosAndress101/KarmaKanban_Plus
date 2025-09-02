@@ -23,11 +23,10 @@ import { useConfirm } from "@/hooks/useConfirm";
 import { UserRole, userRoles } from "@/lib/schemas_drizzle";
 
 export const MemberList = () => {
-
   const workspaceId = useWorkspaceId();
   const [ConfirmDialog, confirm] = useConfirm(
-    "Eliminar miembro",
-    "Este miembro será eliminado del espacio de trabajo"
+    "Remove member",
+    "This member will be removed from the workspace"
   );
 
   const { data } = useGetMember({ workspaceId });
@@ -39,7 +38,7 @@ export const MemberList = () => {
   const handleUpdateMember = (memberId: string, role: UserRole) => {
     updateMember(
       { json: { role }, param: { memberId } },
-      { onSuccess: () => { } }
+      { onSuccess: () => {} }
     );
   };
 
@@ -63,12 +62,15 @@ export const MemberList = () => {
       <ConfirmDialog />
       <CardHeader className="flex flex-row items-center gap-x-4 p-7 space-y-0">
         <Button asChild variant="secondary" size="sm">
-          <Link href={`/workspaces/${workspaceId}`} className="flex items-center gap-2">
+          <Link
+            href={`/workspaces/${workspaceId}`}
+            className="flex items-center gap-2"
+          >
             <ArrowLeftIcon className="size-4" />
-            Atras
+            Back
           </Link>
         </Button>
-        <CardTitle className="text-xl font-bold">Lista de miembros</CardTitle>
+        <CardTitle className="text-xl font-bold">Members list</CardTitle>
       </CardHeader>
       <div className="px-7">
         <Separator />
@@ -77,15 +79,15 @@ export const MemberList = () => {
         {data?.map((member, index) => {
           // Encontrar el usuario actual correctamente
           const currentUser = data.find((m) => m.userId); // Asumiendo que tienes esta propiedad
-          
+
           const isCurrentUserAdmin = currentUser?.role === userRoles[1]; // admin
           const isTargetAdmin = member.role === userRoles[1]; // admin
           const isSelf = currentUser?.id === member.id;
-          
+
           // Lógica de permisos mejorada
           const canUpdateRole = isCurrentUserAdmin && !isSelf;
           const canDelete = (isCurrentUserAdmin && !isTargetAdmin) || isSelf;
-          
+
           return (
             <Fragment key={member.id}>
               <div className="flex items-center gap-2">
@@ -97,10 +99,12 @@ export const MemberList = () => {
                 <div className="flex flex-col">
                   <p className="text-sm font-medium">
                     {member.name}
-                    {isSelf && " (Tu)"}
-                    {isTargetAdmin && " (Administrador)"}
+                    {isSelf && " (You)"}
+                    {isTargetAdmin && " (Administrator)"}
                   </p>
-                  <p className="text-xs text-muted-foreground">{member.email}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {member.email}
+                  </p>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -120,7 +124,7 @@ export const MemberList = () => {
                           }
                           disabled={isUpdatingMember || isTargetAdmin}
                         >
-                          Establecer como administrador
+                          Set as administrator
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="font-medium"
@@ -129,29 +133,27 @@ export const MemberList = () => {
                           }
                           disabled={isUpdatingMember || !isTargetAdmin}
                         >
-                          Establecer como miembro
+                          Set as member
                         </DropdownMenuItem>
                       </>
                     )}
-                    
+
                     {/* Opción de eliminar con lógica mejorada */}
                     <DropdownMenuItem
                       className="font-medium text-amber-700"
                       onClick={() => handleDeleteMember(member.id)}
                       disabled={isDeletingMember || !canDelete}
                     >
-                      {isSelf ? "Abandonar el espacio de trabajo" : `Eliminar ${member.name}`}
+                      {isSelf ? "Leave the workspace" : `Delete ${member.name}`}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              {index < data.length - 1 && (
-                <Separator className="my-2.5" />
-              )}
+              {index < data.length - 1 && <Separator className="my-2.5" />}
             </Fragment>
-          )
+          );
         })}
       </CardContent>
     </Card>
-  )
-}
+  );
+};

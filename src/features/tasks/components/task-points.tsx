@@ -8,7 +8,11 @@ interface TaskPointsProps {
   size?: "sm" | "md" | "lg";
 }
 
-export const TaskPoints = ({ difficulty, className, size = "sm" }: TaskPointsProps) => {
+export const TaskPoints = ({
+  difficulty,
+  className,
+  size = "sm",
+}: TaskPointsProps) => {
   const points = getTaskPoints(difficulty);
   const colorClasses = getPointsColor(points);
 
@@ -17,22 +21,24 @@ export const TaskPoints = ({ difficulty, className, size = "sm" }: TaskPointsPro
   const sizeClasses = {
     sm: "text-xs px-1.5 py-0.5",
     md: "text-sm px-2 py-1",
-    lg: "text-base px-3 py-1.5"
+    lg: "text-base px-3 py-1.5",
   };
 
   const iconSizes = {
     sm: "w-3 h-3",
-    md: "w-4 h-4", 
-    lg: "w-5 h-5"
+    md: "w-4 h-4",
+    lg: "w-5 h-5",
   };
 
   return (
-    <div className={cn(
-      "inline-flex items-center gap-1 rounded-full border font-medium",
-      colorClasses,
-      sizeClasses[size],
-      className
-    )}>
+    <div
+      className={cn(
+        "inline-flex items-center gap-1 rounded-full border font-medium",
+        colorClasses,
+        sizeClasses[size],
+        className
+      )}
+    >
       <TrophyIcon className={iconSizes[size]} />
       <span>{points}</span>
     </div>

@@ -94,7 +94,7 @@ export const CreateTaskForm = ({
                     <FormControl>
                       <Input
                         {...field}
-                        value={field.value || ''} // Ensure value is never undefined
+                        value={field.value || ""} // Ensure value is never undefined
                         placeholder="Enter the task name"
                       />
                     </FormControl>
@@ -109,7 +109,10 @@ export const CreateTaskForm = ({
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <DatePicker {...field} placeholder="Select the due date" />
+                      <DatePicker
+                        {...field}
+                        placeholder="Select the due date"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -169,13 +172,13 @@ export const CreateTaskForm = ({
                         <SelectItem value={TaskStatus.BACKLOG}>
                           Backlog
                         </SelectItem>
+                        <SelectItem value={TaskStatus.TO_DO}>To Do</SelectItem>
                         <SelectItem value={TaskStatus.IN_PROGRESS}>
                           In Progress
                         </SelectItem>
                         <SelectItem value={TaskStatus.IN_REVIEW}>
                           In Review
                         </SelectItem>
-                        <SelectItem value={TaskStatus.TODO}>Todo</SelectItem>
                         <SelectItem value={TaskStatus.DONE}>Done</SelectItem>
                       </SelectContent>
                     </Select>

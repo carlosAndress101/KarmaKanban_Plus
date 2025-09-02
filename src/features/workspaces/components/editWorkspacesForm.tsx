@@ -40,14 +40,14 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
     useResetInviteCode();
 
   const [DeleteDialog, confirmDelete] = useConfirm(
-    "Eliminar workspace",
-    "Esta acción es irreversible y eliminará todos los datos asociados",
+    "Delete workspace",
+    "This action is irreversible and will delete all associated data",
     "destructive"
   );
 
   const [ResetDialog, confirmReset] = useConfirm(
-    "Restablecer enlace de invitación",
-    "Esto invalidará el enlace de invitación actual.",
+    "Reset invitation link",
+    "This will invalidate the current invitation link.",
     "destructive"
   );
 
@@ -96,9 +96,7 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
   const handleCopyInviteLink = () => {
     navigator.clipboard
       .writeText(fullInviteLink)
-      .then(() =>
-        toast.success("Enlace de invitación copiado en el portapapeles")
-      );
+      .then(() => toast.success("Invitation link copied to clipboard"));
   };
 
   const handleResetInviteCode = async () => {
@@ -132,7 +130,7 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
             }
           >
             <ArrowLeftIcon className="size-4 mr-2" />
-            Atras
+            Back
           </Button>
           <CardTitle className="text-xl font-bold">
             {initialValues.name}
@@ -150,10 +148,10 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nombre del Workspace</FormLabel>
+                      <FormLabel>Workspace Name</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Ingrese el nombre del workspace"
+                          placeholder="Enter the workspace name"
                           {...field}
                         />
                       </FormControl>
@@ -175,7 +173,7 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
                   Cancel
                 </Button>
                 <Button type="submit" size="lg" disabled={isPending}>
-                  Guardar cambios
+                  Save changes
                 </Button>
               </div>
             </form>
@@ -186,10 +184,9 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
       <Card className="w-full h-full border-none shadow-none">
         <CardContent className="p-7">
           <div className="flex flex-col">
-            <h3 className="font-bold">Invita a miembros</h3>
+            <h3 className="font-bold">Invite members</h3>
             <p className="text-sm text-muted-foreground">
-              Usa el enlace de invitación para invitar a miembros a tu
-              workspace.
+              Use the invitation link to invite members to your workspace.
             </p>
 
             <div className="mt-4">
@@ -215,7 +212,7 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
               disabled={isPending || isResetingInviteCode}
               onClick={handleResetInviteCode}
             >
-              Restablecer enlace
+              Reset link
             </Button>
           </div>
         </CardContent>
@@ -226,8 +223,8 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
           <div className="flex flex-col">
             <h3 className="font-bold">Danger Zone</h3>
             <p className="text-sm text-muted-foreground">
-              La eliminación de un workspace es irreversible y eliminará todos
-              los datos asociados
+              Deleting a workspace is irreversible and will remove all
+              associated data
             </p>
             <Separator />
             <Button
@@ -238,7 +235,7 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
               disabled={isPending || isDeletingWorkspace}
               onClick={handleDelete}
             >
-              Eliminar Workspace
+              Delete Workspace
             </Button>
           </div>
         </CardContent>

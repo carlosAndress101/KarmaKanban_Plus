@@ -1,6 +1,12 @@
 "use client";
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StoreItem } from "../types";
@@ -24,7 +30,7 @@ const categoryIcons = {
 const categoryColors = {
   Physical: "bg-blue-50 text-blue-700 border-blue-200",
   Digital: "bg-purple-50 text-purple-700 border-purple-200",
-  Experience: "bg-orange-50 text-orange-700 border-orange-200", 
+  Experience: "bg-orange-50 text-orange-700 border-orange-200",
   Perk: "bg-pink-50 text-pink-700 border-pink-200",
 };
 
@@ -40,10 +46,12 @@ export const StoreItemCard = ({
   const isAvailable = canAfford && !isOutOfStock && item.isActive;
 
   return (
-    <Card className={cn(
-      "transition-all duration-200 hover:shadow-lg",
-      !isAvailable && "opacity-60"
-    )}>
+    <Card
+      className={cn(
+        "transition-all duration-200 hover:shadow-lg",
+        !isAvailable && "opacity-60"
+      )}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
@@ -57,9 +65,7 @@ export const StoreItemCard = ({
       </CardHeader>
 
       <CardContent className="pb-3">
-        <p className="text-sm text-muted-foreground mb-4">
-          {item.description}
-        </p>
+        <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
@@ -82,9 +88,7 @@ export const StoreItemCard = ({
         )}
 
         {isOutOfStock && (
-          <div className="mt-2 text-sm text-red-600">
-            Out of stock
-          </div>
+          <div className="mt-2 text-sm text-red-600">Out of stock</div>
         )}
       </CardContent>
 

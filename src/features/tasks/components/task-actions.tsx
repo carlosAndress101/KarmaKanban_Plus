@@ -58,7 +58,7 @@ export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
             className="font-medium p-[10px]"
           >
             <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
-            Detalles de la tarea
+            Task details
           </DropdownMenuItem>
 
           <DropdownMenuItem
@@ -66,7 +66,7 @@ export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
             className="font-medium p-[10px]"
           >
             <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
-            Abrir proyecto
+            Open project
           </DropdownMenuItem>
 
           <DropdownMenuItem
@@ -74,7 +74,7 @@ export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
             className="font-medium p-[10px]"
           >
             <PencilIcon className="size-4 mr-2 stroke-2" />
-            Editar tarea
+            Edit task
           </DropdownMenuItem>
 
           <DropdownMenuItem
@@ -83,7 +83,7 @@ export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
             className="text-amber-700 focus:text-amber-700 font-medium p-[10px]"
           >
             <TrashIcon className="size-4 mr-2 stroke-2" />
-            Eliminar tarea
+            Delete task
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

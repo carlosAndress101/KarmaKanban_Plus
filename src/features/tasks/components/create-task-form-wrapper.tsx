@@ -33,20 +33,24 @@ export const CreateTaskFormWrapper = ({
     name: string;
   }
 
-  const projectOptions: ProjectOption[] | undefined = projects?.map((project: { id: string; name: string }) => ({
-    id: project.id,
-    name: project.name
-  }));
+  const projectOptions: ProjectOption[] | undefined = projects?.map(
+    (project: { id: string; name: string }) => ({
+      id: project.id,
+      name: project.name,
+    })
+  );
 
   interface Member {
     id: string;
     name: string;
   }
 
-  const memberOptions: MemberOption[] | undefined = members?.map((member: Member) => ({
-    id: member.id,
-    name: member.name,
-  }));
+  const memberOptions: MemberOption[] | undefined = members?.map(
+    (member: Member) => ({
+      id: member.id,
+      name: member.name,
+    })
+  );
 
   const isLoading = isLoadingMembers || isLoadingProjects;
 
@@ -59,8 +63,6 @@ export const CreateTaskFormWrapper = ({
       </Card>
     );
   }
-
-
 
   return (
     <CreateTaskForm

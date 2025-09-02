@@ -41,10 +41,10 @@ export const KanbanCard = ({ task }: KanbanCardProps) => {
           <ProjectAvatar
             name={task.project.name}
             fallbackClassname="text-[10px]"
-            />
+          />
           <span className="text-xs font-medium">{task.project.name}</span>
         </div>
-        
+
         <div className="flex items-center gap-x-1.5">
           {task.difficulty && (
             <Badge variant={task.difficulty} className="text-xs">

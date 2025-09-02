@@ -38,10 +38,12 @@ export const DataFilters = ({ hideProjectFilter }: DataFiltersProps) => {
     label: string;
   }
 
-  const projectOptions: ProjectOption[] | undefined = projects?.map((project: { id: string; name: string }) => ({
-    value: project.id,
-    label: project.name,
-  }));
+  const projectOptions: ProjectOption[] | undefined = projects?.map(
+    (project: { id: string; name: string }) => ({
+      value: project.id,
+      label: project.name,
+    })
+  );
 
   interface MemberOption {
     value: string;
@@ -53,10 +55,12 @@ export const DataFilters = ({ hideProjectFilter }: DataFiltersProps) => {
     name: string;
   }
 
-  const memberOptions: MemberOption[] | undefined = members?.map((member: Member) => ({
-    value: member.id,
-    label: member.name,
-  }));
+  const memberOptions: MemberOption[] | undefined = members?.map(
+    (member: Member) => ({
+      value: member.id,
+      label: member.name,
+    })
+  );
 
   const [{ assigneeId, dueDate, projectId, status }, setFilters] =
     useTaskFilters();
@@ -89,17 +93,17 @@ export const DataFilters = ({ hideProjectFilter }: DataFiltersProps) => {
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex items-center pr-2">
             <ListCheckIcon className="size-4 mr-2" />
-            <SelectValue placeholder="Todos los estados" />
+            <SelectValue placeholder="All statuses" />
           </div>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Todos los estados</SelectItem>
+          <SelectItem value="all">All statuses</SelectItem>
           <SelectSeparator />
-          <SelectItem value={TaskStatus.BACKLOG}>Pendientes</SelectItem>
-          <SelectItem value={TaskStatus.IN_PROGRESS}>En Progreso</SelectItem>
-          <SelectItem value={TaskStatus.IN_REVIEW}>En Revisión</SelectItem>
-          <SelectItem value={TaskStatus.TODO}>Por Hacer</SelectItem>
-          <SelectItem value={TaskStatus.DONE}>Completada</SelectItem>
+          <SelectItem value={TaskStatus.BACKLOG}>Backlog</SelectItem>
+          <SelectItem value={TaskStatus.TO_DO}>To Do</SelectItem>
+          <SelectItem value={TaskStatus.IN_PROGRESS}>In Progress</SelectItem>
+          <SelectItem value={TaskStatus.IN_REVIEW}>In Review</SelectItem>
+          <SelectItem value={TaskStatus.DONE}>Done</SelectItem>
         </SelectContent>
       </Select>
 
@@ -110,11 +114,11 @@ export const DataFilters = ({ hideProjectFilter }: DataFiltersProps) => {
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex items-center pr-2">
             <UserIcon className="size-4 mr-2" />
-            <SelectValue placeholder="Todos los asignados" />
+            <SelectValue placeholder="All assignees" />
           </div>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Todos los asignados</SelectItem>
+          <SelectItem value="all">All assignees</SelectItem>
           <SelectSeparator />
           {memberOptions?.map((member) => (
             <SelectItem key={member.value} value={member.value}>
@@ -132,11 +136,11 @@ export const DataFilters = ({ hideProjectFilter }: DataFiltersProps) => {
           <SelectTrigger className="w-full lg:w-auto h-8">
             <div className="flex items-center pr-2">
               <FolderIcon className="size-4 mr-2" />
-              <SelectValue placeholder="Todos los proyectos" />
+              <SelectValue placeholder="All projects" />
             </div>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos los proyectos</SelectItem>
+            <SelectItem value="all">All projects</SelectItem>
             <SelectSeparator />
             {projectOptions?.map((project) => (
               <SelectItem key={project.value} value={project.value}>

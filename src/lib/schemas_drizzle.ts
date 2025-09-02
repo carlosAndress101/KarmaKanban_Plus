@@ -113,7 +113,7 @@ export const tasks = pgTable("tasks", {
   description: text("description"),
   dueDate: timestamp("due_date", { withTimezone: true }),
   status: text("status", {
-    enum: ["BACKLOG", "TODO", "IN_PROGRESS", "IN_REVIEW", "DONE"],
+    enum: ["BACKLOG", "TO_DO", "IN_PROGRESS", "IN_REVIEW", "DONE"],
   }).notNull(),
   difficulty: text("difficulty", {
     enum: ["Facil", "Medio", "Dificil"],
