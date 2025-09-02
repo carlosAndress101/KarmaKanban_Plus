@@ -76,7 +76,7 @@ export const CreateTaskForm = ({
   return (
     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="flex p-7">
-        <CardTitle className="text-xl font-bold">Crear Nueva Tarea</CardTitle>
+        <CardTitle className="text-xl font-bold">Create New Task</CardTitle>
       </CardHeader>
       <div className="px-2">
         <Separator />
@@ -90,12 +90,12 @@ export const CreateTaskForm = ({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nombre de la tarea</FormLabel>
+                    <FormLabel>Task Name</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         value={field.value || ''} // Ensure value is never undefined
-                        placeholder="Ingrese el nombre de la tarea"
+                        placeholder="Enter the task name"
                       />
                     </FormControl>
                   </FormItem>
@@ -107,9 +107,9 @@ export const CreateTaskForm = ({
                 name="dueDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Fecha de vencimiento</FormLabel>
+                    <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <DatePicker {...field} placeholder="Seleccione la fecha de vencimiento" />
+                      <DatePicker {...field} placeholder="Select the due date" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -120,14 +120,14 @@ export const CreateTaskForm = ({
                 name="assignee"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Responsable</FormLabel>
+                    <FormLabel>Assignee</FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccione el responsable" />
+                          <SelectValue placeholder="Select the assignee" />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage />
@@ -154,14 +154,14 @@ export const CreateTaskForm = ({
                 name="status"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Estado</FormLabel>
+                    <FormLabel>Status</FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccione el estado" />
+                          <SelectValue placeholder="Select the status" />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage />
@@ -188,14 +188,14 @@ export const CreateTaskForm = ({
                 name="project"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Proyecto</FormLabel>
+                    <FormLabel>Proyect</FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccione el proyecto" />
+                          <SelectValue placeholder="Select the project" />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage />
@@ -222,21 +222,21 @@ export const CreateTaskForm = ({
                 name="difficulty"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Dificultad</FormLabel>
+                    <FormLabel>Difficulty</FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccione la dificultad" />
+                          <SelectValue placeholder="Select the difficulty" />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage />
                       <SelectContent>
-                        <SelectItem value="Facil">Fácil</SelectItem>
-                        <SelectItem value="Medio">Medio</SelectItem>
-                        <SelectItem value="Dificil">Difícil</SelectItem>
+                        <SelectItem value="Facil">Easy</SelectItem>
+                        <SelectItem value="Medio">Medium</SelectItem>
+                        <SelectItem value="Dificil">Hard</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -253,11 +253,11 @@ export const CreateTaskForm = ({
                 disabled={isPending}
                 className={cn(!onCancel && "invisible")}
               >
-                Cancelar
+                Cancel
               </Button>
 
               <Button type="submit" size="lg" disabled={isPending}>
-                Crear Tarea
+                New Task
               </Button>
             </div>
           </form>

@@ -7,7 +7,7 @@ import { DottedSeparator } from "./dotted-separator";
 const getVariant = (difference: number) => {
   if (difference > 0) return "up";
   if (difference < 0) return "down";
-  return "neutral"; 
+  return "neutral";
 };
 
 export const Analytics = ({ data }: ProjectAnalyticsResponseType) => {
@@ -17,7 +17,7 @@ export const Analytics = ({ data }: ProjectAnalyticsResponseType) => {
       <div className="w-full flex flex-row">
         <div className="flex items-center flex-1">
           <AnalyticsCard
-            title="Tareas totales"
+            title="Total tasks"
             value={data.taskCount}
             variant={getVariant(data.taskCount)}
             increaseValue={data.taskCount}
@@ -27,7 +27,7 @@ export const Analytics = ({ data }: ProjectAnalyticsResponseType) => {
 
         <div className="flex items-center flex-1">
           <AnalyticsCard
-            title="Tareas asignadas"
+            title="Assigned tasks"
             value={data.assignedTaskCount}
             variant={getVariant(data.assignedTaskCount)}
             increaseValue={data.assignedTaskCount}
@@ -37,7 +37,7 @@ export const Analytics = ({ data }: ProjectAnalyticsResponseType) => {
 
         <div className="flex items-center flex-1">
           <AnalyticsCard
-            title="Tareas completadas"
+            title="Completed tasks"
             value={data.completedTaskCount}
             variant={getVariant(data.completedTaskCount)}
             increaseValue={data.completedTaskCount}
@@ -47,7 +47,7 @@ export const Analytics = ({ data }: ProjectAnalyticsResponseType) => {
 
         <div className="flex items-center flex-1">
           <AnalyticsCard
-            title="Tareas incompletas"
+            title="Incomplete tasks"
             value={data.inCompleteTaskCount}
             variant={getVariant(data.inCompleteTaskDifference)}
             increaseValue={data.inCompleteTaskCount}
@@ -57,7 +57,7 @@ export const Analytics = ({ data }: ProjectAnalyticsResponseType) => {
 
         <div className="flex items-center flex-1">
           <AnalyticsCard
-            title="Tareas vencidas"
+            title="Overdue tasks"
             value={data.overDueTaskCount}
             variant={getVariant(data.overDueTaskDifference)}
             increaseValue={data.overDueTaskDifference}

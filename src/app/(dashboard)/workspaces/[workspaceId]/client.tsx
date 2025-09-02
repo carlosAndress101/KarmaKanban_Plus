@@ -80,7 +80,7 @@ export const TaskList = ({ data, total }: TaskListProps) => {
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-muted rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">Tareas ({total})</p>
+          <p className="text-lg font-semibold">Tasks ({total})</p>
           <Button variant="ghost" size="icon" onClick={() => open(undefined)}>
             <PlusIcon className="size-4 text-neutral-400" />
           </Button>
@@ -110,11 +110,11 @@ export const TaskList = ({ data, total }: TaskListProps) => {
             </li>
           ))}
           <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
-            No hay tareas
+            No tasks
           </li>
         </ul>
         <Button variant="ghost" className="mt-4 w-full" asChild>
-          <Link href={`/workspaces/${workspaceId}/tasks`}>Ver todo</Link>
+          <Link href={`/workspaces/${workspaceId}/tasks`}>View all</Link>
         </Button>
       </div>
     </div>
@@ -134,7 +134,7 @@ export const ProjectList = ({ data, total }: ProjectListProps) => {
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-white border rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">Proyectos ({total})</p>
+          <p className="text-lg font-semibold">Projects ({total})</p>
           <Button variant="secondary" size="icon" onClick={open}>
             <PlusIcon className="size-4 text-neutral-400" />
           </Button>
@@ -160,7 +160,7 @@ export const ProjectList = ({ data, total }: ProjectListProps) => {
             </li>
           ))}
           <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
-            No hay proyectos
+            No projects
           </li>
         </ul>
       </div>
@@ -180,7 +180,7 @@ export const MemberList = ({ data, total }: MemberListProps) => {
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-white border rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">Miembros ({total})</p>
+          <p className="text-lg font-semibold">Members ({total})</p>
           <Button variant="secondary" size="icon" asChild>
             <Link href={`/workspaces/${workspaceId}/members`}>
               <SettingsIcon className="size-4 text-neutral-400" />
@@ -209,7 +209,7 @@ export const MemberList = ({ data, total }: MemberListProps) => {
             </li>
           ))}
           <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
-            No hay miembros
+            No members
           </li>
         </ul>
       </div>

@@ -85,7 +85,7 @@ const normalizedTasks = tasks?.documents.map(task => ({
               Kanban
             </TabsTrigger>
             <TabsTrigger className="h-8 w-full lg:w-auto" value="calendar">
-              Calendario
+              Calendar
             </TabsTrigger>
           </TabsList>
           <Button
@@ -94,7 +94,7 @@ const normalizedTasks = tasks?.documents.map(task => ({
             onClick={() => open(undefined)}
           >
             <PlusIcon className="size-4 mr-2" />
-            Nueva tarea
+            New Task
           </Button>
         </div>
 
