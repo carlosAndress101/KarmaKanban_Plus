@@ -4,9 +4,9 @@ export interface MemberStats {
   totalTasksCompleted: number;
   totalPoints: number;
   tasksCompletedByDifficulty: {
-    Facil: number;
-    Medio: number;
-    Dificil: number;
+    Easy: number;
+    Medium: number;
+    Hard: number;
   };
   tasksCompletedToday: number;
   currentStreak: number;
@@ -14,9 +14,9 @@ export interface MemberStats {
   earnedBadges: string[];
   averageCompletionTime?: number; // in seconds, optional
   averageCompletionTimeByDifficulty?: {
-    Facil: number;
-    Medio: number;
-    Dificil: number;
+    Easy: number;
+    Medium: number;
+    Hard: number;
   };
 }
 
@@ -183,9 +183,9 @@ export function formatBadgeProgressText(
               .difficulty as keyof typeof stats.tasksCompletedByDifficulty
           ] || 0;
         const difficultyName =
-          badge.requirement.difficulty === "Facil"
+          badge.requirement.difficulty === "Easy"
             ? "easy"
-            : badge.requirement.difficulty === "Medio"
+            : badge.requirement.difficulty === "Medium"
             ? "medium"
             : "hard";
         return `${Math.min(difficultyCount, badge.requirement.value)}/${

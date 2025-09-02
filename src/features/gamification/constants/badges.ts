@@ -96,7 +96,7 @@ export const EARNABLE_BADGES: Badge[] = [
     icon: Coffee,
     color: "text-green-600 bg-green-50",
     type: "earnable",
-    requirement: { type: "difficulty", value: 5, difficulty: "Facil" },
+    requirement: { type: "difficulty", value: 5, difficulty: "Easy" },
   },
   {
     id: "easy_master",
@@ -105,7 +105,7 @@ export const EARNABLE_BADGES: Badge[] = [
     icon: CheckCircle,
     color: "text-green-600 bg-green-50",
     type: "earnable",
-    requirement: { type: "difficulty", value: 20, difficulty: "Facil" },
+    requirement: { type: "difficulty", value: 20, difficulty: "Easy" },
   },
   {
     id: "steady_achiever",
@@ -114,7 +114,7 @@ export const EARNABLE_BADGES: Badge[] = [
     icon: Zap,
     color: "text-orange-600 bg-orange-50",
     type: "earnable",
-    requirement: { type: "difficulty", value: 5, difficulty: "Medio" },
+    requirement: { type: "difficulty", value: 5, difficulty: "Medium" },
   },
   {
     id: "medium_master",
@@ -123,7 +123,7 @@ export const EARNABLE_BADGES: Badge[] = [
     icon: Award,
     color: "text-orange-600 bg-orange-50",
     type: "earnable",
-    requirement: { type: "difficulty", value: 15, difficulty: "Medio" },
+    requirement: { type: "difficulty", value: 15, difficulty: "Medium" },
   },
   {
     id: "challenge_seeker",
@@ -132,7 +132,7 @@ export const EARNABLE_BADGES: Badge[] = [
     icon: Flame,
     color: "text-red-600 bg-red-50",
     type: "earnable",
-    requirement: { type: "difficulty", value: 3, difficulty: "Dificil" },
+    requirement: { type: "difficulty", value: 3, difficulty: "Hard" },
   },
   {
     id: "hard_master",
@@ -141,7 +141,7 @@ export const EARNABLE_BADGES: Badge[] = [
     icon: Shield,
     color: "text-red-600 bg-red-50",
     type: "earnable",
-    requirement: { type: "difficulty", value: 10, difficulty: "Dificil" },
+    requirement: { type: "difficulty", value: 10, difficulty: "Hard" },
   },
 
   // Points-based Badges (4 badges)

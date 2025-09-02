@@ -87,7 +87,7 @@ const app = new Hono()
     });
 
     if (!requestingMember) {
-      return c.json({ error: "Tu no eres miembro de este workspace" }, 403);
+      return c.json({ error: "You are not a member of this workspace" }, 403);
     }
 
     const isSelf = requestingMember.id === memberToDelete.id;
@@ -103,7 +103,7 @@ const app = new Hono()
       // Si no es él mismo, debe ser admin para eliminar a otros
       if (!isRequestingAdmin) {
         return c.json(
-          { error: "Solo administradores pueden eliminar otros miembros" },
+          { error: "Only administrators can remove other members" },
           403
         );
       }
@@ -111,7 +111,7 @@ const app = new Hono()
       // Los admins no pueden eliminar a otros admins
       if (isTargetAdmin) {
         return c.json(
-          { error: "Administradores no pueden eliminar otros administradores" },
+          { error: "Administrators cannot remove other administrators" },
           403
         );
       }
@@ -127,7 +127,7 @@ const app = new Hono()
         return c.json(
           {
             error:
-              "No se puede abandonar el espacio de trabajo. Usted es el único administrador. Por favor, asigne primero otro administrador.",
+              "You cannot leave the workspace. You are the only administrator. Please assign another administrator first.",
           },
           400
         );
@@ -141,8 +141,8 @@ const app = new Hono()
       data: {
         id: memberToDelete.id,
         message: isSelf
-          ? "Ha abandonado el espacio de trabajo"
-          : "Miembro eliminado correctamente",
+          ? "You have left the workspace"
+          : "Member removed successfully",
       },
     });
   })

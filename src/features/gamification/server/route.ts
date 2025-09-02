@@ -31,15 +31,15 @@ const app = new Hono()
       // (Result not used in this endpoint)
 
       // Calculate average completion time by difficulty
-      const difficulties: Array<"Facil" | "Medio" | "Dificil"> = [
-        "Facil",
-        "Medio",
-        "Dificil",
+      const difficulties: Array<"Easy" | "Medium" | "Hard"> = [
+        "Easy",
+        "Medium",
+        "Hard",
       ];
-      const avgByDifficulty: Record<"Facil" | "Medio" | "Dificil", number> = {
-        Facil: 0,
-        Medio: 0,
-        Dificil: 0,
+      const avgByDifficulty: Record<"Easy" | "Medium" | "Hard", number> = {
+        Easy: 0,
+        Medium: 0,
+        Hard: 0,
       };
       for (const diff of difficulties) {
         const res = await db
@@ -65,7 +65,7 @@ const app = new Hono()
           id: tasks.id,
           name: tasks.name,
           difficulty: tasks.difficulty,
-          points: sql<number>`CASE ${tasks.difficulty} WHEN 'Facil' THEN 10 WHEN 'Medio' THEN 20 WHEN 'Dificil' THEN 30 ELSE 0 END`,
+          points: sql<number>`CASE ${tasks.difficulty} WHEN 'Easy' THEN 10 WHEN 'Medium' THEN 20 WHEN 'Hard' THEN 30 ELSE 0 END`,
           completedAt: tasks.updatedAt,
         })
         .from(tasks)
@@ -195,7 +195,7 @@ const app = new Hono()
           acc[row.difficulty] = row.count;
           return acc;
         },
-        { Facil: 0, Medio: 0, Dificil: 0 } as Record<string, number>
+        { Easy: 0, Medium: 0, Hard: 0 } as Record<string, number>
       );
 
       // Get tasks completed today
@@ -250,15 +250,15 @@ const app = new Hono()
       const averageCompletionTime = avgCompletionResult[0]?.avgSeconds || 0;
 
       // Calculate average completion time by difficulty
-      const difficulties: Array<"Facil" | "Medio" | "Dificil"> = [
-        "Facil",
-        "Medio",
-        "Dificil",
+      const difficulties: Array<"Easy" | "Medium" | "Hard"> = [
+        "Easy",
+        "Medium",
+        "Hard",
       ];
-      const avgByDifficulty: Record<"Facil" | "Medio" | "Dificil", number> = {
-        Facil: 0,
-        Medio: 0,
-        Dificil: 0,
+      const avgByDifficulty: Record<"Easy" | "Medium" | "Hard", number> = {
+        Easy: 0,
+        Medium: 0,
+        Hard: 0,
       };
       for (const diff of difficulties) {
         const res = await db

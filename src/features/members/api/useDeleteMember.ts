@@ -24,19 +24,19 @@ export const useDeleteMember = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Fallo al eliminar el member");
+        throw new Error("Failed to remove the member");
       }
 
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("member eliminado");
+      toast.success("Member removed");
 
       router.push("/");
       queryClient.invalidateQueries({ queryKey: ["members"] });
     },
     onError: () => {
-      toast.error("Fallo al eliminar el member");
+      toast.error("Failed to remove the member");
     },
   });
   return mutation;

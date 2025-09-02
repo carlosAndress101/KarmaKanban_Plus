@@ -5,11 +5,11 @@ export const getTaskPoints = (
   difficulty: string | null | undefined
 ): number => {
   switch (difficulty) {
-    case "Facil":
+    case "Easy":
       return 10;
-    case "Medio":
+    case "Medium":
       return 20;
-    case "Dificil":
+    case "Hard":
       return 30;
     default:
       return 0;

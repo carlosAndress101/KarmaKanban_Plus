@@ -69,7 +69,7 @@ export const TaskViewSwticher = ({
       // Map enum value to its string representation
       difficulty: TaskDifficulty[
         task.difficulty as keyof typeof TaskDifficulty
-      ] as "Facil" | "Medio" | "Dificil",
+      ] as "Easy" | "Medium" | "Hard",
     })) ?? [];
 
   return (

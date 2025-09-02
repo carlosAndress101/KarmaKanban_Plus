@@ -22,8 +22,8 @@ export const TaskBreadcrumbs = ({ project, task }: TaskBreadcrumbsProps) => {
   const workspaceId = useWorkspaceId();
 
   const [ConfirmDialog, confirm] = useConfirm(
-    "Eliminar tarea",
-    "¿Estás seguro de que quieres eliminar esta tarea?",
+    "Delete task",
+    "Are you sure you want to delete this task?",
     "destructive"
   );
 
@@ -67,7 +67,7 @@ export const TaskBreadcrumbs = ({ project, task }: TaskBreadcrumbsProps) => {
         disabled={isPending}
       >
         <TrashIcon className="size-4 mr-2" />
-        <span className="hidden lg:block">Eliminar tarea</span>
+        <span className="hidden lg:block">Delete task</span>
       </Button>
     </div>
   );

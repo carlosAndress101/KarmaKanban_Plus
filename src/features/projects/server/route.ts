@@ -211,7 +211,7 @@ const app = new Hono()
 
       if (!member || member.role !== userRoles[1]) {
         return c.json(
-          { error: "tu no tienes permiso para actualizar este proyecto" },
+          { error: "You do not have permission to update this project" },
           401
         );
       }
@@ -250,7 +250,7 @@ const app = new Hono()
 
     if (!member || member.role !== userRoles[1]) {
       return c.json(
-        { error: "tu no tienes permiso para eliminar este proyecto" },
+        { error: "You do not have permission to delete this project" },
         401
       );
     }

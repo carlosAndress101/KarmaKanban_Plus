@@ -60,9 +60,9 @@ export function ProjectStatistics({
   );
 
   const difficultyBadge: Record<string, string> = {
-    Facil: "Facil",
-    Medio: "Medio",
-    Dificil: "Dificil",
+    Easy: "Easy",
+    Medium: "Medium",
+    Hard: "Hard",
   };
 
   return (
@@ -112,13 +112,8 @@ export function ProjectStatistics({
                   <Badge
                     key={type}
                     variant={
-                      ["Facil", "Medio", "Dificil"].includes(
-                        difficultyBadge[type]
-                      )
-                        ? (difficultyBadge[type] as
-                            | "Facil"
-                            | "Medio"
-                            | "Dificil")
+                      ["Easy", "Medium", "Hard"].includes(difficultyBadge[type])
+                        ? (difficultyBadge[type] as "Easy" | "Medium" | "Hard")
                         : "outline"
                     }
                   >
@@ -138,13 +133,8 @@ export function ProjectStatistics({
                   <Badge
                     key={type}
                     variant={
-                      ["Facil", "Medio", "Dificil"].includes(
-                        difficultyBadge[type]
-                      )
-                        ? (difficultyBadge[type] as
-                            | "Facil"
-                            | "Medio"
-                            | "Dificil")
+                      ["Easy", "Medium", "Hard"].includes(difficultyBadge[type])
+                        ? (difficultyBadge[type] as "Easy" | "Medium" | "Hard")
                         : "outline"
                     }
                   >
@@ -180,13 +170,13 @@ export function ProjectStatistics({
                         <Badge
                           key={type}
                           variant={
-                            ["Facil", "Medio", "Dificil"].includes(
+                            ["Easy", "Medium", "Hard"].includes(
                               difficultyBadge[type]
                             )
                               ? (difficultyBadge[type] as
-                                  | "Facil"
-                                  | "Medio"
-                                  | "Dificil")
+                                  | "Easy"
+                                  | "Medium"
+                                  | "Hard")
                               : "outline"
                           }
                         >

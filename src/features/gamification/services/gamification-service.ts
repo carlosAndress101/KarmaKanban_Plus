@@ -5,9 +5,9 @@ import { EARNABLE_BADGES } from "../constants/badges";
 
 // Point values based on task difficulty
 const POINTS_BY_DIFFICULTY = {
-  Facil: 10, // Easy tasks = 10 points
-  Medio: 20, // Medium tasks = 20 points
-  Dificil: 30, // Hard tasks = 30 points
+  Easy: 10, // Easy tasks = 10 points
+  Medium: 20, // Medium tasks = 20 points
+  Hard: 30, // Hard tasks = 30 points
 } as const;
 
 export class GamificationService {

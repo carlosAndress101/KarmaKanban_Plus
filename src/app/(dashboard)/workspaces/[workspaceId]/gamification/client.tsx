@@ -153,9 +153,9 @@ export const GamificationClient = ({
     totalPoints: realPoints,
     tasksCompletedByDifficulty:
       gamificationStats?.tasksCompletedByDifficulty ?? {
-        Facil: 0,
-        Medio: 0,
-        Dificil: 0,
+        Easy: 0,
+        Medium: 0,
+        Hard: 0,
       },
     tasksCompletedToday: gamificationStats?.tasksCompletedToday ?? 0,
     currentStreak: gamificationStats?.currentStreak ?? 0,

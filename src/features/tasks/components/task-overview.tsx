@@ -23,19 +23,19 @@ export const TaskOveriew = ({ task }: TaskOverviewProps) => {
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-muted rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">Descripción general</p>
+          <p className="text-lg font-semibold">Overview</p>
           <Button size="sm" variant="secondary" onClick={() => open(task.id)}>
             <PencilIcon className="size-4 mr-2" />
-            Editar
+            Edit
           </Button>
         </div>
         <DottedSeparator className="my-4" />
         <div className="flex flex-col gap-y-4">
-          <OverviewProperty label="Asignado">
+          <OverviewProperty label="Assigned">
             {typeof task.assignee === "string" ? (
               <>
-                <MemberAvatar name="Sin asignar" />
-                <p className="text-sm font-medium">Sin asignar</p>
+                <MemberAvatar name="Unassigned" />
+                <p className="text-sm font-medium">Unassigned</p>
               </>
             ) : (
               <>
@@ -45,17 +45,17 @@ export const TaskOveriew = ({ task }: TaskOverviewProps) => {
             )}
           </OverviewProperty>
 
-          <OverviewProperty label="Fecha de vencimiento">
+          <OverviewProperty label="Due Date">
             <TaskDate value={task.dueDate} className="text-sm font-medium" />
           </OverviewProperty>
 
-          <OverviewProperty label="Estado">
+          <OverviewProperty label="Status">
             <Badge variant={task.status}>
               {snakeCaseToTitleCase(task.status)}
             </Badge>
           </OverviewProperty>
 
-          <OverviewProperty label="Dificultad">
+          <OverviewProperty label="Difficulty">
             <Badge variant={task.difficulty}>
               {snakeCaseToTitleCase(task.difficulty)}
             </Badge>

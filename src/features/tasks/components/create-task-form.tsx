@@ -237,9 +237,9 @@ export const CreateTaskForm = ({
                       </FormControl>
                       <FormMessage />
                       <SelectContent>
-                        <SelectItem value="Facil">Easy</SelectItem>
-                        <SelectItem value="Medio">Medium</SelectItem>
-                        <SelectItem value="Dificil">Hard</SelectItem>
+                        <SelectItem value="Easy">Easy</SelectItem>
+                        <SelectItem value="Medium">Medium</SelectItem>
+                        <SelectItem value="Hard">Hard</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>

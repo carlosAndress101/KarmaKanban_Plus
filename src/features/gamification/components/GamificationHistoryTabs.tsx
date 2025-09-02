@@ -185,13 +185,13 @@ export const GamificationHistoryTabs: React.FC<
                     const summary = taskHistory.reduce(
                       (acc, task) => {
                         const key =
-                          task.difficulty === "Facil" ||
+                          task.difficulty === "Easy" ||
                           task.difficulty === "Easy"
                             ? "Easy"
-                            : task.difficulty === "Medio" ||
+                            : task.difficulty === "Medium" ||
                               task.difficulty === "Medium"
                             ? "Medium"
-                            : task.difficulty === "Dificil" ||
+                            : task.difficulty === "Hard" ||
                               task.difficulty === "Hard"
                             ? "Hard"
                             : "Other";
@@ -224,19 +224,19 @@ export const GamificationHistoryTabs: React.FC<
                       let color = "bg-gray-100 text-gray-700";
                       let borderColor = "border-gray-300";
                       if (
-                        task.difficulty === "Facil" ||
+                        task.difficulty === "Easy" ||
                         task.difficulty === "Easy"
                       ) {
                         color = "bg-green-100 text-green-700";
                         borderColor = "border-green-500";
                       } else if (
-                        task.difficulty === "Medio" ||
+                        task.difficulty === "Medium" ||
                         task.difficulty === "Medium"
                       ) {
                         color = "bg-yellow-100 text-yellow-700";
                         borderColor = "border-yellow-500";
                       } else if (
-                        task.difficulty === "Dificil" ||
+                        task.difficulty === "Hard" ||
                         task.difficulty === "Hard"
                       ) {
                         color = "bg-red-100 text-red-700";

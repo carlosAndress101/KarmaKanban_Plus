@@ -148,7 +148,7 @@ const app = new Hono()
 
     if (!member || member.role !== userRoles[1]) {
       return c.json(
-        { error: "Tu no tienes permiso para eliminar este workspace" },
+        { error: "You don't have permission to delete this workspace" },
         401
       );
     }
@@ -169,7 +169,7 @@ const app = new Hono()
 
     if (!member || member.role !== userRoles[1]) {
       return c.json(
-        { error: "Tu no tienes permiso para resetear el enlace de invitación" },
+        { error: "You do not have permission to reset the invitation link" },
         401
       );
     }
@@ -200,7 +200,7 @@ const app = new Hono()
         .where(eq(workspaces.id, workspaceId));
 
       if (workspace[0].inviteCode !== inviteCode) {
-        return c.json({ error: "Codigo de invitación no válido" }, 400);
+        return c.json({ error: "Invalid invitation code" }, 400);
       }
 
       await db.insert(members).values({

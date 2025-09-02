@@ -31,7 +31,7 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
   return (
     <div className="p-4 border rounded-lg">
       <div className="flex items-center justify-between">
-        <p className="text-lg font-semibold">Descripción general</p>
+        <p className="text-lg font-semibold">Overview</p>
         <Button
           size="sm"
           variant="secondary"
@@ -45,7 +45,7 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
           ) : (
             <>
               <PencilIcon className="size-4 mr-2" />
-              Editar
+              Edit
             </>
           )}
         </Button>
@@ -54,7 +54,7 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
       {isEditing ? (
         <div className="flex flex-col gap-y-4">
           <Textarea
-            placeholder="Escribe una descripción"
+            placeholder="Enter a description"
             value={value}
             rows={4}
             onChange={(e) => setValue(e.target.value)}
@@ -66,13 +66,13 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
             onClick={handleSave}
             disabled={isPending}
           >
-            {isPending ? "Guardando..." : "Guardar cambios"}
+            {isPending ? "Saving..." : "Save changes"}
           </Button>
         </div>
       ) : (
         <div>
           {task.description || (
-            <span className="text-muted-foreground">Sin descripción</span>
+            <span className="text-muted-foreground">No description</span>
           )}
         </div>
       )}

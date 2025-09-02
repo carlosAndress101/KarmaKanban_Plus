@@ -97,9 +97,9 @@ interface GamificationProfileProps {
     earnedBadges?: string[];
     totalTasksCompleted?: number;
     tasksCompletedByDifficulty?: {
-      Facil: number;
-      Medio: number;
-      Dificil: number;
+      Easy: number;
+      Medium: number;
+      Hard: number;
     };
   };
   onUpdate: (data: {
@@ -217,9 +217,9 @@ export const GamificationProfile = ({
     totalTasksCompleted: gamificationData.totalTasksCompleted || 0,
     totalPoints: gamificationData.points,
     tasksCompletedByDifficulty: gamificationData.tasksCompletedByDifficulty || {
-      Facil: 0,
-      Medio: 0,
-      Dificil: 0,
+      Easy: 0,
+      Medium: 0,
+      Hard: 0,
     },
     tasksCompletedToday: 0, // TODO: Calculate from today's completed tasks
     currentStreak: 0, // TODO: Calculate streak

@@ -116,7 +116,7 @@ export const tasks = pgTable("tasks", {
     enum: ["BACKLOG", "TO_DO", "IN_PROGRESS", "IN_REVIEW", "DONE"],
   }).notNull(),
   difficulty: text("difficulty", {
-    enum: ["Facil", "Medio", "Dificil"],
+    enum: ["Easy", "Medium", "Hard"],
   }).notNull(), // <-- NUEVO CAMPO
   position: integer("position").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })

@@ -10,9 +10,9 @@ export enum TaskStatus {
 }
 
 export enum TaskDifficulty {
-  Facil = "Facil",
-  Medio = "Medio",
-  Dificil = "Dificil",
+  Easy = "Easy",
+  Medium = "Medium",
+  Hard = "Hard",
 }
 
 export interface Task {
@@ -31,7 +31,7 @@ export interface Task {
   position: number;
   createdAt: string;
   updatedAt: string;
-  difficulty: "Facil" | "Medio" | "Dificil"; // <-- Nuevo campo
+  difficulty: "Easy" | "Medium" | "Hard"; // <-- Nuevo campo
 }
 
 export type TaskFront = {
@@ -46,7 +46,7 @@ export type TaskFront = {
   workspaceId: string;
   createdAt?: string;
   updatedAt?: string;
-  difficulty: "Facil" | "Medio" | "Dificil";
+  difficulty: "Easy" | "Medium" | "Hard";
 };
 
 export type ProjectTId = {

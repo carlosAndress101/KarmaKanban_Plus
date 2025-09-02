@@ -47,7 +47,7 @@ export const ProjectIdClient = () => {
               href={`/workspaces/${project.workspaceId}/projects/${project.id}/settings`}
             >
               <PencilIcon className="size-4 mr-2" />
-              Editar Proyecto
+              Edit Proyect
             </Link>
           </Button>
         </div>

@@ -3,14 +3,14 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 interface GamificationStatsProps {
   totalTasksCompleted: number;
-  tasksCompletedByDifficulty: { Facil: number; Medio: number; Dificil: number };
+  tasksCompletedByDifficulty: { Easy: number; Medium: number; Hard: number };
   tasksCompletedToday: number;
   currentStreak: number;
   averageCompletionTime?: number; // in seconds
   averageCompletionTimeByDifficulty?: {
-    Facil: number;
-    Medio: number;
-    Dificil: number;
+    Easy: number;
+    Medium: number;
+    Hard: number;
   };
 }
 
@@ -65,13 +65,13 @@ export const GamificationStats: React.FC<GamificationStatsProps> = ({
             <div className="text-sm text-gray-500 mb-2">By Difficulty</div>
             <div className="flex gap-4 mb-4">
               <div className="px-3 py-1 rounded border-2 border-green-500 bg-green-50 text-green-700 text-xs font-semibold">
-                Easy: {tasksCompletedByDifficulty.Facil}
+                Easy: {tasksCompletedByDifficulty.Easy}
               </div>
               <div className="px-3 py-1 rounded border-2 border-yellow-500 bg-yellow-50 text-yellow-700 text-xs font-semibold">
-                Medium: {tasksCompletedByDifficulty.Medio}
+                Medium: {tasksCompletedByDifficulty.Medium}
               </div>
               <div className="px-3 py-1 rounded border-2 border-red-500 bg-red-50 text-red-700 text-xs font-semibold">
-                Hard: {tasksCompletedByDifficulty.Dificil}
+                Hard: {tasksCompletedByDifficulty.Hard}
               </div>
             </div>
           </div>
@@ -88,19 +88,19 @@ export const GamificationStats: React.FC<GamificationStatsProps> = ({
             <div className="px-3 py-2 rounded border-2 border-green-500 bg-green-50 text-green-700 text-xs font-semibold flex flex-col items-center w-full">
               <span>Easy</span>
               <span className="text-base font-bold">
-                {formatDuration(averageCompletionTimeByDifficulty?.Facil)}
+                {formatDuration(averageCompletionTimeByDifficulty?.Easy)}
               </span>
             </div>
             <div className="px-3 py-2 rounded border-2 border-yellow-500 bg-yellow-50 text-yellow-700 text-xs font-semibold flex flex-col items-center w-full">
               <span>Medium</span>
               <span className="text-base font-bold">
-                {formatDuration(averageCompletionTimeByDifficulty?.Medio)}
+                {formatDuration(averageCompletionTimeByDifficulty?.Medium)}
               </span>
             </div>
             <div className="px-3 py-2 rounded border-2 border-red-500 bg-red-50 text-red-700 text-xs font-semibold flex flex-col items-center w-full">
               <span>Hard</span>
               <span className="text-base font-bold">
-                {formatDuration(averageCompletionTimeByDifficulty?.Dificil)}
+                {formatDuration(averageCompletionTimeByDifficulty?.Hard)}
               </span>
             </div>
           </div>

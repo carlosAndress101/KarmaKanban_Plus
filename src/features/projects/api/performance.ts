@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
       }
 
       // --- Average completion time by type ---
-      const types = ["Facil", "Medio", "Dificil"];
+      const types = ["Easy", "Medium", "Hard"];
       const avgCompletionTimeByType: Record<string, number | null> = {};
       const completedCountByType: Record<string, number> = {};
       types.forEach((type) => {
@@ -111,7 +111,7 @@ export async function GET(req: NextRequest) {
             memberStats[t.assigneeId] = {
               name,
               total: 0,
-              byType: { Facil: 0, Medio: 0, Dificil: 0 },
+              byType: { Easy: 0, Medium: 0, Hard: 0 },
             };
           }
           memberStats[t.assigneeId].total += 1;

@@ -25,9 +25,9 @@ export default function ProjectPerformanceSection() {
 
   // Difficulty color mapping for Badge
   const difficultyBadge: Record<string, string> = {
-    Facil: "Facil",
-    Medio: "Medio",
-    Dificil: "Dificil",
+    Easy: "Easy",
+    Medium: "Medium",
+    Hard: "Hard",
   };
 
   return (
@@ -85,13 +85,13 @@ export default function ProjectPerformanceSection() {
                       <Badge
                         key={type}
                         variant={
-                          ["Facil", "Medio", "Dificil"].includes(
+                          ["Easy", "Medium", "Hard"].includes(
                             difficultyBadge[type]
                           )
                             ? (difficultyBadge[type] as
-                                | "Facil"
-                                | "Medio"
-                                | "Dificil")
+                                | "Easy"
+                                | "Medium"
+                                | "Hard")
                             : "outline"
                         }
                       >
@@ -111,13 +111,13 @@ export default function ProjectPerformanceSection() {
                       <Badge
                         key={type}
                         variant={
-                          ["Facil", "Medio", "Dificil"].includes(
+                          ["Easy", "Medium", "Hard"].includes(
                             difficultyBadge[type]
                           )
                             ? (difficultyBadge[type] as
-                                | "Facil"
-                                | "Medio"
-                                | "Dificil")
+                                | "Easy"
+                                | "Medium"
+                                | "Hard")
                             : "outline"
                         }
                       >
@@ -154,13 +154,13 @@ export default function ProjectPerformanceSection() {
                               <Badge
                                 key={type}
                                 variant={
-                                  ["Facil", "Medio", "Dificil"].includes(
+                                  ["Easy", "Medium", "Hard"].includes(
                                     difficultyBadge[type]
                                   )
                                     ? (difficultyBadge[type] as
-                                        | "Facil"
-                                        | "Medio"
-                                        | "Dificil")
+                                        | "Easy"
+                                        | "Medium"
+                                        | "Hard")
                                     : "outline"
                                 }
                               >
