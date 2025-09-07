@@ -4,10 +4,8 @@ import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { MemberAvatar } from "@/features/members/components/meberAvatar";
 import { ProjectAvatar } from "@/features/projects/components/projectAvatar";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/date-picker";
@@ -22,41 +20,40 @@ import {
 } from "@/components/ui/select";
 import {
   Form,
-  FormControl,
   FormField,
   FormItem,
   FormLabel,
+  FormControl,
   FormMessage,
 } from "@/components/ui/form";
-
-import { normalizeFormValues, Task, TaskStatus } from "../types";
 import { taskSchema } from "../schemas";
-import { useUpdateTask } from "../api/useUpdateTask";
+import { normalizeFormValues, TaskStatus } from "../types";
 
 interface EditTaskFormProps {
-  onCancel?: () => void;
-  projectOptions: { id: string; name: string }[];
-  memberOptions: { id: string; name: string }[];
-  initialValues: Task;
+  initialValues: any;
+  memberOptions: any[];
+  projectOptions: any[];
+  onCancel: () => void;
+  isPending?: boolean;
+  mutate?: (data: any, options?: any) => void;
 }
 
-export const EditTaskForm = ({
-  onCancel,
+export function EditTaskForm({
+  initialValues,
   memberOptions,
   projectOptions,
-  initialValues,
-}: EditTaskFormProps) => {
-  const { mutate, isPending } = useUpdateTask();
-
+  onCancel,
+  isPending,
+  mutate,
+}: EditTaskFormProps) {
   const schema = taskSchema.omit({ workspaceId: true, description: true });
-
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: normalizeFormValues(initialValues),
   });
 
   const onSubmit = (values: z.infer<typeof schema>) => {
-    mutate(
+    mutate?.(
       { json: values, param: { taskId: initialValues.id } },
       {
         onSuccess: () => {
@@ -91,7 +88,31 @@ export const EditTaskForm = ({
                   </FormItem>
                 )}
               />
-
+              <FormField
+                control={form.control}
+                name="difficulty"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Dificultad</FormLabel>
+                    <Select
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona dificultad" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <FormMessage />
+                      <SelectContent>
+                        <SelectItem value="Easy">Fácil</SelectItem>
+                        <SelectItem value="Medium">Media</SelectItem>
+                        <SelectItem value="Hard">Difícil</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="dueDate"
@@ -107,7 +128,6 @@ export const EditTaskForm = ({
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="assignee"
@@ -125,7 +145,7 @@ export const EditTaskForm = ({
                       </FormControl>
                       <FormMessage />
                       <SelectContent>
-                        {memberOptions.map((member) => (
+                        {memberOptions.map((member: any) => (
                           <SelectItem key={member.id} value={member.id}>
                             <div className="flex items-center gap-x-2">
                               <MemberAvatar
@@ -141,7 +161,6 @@ export const EditTaskForm = ({
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="status"
@@ -175,7 +194,6 @@ export const EditTaskForm = ({
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="project"
@@ -193,7 +211,7 @@ export const EditTaskForm = ({
                       </FormControl>
                       <FormMessage />
                       <SelectContent>
-                        {projectOptions.map((project) => (
+                        {projectOptions.map((project: any) => (
                           <SelectItem key={project.id} value={project.id}>
                             <div className="flex items-center gap-x-2">
                               <ProjectAvatar
@@ -222,7 +240,6 @@ export const EditTaskForm = ({
               >
                 Cancel
               </Button>
-
               <Button type="submit" size="lg" disabled={isPending}>
                 Save changes
               </Button>
@@ -232,4 +249,4 @@ export const EditTaskForm = ({
       </CardContent>
     </Card>
   );
-};
+}
