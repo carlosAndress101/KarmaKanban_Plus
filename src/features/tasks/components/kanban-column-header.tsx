@@ -20,7 +20,7 @@ interface KanbanColumnHeaderProps {
 }
 
 const statusIconMap: Record<TaskStatus, React.ReactNode> = {
-  [TaskStatus.BACKLOG]: (
+  [TaskStatus.NEW]: (
     <CircleDashedIcon className="size-[18px] text-pink-400" />
   ),
   [TaskStatus.TO_DO]: <CircleIcon className="size-[18px] text-red-400" />,

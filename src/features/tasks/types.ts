@@ -2,7 +2,7 @@ import { z } from "zod";
 import { taskSchema } from "./schemas";
 
 export enum TaskStatus {
-  BACKLOG = "BACKLOG",
+  NEW = "NEW",
   TO_DO = "TO_DO",
   IN_PROGRESS = "IN_PROGRESS",
   IN_REVIEW = "IN_REVIEW",

@@ -12,7 +12,7 @@ import { KanbanColumnHeader } from "./kanban-column-header";
 import { useBulkUpdateTask } from "../api/useBulkUpdateTask"; // Importa tu hook aquí
 
 const boards: TaskStatus[] = [
-  TaskStatus.BACKLOG,
+  TaskStatus.NEW,
   TaskStatus.TO_DO,
   TaskStatus.IN_PROGRESS,
   TaskStatus.IN_REVIEW,
@@ -45,7 +45,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
   const buildTaskState = (taskList: Task[]): TasksState => {
     const cleanData = removeDuplicateTasks(taskList);
     const initial: TasksState = {
-      [TaskStatus.BACKLOG]: [],
+  [TaskStatus.NEW]: [],
       [TaskStatus.TO_DO]: [],
       [TaskStatus.IN_PROGRESS]: [],
       [TaskStatus.IN_REVIEW]: [],

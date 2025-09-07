@@ -169,8 +169,8 @@ export const CreateTaskForm = ({
                       </FormControl>
                       <FormMessage />
                       <SelectContent>
-                        <SelectItem value={TaskStatus.BACKLOG}>
-                          Backlog
+                        <SelectItem value={TaskStatus.NEW}>
+                          New
                         </SelectItem>
                         <SelectItem value={TaskStatus.TO_DO}>To Do</SelectItem>
                         <SelectItem value={TaskStatus.IN_PROGRESS}>
