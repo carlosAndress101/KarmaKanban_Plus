@@ -26,8 +26,10 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 import { taskSchema } from "../schemas";
 import { normalizeFormValues, TaskStatus } from "../types";
+import { useEffect } from "react";
 
 interface EditTaskFormProps {
   initialValues: any;
@@ -46,11 +48,15 @@ export function EditTaskForm({
   isPending,
   mutate,
 }: EditTaskFormProps) {
-  const schema = taskSchema.omit({ workspaceId: true, description: true });
+  const schema = taskSchema.omit({ workspaceId: true });
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: normalizeFormValues(initialValues),
   });
+
+  useEffect(() => {
+    form.reset(normalizeFormValues(initialValues));
+  }, [initialValues]);
 
   const onSubmit = (values: z.infer<typeof schema>) => {
     mutate?.(
@@ -84,6 +90,22 @@ export function EditTaskForm({
                     <FormLabel>Task name</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="Enter the task name" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        placeholder="Enter a description"
+                        rows={3}
+                      />
                     </FormControl>
                   </FormItem>
                 )}

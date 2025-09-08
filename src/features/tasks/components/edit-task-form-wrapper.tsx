@@ -14,11 +14,13 @@ import { normalizeAssignee, Task, TaskStatus } from "../types";
 interface EditTaskFormWrapperProps {
   onCancel: () => void;
   id: string;
+  onEditSuccess?: () => void;
 }
 
 export const EditTaskFormWrapper = ({
   onCancel,
   id,
+  onEditSuccess,
 }: EditTaskFormWrapperProps) => {
   const workspaceId = useWorkspaceId();
 
@@ -97,7 +99,15 @@ export const EditTaskFormWrapper = ({
       projectOptions={projectOptions ?? []}
       memberOptions={memberOptions ?? []}
       initialValues={normalizedInitialValues}
-      mutate={mutate}
+      mutate={(data, options) =>
+        mutate(data, {
+          ...options,
+          onSuccess: (...args) => {
+            options?.onSuccess?.(...args);
+            onEditSuccess?.();
+          },
+        })
+      }
       isPending={isPending}
     />
   );

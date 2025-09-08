@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PencilIcon, XIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,11 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(task.description);
   const { mutate, isPending } = useUpdateTask();
+
+  // Sincroniza el estado local con la prop task.description
+  useEffect(() => {
+    setValue(task.description);
+  }, [task.description]);
 
   const handleSave = () => {
     mutate(

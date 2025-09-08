@@ -39,7 +39,11 @@ export const TaskViewSwticher = ({
   const paramProjectId = useProjectId();
   const { open } = useCreateTaskModal();
   const { data: projects } = useGetProjects({ workspaceId });
-  const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
+  const {
+    data: tasks,
+    isLoading: isLoadingTasks,
+    refetch: refetchTasks,
+  } = useGetTasks({
     workspaceId,
     assigneeId,
     dueDate,
@@ -48,6 +52,11 @@ export const TaskViewSwticher = ({
     status,
   });
   const { mutate: bulkUpdate } = useBulkUpdateTask();
+
+  // Refetch tasks after editing a task
+  const handleTaskEditSuccess = useCallback(() => {
+    refetchTasks();
+  }, [refetchTasks]);
 
   const onKanbanChange = useCallback(
     (tasks: { id: string; status: TaskStatus; position: number }[]) => {
@@ -126,7 +135,8 @@ export const TaskViewSwticher = ({
         </div>
       </Tabs>
       {/* Modal de edición de tarea */}
-      <EditTaskModal />
+      {/* Modal de edición de tarea con refetch al editar */}
+      <EditTaskModal onEditSuccess={handleTaskEditSuccess} />
     </>
   );
   // ...eliminado código duplicado y residual...
