@@ -52,7 +52,10 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
       [TaskStatus.DONE]: [],
     };
     for (const task of cleanData) {
-      initial[task.status].push(task);
+      if (task.status && boards.includes(task.status)) {
+        initial[task.status].push(task);
+      }
+      // Si el status no es válido, puedes agregar un manejo aquí (ej. log, ignorar, etc.)
     }
     for (const status of boards) {
       initial[status].sort((a, b) => a.position - b.position);
