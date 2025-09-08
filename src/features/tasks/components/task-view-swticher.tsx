@@ -66,20 +66,28 @@ export const TaskViewSwticher = ({
   );
 
   const normalizedTasks =
-    tasks?.documents.map((task) => ({
-      ...task,
-      status: TaskStatus[task.status as keyof typeof TaskStatus],
-      description: task.description ?? null,
-      dueDate: task.dueDate ?? "",
-      assignee: task.assignee ?? null,
-      project: {
-        id: task.project?.id ?? "",
-        name: task.project?.name ?? "N/A",
-      },
-      difficulty: TaskDifficulty[
-        task.difficulty as keyof typeof TaskDifficulty
-      ] as "Easy" | "Medium" | "Hard",
-    })) ?? [];
+    tasks?.documents.map((task) => {
+      const normalizedStatus =
+        (TaskStatus as Record<string, TaskStatus>)[task.status] ??
+        TaskStatus.BACKLOG;
+      if (!Object.values(TaskStatus).includes(normalizedStatus)) {
+        console.warn("Status inválido en tarea:", task);
+      }
+      return {
+        ...task,
+        status: normalizedStatus,
+        description: task.description ?? null,
+        dueDate: task.dueDate ?? "",
+        assignee: task.assignee ?? null,
+        project: {
+          id: task.project?.id ?? "",
+          name: task.project?.name ?? "N/A",
+        },
+        difficulty: TaskDifficulty[
+          task.difficulty as keyof typeof TaskDifficulty
+        ] as "Easy" | "Medium" | "Hard",
+      };
+    }) ?? [];
 
   return (
     <>
