@@ -66,7 +66,9 @@ const app = new Hono()
 
       // Agregar búsqueda por nombre directamente en la query
       if (search) {
-        whereConditions.push(like(tasks.name, `%${search.toLowerCase()}%`));
+        if (typeof search === "string") {
+          whereConditions.push(like(tasks.name, `%${search.toLowerCase()}%`));
+        }
       }
 
       if (difficulty) {
