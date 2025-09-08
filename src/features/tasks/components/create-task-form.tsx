@@ -30,6 +30,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 
 import { TaskStatus } from "../types";
 import { taskSchema } from "../schemas";
@@ -96,6 +97,23 @@ export const CreateTaskForm = ({
                         {...field}
                         value={field.value || ""} // Ensure value is never undefined
                         placeholder="Enter the task name"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        placeholder="Enter a description"
+                        rows={3}
                       />
                     </FormControl>
                   </FormItem>

@@ -4,6 +4,7 @@ import { useTaskId } from "@/features/tasks/hooks/use-task-id";
 import { useGetTask } from "@/features/tasks/api/useGetTask";
 import { TaskOveriew } from "@/features/tasks/components/task-overview";
 import { TaskBreadcrumbs } from "@/features/tasks/components/task-breadcrumbs";
+import { EditTaskModal } from "@/features/tasks/components/edit-task-modal";
 
 import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";
@@ -28,6 +29,7 @@ export const TaskIdClient = () => {
         <TaskOveriew task={data} />
         <TaskDescription task={data} />
       </div>
+      <EditTaskModal />
     </div>
   );
 };

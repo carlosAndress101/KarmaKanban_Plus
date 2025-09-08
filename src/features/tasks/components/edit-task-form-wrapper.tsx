@@ -8,16 +8,19 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { EditTaskForm } from "./edit-task-form";
 import { useGetTask } from "../api/useGetTask";
+import { useUpdateTask } from "../api/useUpdateTask";
 import { normalizeAssignee, Task, TaskStatus } from "../types";
 
 interface EditTaskFormWrapperProps {
   onCancel: () => void;
   id: string;
+  onEditSuccess?: () => void;
 }
 
 export const EditTaskFormWrapper = ({
   onCancel,
   id,
+  onEditSuccess,
 }: EditTaskFormWrapperProps) => {
   const workspaceId = useWorkspaceId();
 
@@ -30,6 +33,7 @@ export const EditTaskFormWrapper = ({
   const { data: members, isLoading: isLoadingMembers } = useGetMember({
     workspaceId,
   });
+  const { mutate, isPending } = useUpdateTask();
 
   interface ProjectOption {
     id: string;
@@ -95,6 +99,16 @@ export const EditTaskFormWrapper = ({
       projectOptions={projectOptions ?? []}
       memberOptions={memberOptions ?? []}
       initialValues={normalizedInitialValues}
+      mutate={(data, options) =>
+        mutate(data, {
+          ...options,
+          onSuccess: () => {
+            options?.onSuccess?.();
+            onEditSuccess?.();
+          },
+        })
+      }
+      isPending={isPending}
     />
   );
 };
