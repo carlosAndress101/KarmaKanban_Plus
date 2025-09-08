@@ -66,7 +66,7 @@ export const TaskViewSwticher = ({
   );
 
   const normalizedTasks =
-    tasks?.documents.map((task: any) => ({
+    tasks?.documents.map((task) => ({
       ...task,
       status: TaskStatus[task.status as keyof typeof TaskStatus],
       description: task.description ?? null,

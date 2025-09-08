@@ -102,8 +102,8 @@ export const EditTaskFormWrapper = ({
       mutate={(data, options) =>
         mutate(data, {
           ...options,
-          onSuccess: (...args) => {
-            options?.onSuccess?.(...args);
+          onSuccess: () => {
+            options?.onSuccess?.();
             onEditSuccess?.();
           },
         })

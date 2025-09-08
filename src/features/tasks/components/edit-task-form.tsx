@@ -30,14 +30,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { taskSchema } from "../schemas";
 import { normalizeFormValues, TaskStatus } from "../types";
 import { useEffect } from "react";
+import { Task } from "../types";
 
 interface EditTaskFormProps {
-  initialValues: any;
-  memberOptions: any[];
-  projectOptions: any[];
+  initialValues: Task;
+  memberOptions: { id: string; name: string }[];
+  projectOptions: { id: string; name: string }[];
   onCancel: () => void;
   isPending?: boolean;
-  mutate?: (data: any, options?: any) => void;
+  mutate?: (
+    data: { json: z.infer<typeof taskSchema>; param: { taskId: string } },
+    options?: { onSuccess?: () => void }
+  ) => void;
 }
 
 export function EditTaskForm({
@@ -56,11 +60,17 @@ export function EditTaskForm({
 
   useEffect(() => {
     form.reset(normalizeFormValues(initialValues));
-  }, [initialValues]);
+  }, [initialValues, form]);
 
   const onSubmit = (values: z.infer<typeof schema>) => {
     mutate?.(
-      { json: values, param: { taskId: initialValues.id } },
+      {
+        json: {
+          ...values,
+          workspaceId: initialValues.workspaceId,
+        },
+        param: { taskId: initialValues.id },
+      },
       {
         onSuccess: () => {
           form.reset();
@@ -167,7 +177,7 @@ export function EditTaskForm({
                       </FormControl>
                       <FormMessage />
                       <SelectContent>
-                        {memberOptions.map((member: any) => (
+                        {memberOptions.map((member) => (
                           <SelectItem key={member.id} value={member.id}>
                             <div className="flex items-center gap-x-2">
                               <MemberAvatar
@@ -233,7 +243,7 @@ export function EditTaskForm({
                       </FormControl>
                       <FormMessage />
                       <SelectContent>
-                        {projectOptions.map((project: any) => (
+                        {projectOptions.map((project) => (
                           <SelectItem key={project.id} value={project.id}>
                             <div className="flex items-center gap-x-2">
                               <ProjectAvatar
