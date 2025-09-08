@@ -69,7 +69,7 @@ export const TaskViewSwticher = ({
     tasks?.documents.map((task) => {
       const normalizedStatus =
         (TaskStatus as Record<string, TaskStatus>)[task.status] ??
-        TaskStatus.BACKLOG;
+        TaskStatus.NEW;
       if (!Object.values(TaskStatus).includes(normalizedStatus)) {
         console.warn("Status inválido en tarea:", task);
       }

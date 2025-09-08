@@ -45,7 +45,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
   const buildTaskState = (taskList: Task[]): TasksState => {
     const cleanData = removeDuplicateTasks(taskList);
     const initial: TasksState = {
-  [TaskStatus.NEW]: [],
+      [TaskStatus.NEW]: [],
       [TaskStatus.TO_DO]: [],
       [TaskStatus.IN_PROGRESS]: [],
       [TaskStatus.IN_REVIEW]: [],
