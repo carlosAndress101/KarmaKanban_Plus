@@ -69,12 +69,9 @@ export function EditTaskForm({
       (m) => m.id === values.assignee
     );
 
-    // Excluir 'assignee' del objeto enviado al backend
+    // Excluir 'assignee' del objeto enviado al backend sin error ESLint
     const { assignee, ...rest } = values;
-    const payload: Omit<
-      typeof rest & { assigneeId: string; workspaceId: string },
-      "assignee"
-    > = {
+    const payload = {
       ...rest,
       assigneeId: selectedAssignee ? selectedAssignee.id : "",
       workspaceId: initialValues.workspaceId,
@@ -96,10 +93,25 @@ export function EditTaskForm({
   return (
     <Card className="w-full max-w-lg mx-auto border-none shadow-none">
       <CardContent className="p-7">
-        <DialogTitle className="text-xl font-bold text-center">
+        {/* DialogTitle accesible y oculto para Radix UI (primer hijo) */}
+        <DialogTitle
+          style={{
+            position: "absolute",
+            width: 1,
+            height: 1,
+            padding: 0,
+            margin: -1,
+            overflow: "hidden",
+            clip: "rect(0 0 0 0)",
+            whiteSpace: "nowrap",
+            border: 0,
+          }}
+        >
           Editar tarea
         </DialogTitle>
+        {/* Título visual */}
         <div className="mb-6">
+          <h2 className="text-xl font-bold text-center">Editar tarea</h2>
           <DottedSeparator className="mt-4" />
         </div>
         <Form {...form}>
