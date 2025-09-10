@@ -25,13 +25,13 @@ export const useResetInviteCode = (onSuccessCallback?: OnSuccessCallback) => {
       ]["$post"]({ param });
 
       if (!response.ok) {
-        throw new Error("Fallo al resetear el codigo de invitación");
+        throw new Error("Failed to reset the invitation code");
       }
 
       return await response.json();
     },
     onSuccess: (response) => {
-      toast.success("Codigo de invitación reseteado");
+      toast.success("Invitation code reset");
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
       queryClient.invalidateQueries({
         queryKey: ["workspace", response.data[0].id],
@@ -43,7 +43,7 @@ export const useResetInviteCode = (onSuccessCallback?: OnSuccessCallback) => {
       }
     },
     onError: () => {
-      toast.error("Fallo al resetear el codigo de invitación");
+      toast.error("Failed to reset the invitation code");
     },
   });
   return mutation;

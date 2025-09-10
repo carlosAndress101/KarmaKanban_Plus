@@ -18,17 +18,17 @@ export const useCreateProject = () => {
       const response = await client.api.projects["$post"]({ form });
 
       if (!response.ok) {
-        throw new Error("Fallo al crear el proyecto");
+        throw new Error("Failed to create the project");
       }
 
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Proyecto creado correctamente");
+      toast.success("Project created successfully");
       queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
     onError: () => {
-      toast.error("Fallo al crear el proyecto");
+      toast.error("Failed to create the project");
     },
   });
   return mutation;

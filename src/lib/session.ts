@@ -25,7 +25,7 @@ export const sessionMiddleware = createMiddleware(async (c, next) => {
       path: "/",
       secure: true,
     });
-    return c.json({ error: "Se terminno tu seccion", stack: err }, 401);
+    return c.json({ error: "Your session has ended", stack: err }, 401);
   }
 
   // Validar estructura del payload
@@ -52,7 +52,7 @@ export const sessionMiddleware = createMiddleware(async (c, next) => {
     c.set("user", userRecord[0]);
     c.set("authenticated", true);
   } catch (err) {
-    console.error("Error al buscar el usuario:", err);
+    console.error("EError while searching for the user:", err);
     return c.json({ error: "Unauthorized" }, 401);
   }
   await next();

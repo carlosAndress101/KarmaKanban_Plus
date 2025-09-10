@@ -145,7 +145,7 @@ const app = new Hono()
 
       const { workspaceId, memberId } = c.req.valid("query");
       const [member] = await getMember(workspaceId, user.id);
-      if (!member) return c.json({ error: "Unauthorized" }, 401);
+      if (!member) return c.json({ : "Unauthorized" }, 401);
 
       // Use provided memberId or current user's member ID
       const targetMemberId = memberId || member.id;

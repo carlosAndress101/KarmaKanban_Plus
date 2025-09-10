@@ -15,18 +15,18 @@ export const useLogout = () => {
     mutationFn: async () => {
       const response = await client.api.auth.logout["$post"]();
       if (!response.ok) {
-        throw new Error("Fallo al cerrar sesión");
+        throw new Error("Failed to log out");
       }
       return await response.json();
     },
     onSuccess: () => {
-      toast("Sesión cerrada");
+      toast("Logged out");
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
     },
     onError: () => {
-      toast.error("Hubo un error al cerrar la sesión");
+      toast.error("An error occurred while logging out");
     },
   });
 

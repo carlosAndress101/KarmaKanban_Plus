@@ -23,19 +23,19 @@ export const useUpdateProject = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Fallo al actualizar el proyecto");
+        throw new Error("Failed to update the project");
       }
 
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      toast.success("Proyecto actualizado");
+      toast.success("Project updated");
 
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({ queryKey: ["project", data.id] });
     },
     onError: () => {
-      toast.error("Fallo al actualizar el proyecto");
+      toast.error("Failed to update the project");
     },
   });
   return mutation;

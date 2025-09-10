@@ -26,12 +26,12 @@ export const useRegister = () => {
       }
     },
     onSuccess: () => {
-      toast.success("Registro exitoso");
+      toast.success("Registration successful");
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
     },
     onError: () => {
-      toast.error("Error al registrar");
+      toast.error("Registration failed");
     },
   });
 

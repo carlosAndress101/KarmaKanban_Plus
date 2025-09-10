@@ -25,19 +25,19 @@ export const useUpdateMember = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Fallo al actualizar el member");
+        throw new Error("Failed to update the member");
       }
 
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("member actualizado");
+      toast.success("Member updated");
 
       router.push("/");
       queryClient.invalidateQueries({ queryKey: ["members"] });
     },
     onError: () => {
-      toast.error("Fallo al actualizar el member");
+      toast.error("Failed to update the member");
     },
   });
   return mutation;

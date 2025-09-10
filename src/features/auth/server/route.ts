@@ -21,13 +21,13 @@ const app = new Hono()
     //check if email exists
     const userDt = await db.select().from(users).where(eq(users.email, email));
     if (userDt.length === 0) {
-      return c.json({ error: "Correo o contraseña incorrectos" }, 401);
+      return c.json({ error: "Incorrect email or password" }, 401);
     }
 
     //check if password is correct
     const comparePassword = await bcrypt.compare(password, userDt[0].password);
     if (!comparePassword) {
-      return c.json({ error: "Correo o contraseña incorrectos" }, 401);
+      return c.json({ error: "Incorrect email or password" }, 401);
     }
 
     const payload = {
@@ -54,7 +54,7 @@ const app = new Hono()
 
     const regex = /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]+$/;
     if (!regex.test(name)) {
-      return c.json({ success: false, message: "Nombre no válido" }, 400);
+      return c.json({ success: false, message: "Invalid name" }, 400);
     }
     // Verificar si el usuario ya existe
     const existingUser = await db
@@ -63,7 +63,7 @@ const app = new Hono()
       .where(eq(users.email, email));
 
     if (existingUser.length > 1) {
-      return c.json({ success: false, message: "El usuario ya existe" }, 409);
+      return c.json({ success: false, message: "The user already exists" }, 409);
     }
 
     // Generar hash de la contraseña

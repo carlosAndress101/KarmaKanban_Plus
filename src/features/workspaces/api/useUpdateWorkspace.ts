@@ -25,19 +25,19 @@ export const useUpdateWorkspace = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create workspace");
+        throw new Error("An error occurred while updating the workspace");
       }
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      toast.success("Workspace actualizado");
+      toast.success("Workspace updated");
 
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
       queryClient.invalidateQueries({ queryKey: ["workspace", data[0].id] });
     },
     onError: () => {
-      toast.error("Hubo un error al actualizar el workspace");
+      toast.error("An error occurred while updating the workspace");
     },
   });
 

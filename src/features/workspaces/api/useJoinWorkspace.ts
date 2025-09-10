@@ -22,7 +22,7 @@ export const useJoinWorkspace = () => {
       ]({ param, json });
 
       if (!response.ok) {
-        throw new Error("Error al unirse al workspace");
+        throw new Error("Failed to join the workspace");
       }
 
       return await response.json();
@@ -33,7 +33,7 @@ export const useJoinWorkspace = () => {
       queryClient.invalidateQueries({ queryKey: ["workspace", data[0].id] });
     },
     onError: () => {
-      toast.error("Error al unirse al workspace");
+      toast.error("Failed to join the workspace");
     },
   });
   return mutation;

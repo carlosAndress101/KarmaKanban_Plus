@@ -25,12 +25,12 @@ export const useLogin = () => {
       }
     },
     onSuccess: () => {
-      toast.success("Sesión iniciada");
+      toast.success("Logged in");
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
     },
     onError: () => {
-      toast.error("Hubo un error al iniciar sesión");
+      toast.error("An error occurred while logging in");
     },
   });
 
