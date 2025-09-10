@@ -17,10 +17,11 @@ export const useBulkUpdateTask = () => {
   const queryClient = useQueryClient();
 
   // Accept members as an argument for optimistic update
+  type Member = { id: string; name: string | null; lastName?: string | null };
   const mutation = useMutation<
     ResponseType,
     Error,
-    RequestType & { members?: any[] }
+    RequestType & { members?: Member[] }
   >({
     mutationFn: async ({ json }) => {
       const response = await client.api.tasks["bulk-update"]["$post"]({
@@ -46,9 +47,7 @@ export const useBulkUpdateTask = () => {
           if (taskIndex !== -1) {
             let newAssignee = updatedTasks[taskIndex].assignee;
             if (update.assigneeId && members) {
-              const member = members.find(
-                (m: any) => m.id === update.assigneeId
-              );
+              const member = members.find((m) => m.id === update.assigneeId);
               if (member) {
                 newAssignee = {
                   id: member.id,

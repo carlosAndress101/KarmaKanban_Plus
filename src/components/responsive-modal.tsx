@@ -1,5 +1,5 @@
 import { useMedia } from "react-use";
-import { DialogContent, Dialog, DialogTitle } from "./ui/dialog";
+import { DialogContent, Dialog } from "./ui/dialog";
 import { Drawer, DrawerContent } from "./ui/drawer";
 
 export function ResponsiveModal({

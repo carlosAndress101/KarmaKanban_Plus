@@ -139,7 +139,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
       // Enviar cambios directamente usando mutate
       mutate({ json: { tasks: updatesPayload }, members });
     },
-    [mutate]
+    [mutate, members]
   );
 
   return (

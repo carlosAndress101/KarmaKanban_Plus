@@ -8,9 +8,10 @@ import { MemberAvatar } from "@/features/members/components/meberAvatar";
 import { ProjectAvatar } from "@/features/projects/components/projectAvatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { DialogTitle } from "@/components/ui/dialog";
 import { DatePicker } from "@/components/date-picker";
 import { DottedSeparator } from "@/components/dotted-separator";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -39,7 +40,7 @@ interface EditTaskFormProps {
   onCancel: () => void;
   isPending?: boolean;
   mutate?: (
-    data: { json: z.infer<typeof taskSchema>; param: { taskId: string } },
+    data: { json: Record<string, unknown>; param: { taskId: string } },
     options?: { onSuccess?: () => void }
   ) => void;
 }
@@ -68,14 +69,19 @@ export function EditTaskForm({
       (m) => m.id === values.assignee
     );
 
+    // Excluir 'assignee' del objeto enviado al backend
     const { assignee, ...rest } = values;
+    const payload: Omit<
+      typeof rest & { assigneeId: string; workspaceId: string },
+      "assignee"
+    > = {
+      ...rest,
+      assigneeId: selectedAssignee ? selectedAssignee.id : "",
+      workspaceId: initialValues.workspaceId,
+    };
     mutate?.(
       {
-        json: {
-          ...rest,
-          assigneeId: selectedAssignee ? selectedAssignee.id : "",
-          workspaceId: initialValues.workspaceId,
-        } as any,
+        json: payload,
         param: { taskId: initialValues.id },
       },
       {
@@ -89,15 +95,17 @@ export function EditTaskForm({
 
   return (
     <Card className="w-full max-w-lg mx-auto border-none shadow-none">
-      {/* Solo título centrado, sin CardHeader/CardTitle duplicado */}
       <CardContent className="p-7">
+        <DialogTitle className="text-xl font-bold text-center">
+          Editar tarea
+        </DialogTitle>
         <div className="mb-6">
-          <h2 className="text-xl font-bold text-center">Edit Task</h2>
           <DottedSeparator className="mt-4" />
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-4">
+              {/* ...existing code... */}
               <FormField
                 control={form.control}
                 name="name"
