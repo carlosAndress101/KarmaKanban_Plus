@@ -88,6 +88,8 @@ export const TaskViewSwticher = ({
         ] as "Easy" | "Medium" | "Hard",
       };
     }) ?? [];
+  // Depuración: mostrar el array de tareas normalizadas antes de pasarlo al Kanban
+  console.log("TaskViewSwticher normalizedTasks:", normalizedTasks);
 
   return (
     <>
@@ -133,7 +135,12 @@ export const TaskViewSwticher = ({
                 <DataTable columns={columns} data={normalizedTasks} />
               </TabsContent>
               <TabsContent value="kanban" className="mt-0">
-                <DataKanban data={normalizedTasks} onChange={onKanbanChange} />
+                {/* Forzar re-render usando key única */}
+                <DataKanban
+                  key={workspaceId + "-" + normalizedTasks.length}
+                  data={normalizedTasks}
+                  onChange={onKanbanChange}
+                />
               </TabsContent>
               <TabsContent value="calendar" className="mt-0 h-full pb-4">
                 <DataCalendar data={normalizedTasks} projects={projects} />

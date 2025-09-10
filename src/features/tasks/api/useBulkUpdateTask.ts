@@ -16,11 +16,14 @@ type RequestType = InferRequestType<
 export const useBulkUpdateTask = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<ResponseType, Error, RequestType>({
+  // Accept members as an argument for optimistic update
+  const mutation = useMutation<
+    ResponseType,
+    Error,
+    RequestType & { members?: any[] }
+  >({
     mutationFn: async ({ json }) => {
-      const response = await client.api.tasks["bulk-update"][
-        "$post"
-      ]({
+      const response = await client.api.tasks["bulk-update"]["$post"]({
         json,
       });
 
@@ -31,7 +34,7 @@ export const useBulkUpdateTask = () => {
       return await response.json();
     },
 
-    onMutate: async ({ json }) => {
+    onMutate: async ({ json, members }) => {
       await queryClient.cancelQueries({ queryKey: ["tasks"] });
 
       const previousTasks = queryClient.getQueryData<Task[]>(["tasks"]);
@@ -41,14 +44,33 @@ export const useBulkUpdateTask = () => {
         for (const update of json.tasks) {
           const taskIndex = updatedTasks.findIndex((t) => t.id === update.id);
           if (taskIndex !== -1) {
+            let newAssignee = updatedTasks[taskIndex].assignee;
+            if (update.assigneeId && members) {
+              const member = members.find(
+                (m: any) => m.id === update.assigneeId
+              );
+              if (member) {
+                newAssignee = {
+                  id: member.id,
+                  name: member.name,
+                  lastName: member.lastName ?? null,
+                };
+              } else {
+                newAssignee = {
+                  id: update.assigneeId,
+                  name: null,
+                  lastName: null,
+                };
+              }
+            }
             updatedTasks[taskIndex] = {
               ...updatedTasks[taskIndex],
               status: update.status,
               position: update.position,
+              assignee: newAssignee,
             };
           }
         }
-
         queryClient.setQueryData(["tasks"], updatedTasks);
       }
 

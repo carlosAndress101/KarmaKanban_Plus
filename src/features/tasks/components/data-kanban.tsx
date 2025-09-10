@@ -10,6 +10,8 @@ import { Task, TaskStatus } from "../types";
 import { KanbanCard } from "./kanban-card";
 import { KanbanColumnHeader } from "./kanban-column-header";
 import { useBulkUpdateTask } from "../api/useBulkUpdateTask"; // Importa tu hook aquí
+import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
+import { useGetMember } from "@/features/members/api/useGetMember";
 
 const boards: TaskStatus[] = [
   TaskStatus.NEW,
@@ -40,7 +42,11 @@ const removeDuplicateTasks = (tasks: Task[]) => {
 };
 
 export const DataKanban = ({ data }: DataKanbanProps) => {
+  const workspaceId = useWorkspaceId();
+  const { data: members } = useGetMember({ workspaceId });
   const { mutate } = useBulkUpdateTask();
+  // Depuración: mostrar el array de tareas recibido
+  console.log("DataKanban data:", data);
 
   const buildTaskState = (taskList: Task[]): TasksState => {
     const cleanData = removeDuplicateTasks(taskList);
@@ -82,6 +88,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
         id: string;
         status: TaskStatus;
         position: number;
+        assigneeId: string;
       }[] = [];
 
       setTasks((prevTasks) => {
@@ -108,6 +115,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
           id: updatedTask.id,
           status: destStatus,
           position: Math.min((destination.index + 1) * 1000, 1_000_000),
+          assigneeId: updatedTask.assignee?.id || "",
         });
 
         // Recalcular posiciones en ambas columnas
@@ -119,6 +127,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
                 id: task.id,
                 status,
                 position: newPosition,
+                assigneeId: task.assignee?.id || "",
               });
             }
           });
@@ -128,7 +137,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
       });
 
       // Enviar cambios directamente usando mutate
-      mutate({ json: { tasks: updatesPayload } });
+      mutate({ json: { tasks: updatesPayload }, members });
     },
     [mutate]
   );

@@ -100,13 +100,16 @@ export const EditTaskFormWrapper = ({
       memberOptions={memberOptions ?? []}
       initialValues={normalizedInitialValues}
       mutate={(data, options) =>
-        mutate(data, {
-          ...options,
-          onSuccess: () => {
-            options?.onSuccess?.();
-            onEditSuccess?.();
-          },
-        })
+        mutate(
+          { ...data },
+          {
+            ...options,
+            onSuccess: () => {
+              options?.onSuccess?.();
+              onEditSuccess?.();
+            },
+          }
+        )
       }
       isPending={isPending}
     />

@@ -63,12 +63,19 @@ export function EditTaskForm({
   }, [initialValues, form]);
 
   const onSubmit = (values: z.infer<typeof schema>) => {
+    // Enviar solo el id del miembro asignado como assigneeId
+    const selectedAssignee = memberOptions.find(
+      (m) => m.id === values.assignee
+    );
+    // Elimina 'assignee' y agrega 'assigneeId' solo en el payload enviado al backend
+    const { assignee, ...rest } = values;
     mutate?.(
       {
         json: {
-          ...values,
+          ...rest,
+          assigneeId: selectedAssignee ? selectedAssignee.id : "",
           workspaceId: initialValues.workspaceId,
-        },
+        } as any,
         param: { taskId: initialValues.id },
       },
       {
@@ -210,9 +217,7 @@ export function EditTaskForm({
                       </FormControl>
                       <FormMessage />
                       <SelectContent>
-                        <SelectItem value={TaskStatus.NEW}>
-                          New
-                        </SelectItem>
+                        <SelectItem value={TaskStatus.NEW}>New</SelectItem>
                         <SelectItem value={TaskStatus.TO_DO}>To Do</SelectItem>
                         <SelectItem value={TaskStatus.IN_PROGRESS}>
                           In Progress
