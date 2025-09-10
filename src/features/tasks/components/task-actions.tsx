@@ -74,7 +74,7 @@ export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
             className="font-medium p-[10px]"
           >
             <PencilIcon className="size-4 mr-2 stroke-2" />
-            Edit task
+            Editar tarea
           </DropdownMenuItem>
 
           <DropdownMenuItem

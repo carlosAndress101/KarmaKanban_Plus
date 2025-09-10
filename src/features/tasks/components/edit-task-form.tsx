@@ -67,7 +67,7 @@ export function EditTaskForm({
     const selectedAssignee = memberOptions.find(
       (m) => m.id === values.assignee
     );
-    // Elimina 'assignee' y agrega 'assigneeId' solo en el payload enviado al backend
+
     const { assignee, ...rest } = values;
     mutate?.(
       {
@@ -88,14 +88,13 @@ export function EditTaskForm({
   };
 
   return (
-    <Card className="w-full h-full border-none shadow-none">
-      <CardHeader className="flex p-7">
-        <CardTitle className="text-xl font-bold">Edit task</CardTitle>
-      </CardHeader>
-      <div className="px-7">
-        <DottedSeparator />
-      </div>
+    <Card className="w-full max-w-lg mx-auto border-none shadow-none">
+      {/* Solo título centrado, sin CardHeader/CardTitle duplicado */}
       <CardContent className="p-7">
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-center">Edit Task</h2>
+          <DottedSeparator className="mt-4" />
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-4">

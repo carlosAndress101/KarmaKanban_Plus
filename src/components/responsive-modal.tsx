@@ -17,7 +17,7 @@ export function ResponsiveModal({
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="w-full sm:max-w-lg p-0 border-none overflow-y-auto hide-scrollbar max-h-[85vh]">
-          <DialogTitle>Edit Task</DialogTitle>
+          {/* Eliminado título para evitar duplicidad */}
           {children}
         </DialogContent>
       </Dialog>
@@ -26,17 +26,7 @@ export function ResponsiveModal({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent>
-        {/* Título accesible oculto para el drawer */}
-        <div
-          style={{
-            position: "absolute",
-            width: 0,
-            height: 0,
-            overflow: "hidden",
-          }}
-        >
-          <DialogTitle>Edit Task</DialogTitle>
-        </div>
+        {/* Eliminado título para evitar duplicidad */}
         <div className="overflow-y-auto hide-scrollbar max-h-[85vh]">
           {children}
         </div>
