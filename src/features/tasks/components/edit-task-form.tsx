@@ -70,7 +70,8 @@ export function EditTaskForm({
     );
 
     // Excluir 'assignee' del objeto enviado al backend sin error ESLint
-    const { assignee, ...rest } = values;
+    const rest: Record<string, unknown> = { ...values };
+    delete rest.assignee;
     const payload = {
       ...rest,
       assigneeId: selectedAssignee ? selectedAssignee.id : "",
