@@ -44,6 +44,7 @@ export const BulkUpdateTasksSchema = z.object({
       id: z.string(),
       status: z.nativeEnum(TaskStatus),
       position: z.number(),
+      assigneeId: z.string().optional(),
     })
   ),
 });

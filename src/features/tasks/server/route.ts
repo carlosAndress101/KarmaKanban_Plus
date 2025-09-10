@@ -196,7 +196,10 @@ const app = new Hono()
   .patch(
     "/:taskId",
     sessionMiddleware,
-    zValidator("json", taskSchema.partial()),
+    zValidator(
+      "json",
+      taskSchema.partial().extend({ assigneeId: z.string().optional() })
+    ),
     async (c) => {
       const user = c.get("user");
 
@@ -223,11 +226,20 @@ const app = new Hono()
       const isStatusChanging = oldStatus !== newStatus;
       const hasAssignee = task.assigneeId;
 
-      const [updatedTask] = await db
+      const updatePayload = { ...values, updatedAt: new Date() };
+      if (values.assigneeId) {
+        updatePayload.assigneeId = values.assigneeId;
+      }
+      
+      if ("assignee" in updatePayload) {
+        delete updatePayload.assignee;
+      }
+      const updatedTaskArr = await db
         .update(tasks)
-        .set({ ...values, updatedAt: new Date() })
+        .set(updatePayload)
         .where(eq(tasks.id, taskId))
         .returning();
+      const updatedTask = updatedTaskArr[0];
 
       // Handle gamification points and badges
       if (isStatusChanging && hasAssignee) {
@@ -265,7 +277,52 @@ const app = new Hono()
         }
       }
 
-      return c.json({ data: updatedTask });
+      // Populate assignee info igual que el GET
+      let assignee = null;
+      if (updatedTask.assigneeId) {
+        const [assigneeMember] = await db
+          .select()
+          .from(members)
+          .where(eq(members.id, updatedTask.assigneeId))
+          .limit(1);
+        if (assigneeMember) {
+          const [assigneeUser] = await db
+            .select()
+            .from(users)
+            .where(eq(users.id, assigneeMember.userId))
+            .limit(1);
+          assignee = {
+            id: assigneeMember.id,
+            name: assigneeUser?.name ?? null,
+            lastName: assigneeUser?.lastName ?? null,
+          };
+        } else {
+          assignee = { id: updatedTask.assigneeId, name: null, lastName: null };
+        }
+      }
+
+      // Populate project info igual que el GET
+      let project = null;
+      if (updatedTask.projectId) {
+        const [projectRow] = await db
+          .select()
+          .from(projects)
+          .where(eq(projects.id, updatedTask.projectId))
+          .limit(1);
+        if (projectRow) {
+          project = { id: projectRow.id, name: projectRow.name };
+        } else {
+          project = { id: updatedTask.projectId, name: "N/A" };
+        }
+      }
+
+      return c.json({
+        data: {
+          ...updatedTask,
+          assignee,
+          project,
+        },
+      });
     }
   )
   .delete("/:taskId", sessionMiddleware, async (c) => {
@@ -459,6 +516,7 @@ const app = new Hono()
             .set({
               status: update.status,
               position: update.position,
+              assigneeId: update.assigneeId ?? undefined,
               updatedAt: new Date(),
             })
             .where(eq(tasks.id, update.id))
