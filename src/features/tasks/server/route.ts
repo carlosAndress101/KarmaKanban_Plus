@@ -25,6 +25,7 @@ const app = new Hono()
         search: z.string().nullish(),
         dueDate: z.string().nullish(),
         difficulty: z.nativeEnum(TaskDifficulty).nullish(),
+        archived: z.string().nullish().transform((v) => v === "true"),
       })
     ),
     async (c) => {
@@ -40,13 +41,17 @@ const app = new Hono()
         search,
         status,
         difficulty,
+        archived,
       } = c.req.valid("query");
 
       const [member] = await getMember(workspaceId, user.id);
       if (!member) return c.json({ error: "Unauthorized" }, 401);
 
       // Construir condiciones WHERE
-      const whereConditions = [eq(tasks.workspaceId, workspaceId)];
+      const whereConditions = [
+        eq(tasks.workspaceId, workspaceId),
+        eq(tasks.archived, archived ?? false), // Default to non-archived tasks
+      ];
 
       if (projectId) {
         whereConditions.push(eq(tasks.projectId, projectId));
@@ -93,7 +98,8 @@ const app = new Hono()
           assigneeName: users.name,
           assigneeLastName: users.lastName,
           projectName: projects.name,
-          difficulty: tasks.difficulty, // <-- Agrega esto
+          difficulty: tasks.difficulty,
+          archived: tasks.archived, // Archive field
         })
         .from(tasks)
         .leftJoin(projects, eq(tasks.projectId, projects.id))
@@ -122,7 +128,8 @@ const app = new Hono()
         position: row.position,
         createdAt: row.createdAt,
         updatedAt: row.updatedAt,
-        difficulty: row.difficulty, // <-- Agrega esto
+        difficulty: row.difficulty,
+        archived: row.archived, // Archive field
       }));
 
       return c.json({ data: { documents: formattedTasks } });
@@ -543,6 +550,78 @@ const app = new Hono()
         gamificationChanges: gamificationChanges.length,
         message: `Updated ${updates.length} tasks with ${gamificationChanges.length} point changes`,
       });
+    }
+  )
+  .patch(
+    "/:taskId/archive",
+    sessionMiddleware,
+    async (c) => {
+      const user = c.get("user");
+      const { taskId } = c.req.param();
+
+      if (!user) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      // Get the task to check workspace access
+      const [task] = await db
+        .select()
+        .from(tasks)
+        .where(eq(tasks.id, taskId));
+
+      if (!task) {
+        return c.json({ error: "Task not found" }, 404);
+      }
+
+      const [member] = await getMember(task.workspaceId, user.id);
+      if (!member) return c.json({ error: "Unauthorized" }, 401);
+
+      // Archive the task
+      await db
+        .update(tasks)
+        .set({ 
+          archived: true,
+          updatedAt: new Date(),
+        })
+        .where(eq(tasks.id, taskId));
+
+      return c.json({ data: { archived: true } });
+    }
+  )
+  .patch(
+    "/:taskId/unarchive",
+    sessionMiddleware,
+    async (c) => {
+      const user = c.get("user");
+      const { taskId } = c.req.param();
+
+      if (!user) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      // Get the task to check workspace access
+      const [task] = await db
+        .select()
+        .from(tasks)
+        .where(eq(tasks.id, taskId));
+
+      if (!task) {
+        return c.json({ error: "Task not found" }, 404);
+      }
+
+      const [member] = await getMember(task.workspaceId, user.id);
+      if (!member) return c.json({ error: "Unauthorized" }, 401);
+
+      // Unarchive the task
+      await db
+        .update(tasks)
+        .set({ 
+          archived: false,
+          updatedAt: new Date(),
+        })
+        .where(eq(tasks.id, taskId));
+
+      return c.json({ data: { archived: false } });
     }
   );
 

@@ -32,6 +32,7 @@ export interface Task {
   createdAt: string;
   updatedAt: string;
   difficulty: "Easy" | "Medium" | "Hard"; // <-- Nuevo campo
+  archived: boolean; // Archive field
 }
 
 export type TaskFront = {
@@ -47,6 +48,7 @@ export type TaskFront = {
   createdAt?: string;
   updatedAt?: string;
   difficulty: "Easy" | "Medium" | "Hard";
+  archived?: boolean; // Archive field
 };
 
 export type ProjectTId = {

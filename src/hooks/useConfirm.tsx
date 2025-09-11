@@ -5,10 +5,12 @@ import { ResponsiveModal } from "@/components/responsive-modal";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
+import {
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 export const useConfirm = (
   title: string,
@@ -41,11 +43,13 @@ export const useConfirm = (
 
   const ConfirmationDialog = () => (
     <ResponsiveModal open={promise !== null} onOpenChange={handleClose}>
+      <DialogTitle className="sr-only">{title}</DialogTitle>
+      <DialogDescription className="sr-only">{message}</DialogDescription>
       <Card className="w-full h-full border-none shadow-none">
         <CardContent className="pt-8">
           <CardHeader className="p-0">
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>{message}</CardDescription>
+            <h2 className="text-lg leading-none font-semibold">{title}</h2>
+            <p className="text-muted-foreground text-sm">{message}</p>
           </CardHeader>
 
           <div className="pt-4 w-full flex flex-col gap-y-2 lg:flex-row gap-x-2 items-center justify-end">

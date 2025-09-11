@@ -36,6 +36,10 @@ export const querySchema = z.object({
     .string()
     .optional()
     .transform((v) => v ?? undefined),
+  archived: z
+    .boolean()
+    .optional()
+    .transform((v) => v ?? false), // Archive filter
 });
 
 export const BulkUpdateTasksSchema = z.object({

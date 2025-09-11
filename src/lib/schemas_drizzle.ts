@@ -118,6 +118,7 @@ export const tasks = pgTable("tasks", {
   difficulty: text("difficulty", {
     enum: ["Easy", "Medium", "Hard"],
   }).notNull(), // <-- NUEVO CAMPO
+  archived: boolean("archived").default(false).notNull(), // Archive field
   position: integer("position").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

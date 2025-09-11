@@ -17,6 +17,7 @@ import { DataTable } from "./data-table";
 import { DataKanban } from "./data-kanban";
 import { DataFilters } from "./data-filters";
 import { DataCalendar } from "./data-calendar";
+import { DataArchived } from "./data-archived";
 import { EditTaskModal } from "./edit-task-modal";
 
 import { TaskDifficulty, TaskStatus } from "../types";
@@ -34,6 +35,8 @@ export const TaskViewSwticher = ({
 }: TaskViewSwticherProps) => {
   const [{ assigneeId, dueDate, projectId, search, status }] = useTaskFilters();
   const [view, setView] = useQueryState("task-view", { defaultValue: "table" });
+  
+  const isArchivedView = view === "archived";
 
   const workspaceId = useWorkspaceId();
   const paramProjectId = useProjectId();
@@ -49,7 +52,8 @@ export const TaskViewSwticher = ({
     dueDate,
     projectId: paramProjectId || projectId,
     search,
-    status,
+    status: isArchivedView ? undefined : status, // Don't filter by status when viewing archived
+    archived: isArchivedView,
   });
   const { mutate: bulkUpdate } = useBulkUpdateTask();
 
@@ -110,6 +114,9 @@ export const TaskViewSwticher = ({
               <TabsTrigger className="h-8 w-full lg:w-auto" value="calendar">
                 Calendar
               </TabsTrigger>
+              <TabsTrigger className="h-8 w-full lg:w-auto" value="archived">
+                Archived
+              </TabsTrigger>
             </TabsList>
             <Button
               size="sm"
@@ -122,8 +129,12 @@ export const TaskViewSwticher = ({
           </div>
 
           <DottedSeparator className="my-4" />
-          <DataFilters hideProjectFilter={hideProjectFilter} />
-          <DottedSeparator className="my-4" />
+          {!isArchivedView && (
+            <>
+              <DataFilters hideProjectFilter={hideProjectFilter} />
+              <DottedSeparator className="my-4" />
+            </>
+          )}
 
           {isLoadingTasks ? (
             <div className="w-full border rounded-lg h-[200px] flex flex-col items-center justify-center">
@@ -144,6 +155,9 @@ export const TaskViewSwticher = ({
               </TabsContent>
               <TabsContent value="calendar" className="mt-0 h-full pb-4">
                 <DataCalendar data={normalizedTasks} projects={projects} />
+              </TabsContent>
+              <TabsContent value="archived" className="mt-0">
+                <DataArchived data={normalizedTasks} />
               </TabsContent>
             </>
           )}

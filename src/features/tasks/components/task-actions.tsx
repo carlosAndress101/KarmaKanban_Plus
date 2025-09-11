@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { ExternalLinkIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { ExternalLinkIcon, PencilIcon, TrashIcon, ArchiveIcon, ArchiveRestoreIcon } from "lucide-react";
 
 import { useConfirm } from "@/hooks/useConfirm";
 import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
@@ -12,15 +12,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useDeleteTask } from "../api/useDeleteTask";
+import { useArchiveTask } from "../api/useArchiveTask";
+import { useUnarchiveTask } from "../api/useUnarchiveTask";
 import { useEditTaskModal } from "../hooks/use-edit-task-modal";
 
 interface TaskActionsProps {
   id: string;
   projectId: string;
   children: React.ReactNode;
+  archived?: boolean;
 }
 
-export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
+export const TaskActions = ({ children, id, projectId, archived = false }: TaskActionsProps) => {
   const router = useRouter();
   const workspaceId = useWorkspaceId();
   const { open } = useEditTaskModal();
@@ -30,13 +33,33 @@ export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
     "This action cannot be undone.",
     "destructive"
   );
+  const [ArchiveConfirmDialog, confirmArchive] = useConfirm(
+    archived ? "Restore task" : "Archive task",
+    archived
+      ? "This task will be moved back to active tasks."
+      : "This task will be moved to archived tasks.",
+    archived ? "default" : "destructive"
+  );
   const { mutate, isPending } = useDeleteTask();
+  const { mutate: archiveTask, isPending: isArchiving } = useArchiveTask();
+  const { mutate: unarchiveTask, isPending: isUnarchiving } = useUnarchiveTask();
 
   const onDelete = async () => {
     const ok = await confirm();
     if (!ok) return;
 
     mutate({ param: { taskId: id } });
+  };
+
+  const onArchive = async () => {
+    const ok = await confirmArchive();
+    if (!ok) return;
+
+    if (archived) {
+      unarchiveTask({ param: { taskId: id } });
+    } else {
+      archiveTask({ param: { taskId: id } });
+    }
   };
 
   const onOpenTask = () => {
@@ -50,6 +73,7 @@ export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
   return (
     <div className="flex justify-end">
       <ConfirmDialog />
+      <ArchiveConfirmDialog />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent className="w-48" align="end">
@@ -75,6 +99,19 @@ export const TaskActions = ({ children, id, projectId }: TaskActionsProps) => {
           >
             <PencilIcon className="size-4 mr-2 stroke-2" />
             Editar tarea
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={onArchive}
+            disabled={isArchiving || isUnarchiving}
+            className="font-medium p-[10px]"
+          >
+            {archived ? (
+              <ArchiveRestoreIcon className="size-4 mr-2 stroke-2" />
+            ) : (
+              <ArchiveIcon className="size-4 mr-2 stroke-2" />
+            )}
+            {archived ? "Restore task" : "Archive task"}
           </DropdownMenuItem>
 
           <DropdownMenuItem
