@@ -1,3 +1,5 @@
+// ...existing code...
+
 import { z } from "zod";
 import { TaskStatus } from "./types";
 
@@ -12,6 +14,7 @@ export const taskSchema = z.object({
   difficulty: z.enum(["Easy", "Medium", "Hard"], {
     required_error: "Difficulty required",
   }), // <-- Nuevo campo
+  developerFeedback: z.string().nullable().optional(), // Allow feedback in updates
 });
 
 export const querySchema = z.object({
@@ -54,3 +57,7 @@ export const BulkUpdateTasksSchema = z.object({
 });
 
 export type BulkUpdateTasksInput = z.infer<typeof BulkUpdateTasksSchema>;
+
+export const taskDeveloperFeedbackSchema = z.object({
+  developerFeedback: z.string().optional(),
+});

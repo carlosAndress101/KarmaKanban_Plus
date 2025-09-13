@@ -71,6 +71,13 @@
       "when": 1757601584140,
       "tag": "0009_purple_red_shift",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1757725919433,
+      "tag": "0010_faithful_rattler",
+      "breakpoints": true
     }
   ]
 }

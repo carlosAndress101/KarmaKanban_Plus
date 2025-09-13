@@ -149,6 +149,23 @@ export function EditTaskForm({
               />
               <FormField
                 control={form.control}
+                name="developerFeedback"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Developer Feedback</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        value={field.value ?? ""}
+                        placeholder="Enter developer feedback or implementation notes"
+                        rows={3}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="difficulty"
                 render={({ field }) => (
                   <FormItem>

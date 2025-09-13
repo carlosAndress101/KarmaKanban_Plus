@@ -33,6 +33,7 @@ export interface Task {
   updatedAt: string;
   difficulty: "Easy" | "Medium" | "Hard"; // <-- Nuevo campo
   archived: boolean; // Archive field
+  developerFeedback?: string | null; // Developer feedback field
 }
 
 export type TaskFront = {
@@ -49,6 +50,7 @@ export type TaskFront = {
   updatedAt?: string;
   difficulty: "Easy" | "Medium" | "Hard";
   archived?: boolean; // Archive field
+  developerFeedback?: string | null; // Developer feedback field
 };
 
 export type ProjectTId = {

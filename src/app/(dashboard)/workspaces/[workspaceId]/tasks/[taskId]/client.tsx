@@ -10,6 +10,7 @@ import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { TaskDescription } from "@/features/tasks/components/task-description";
+import { TaskDeveloperFeedback } from "@/features/tasks/components/task-developer-feedback";
 
 export const TaskIdClient = () => {
   const taskId = useTaskId();
@@ -27,7 +28,10 @@ export const TaskIdClient = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <TaskOveriew task={data} />
-        <TaskDescription task={data} />
+        <div className="flex flex-col gap-4">
+          <TaskDescription task={data} />
+          <TaskDeveloperFeedback task={data} />
+        </div>
       </div>
       <EditTaskModal />
     </div>
