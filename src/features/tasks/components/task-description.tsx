@@ -10,9 +10,10 @@ import { useUpdateTask } from "../api/useUpdateTask";
 
 interface TaskDescriptionProps {
   task: TaskFront;
+  className?: string;
 }
 
-export const TaskDescription = ({ task }: TaskDescriptionProps) => {
+export const TaskDescription = ({ task, className }: TaskDescriptionProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(task.description);
   const { mutate, isPending } = useUpdateTask();
@@ -34,9 +35,9 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
   };
 
   return (
-    <div className="p-4 border rounded-lg">
+    <div className={`p-4 border rounded-lg ${className || ""}`}>
       <div className="flex items-center justify-between">
-        <p className="text-lg font-semibold">Overview</p>
+        <p className="text-lg font-semibold">Description</p>
         <Button
           size="sm"
           variant="secondary"
@@ -75,7 +76,7 @@ export const TaskDescription = ({ task }: TaskDescriptionProps) => {
           </Button>
         </div>
       ) : (
-        <div>
+        <div className="whitespace-pre-wrap break-words overflow-y-auto max-h-[150px] pr-2">
           {task.description || (
             <span className="text-muted-foreground">No description</span>
           )}

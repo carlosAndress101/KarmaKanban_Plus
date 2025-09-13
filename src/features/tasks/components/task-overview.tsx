@@ -14,14 +14,15 @@ import { useEditTaskModal } from "../hooks/use-edit-task-modal";
 
 interface TaskOverviewProps {
   task: TaskFront;
+  className?: string;
 }
 
-export const TaskOveriew = ({ task }: TaskOverviewProps) => {
+export const TaskOveriew = ({ task, className }: TaskOverviewProps) => {
   const { open } = useEditTaskModal();
 
   return (
-    <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-muted rounded-lg p-4">
+    <div className={`flex flex-col gap-y-4 col-span-1 ${className || ""}`}>
+      <div className="bg-muted rounded-lg p-4 h-full">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Overview</p>
           <Button size="sm" variant="secondary" onClick={() => open(task.id)}>

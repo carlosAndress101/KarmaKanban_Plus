@@ -10,9 +10,13 @@ import { useUpdateTask } from "../api/useUpdateTask";
 
 interface TaskDeveloperFeedbackProps {
   task: TaskFront;
+  className?: string;
 }
 
-export const TaskDeveloperFeedback = ({ task }: TaskDeveloperFeedbackProps) => {
+export const TaskDeveloperFeedback = ({
+  task,
+  className,
+}: TaskDeveloperFeedbackProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(task.developerFeedback);
   const { mutate, isPending } = useUpdateTask();
@@ -33,7 +37,7 @@ export const TaskDeveloperFeedback = ({ task }: TaskDeveloperFeedbackProps) => {
   };
 
   return (
-    <div className="p-4 border rounded-lg">
+    <div className={`p-4 border rounded-lg ${className || ""}`}>
       <div className="flex items-center justify-between">
         <p className="text-lg font-semibold">Developer Feedback</p>
         <Button
@@ -74,7 +78,7 @@ export const TaskDeveloperFeedback = ({ task }: TaskDeveloperFeedbackProps) => {
           </Button>
         </div>
       ) : (
-        <div>
+        <div className="whitespace-pre-wrap break-words overflow-y-auto max-h-[150px] pr-2">
           {task.developerFeedback || (
             <span className="text-muted-foreground">No developer feedback</span>
           )}

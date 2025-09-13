@@ -26,11 +26,11 @@ export const TaskIdClient = () => {
 
       <DottedSeparator className="my-6" />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <TaskOveriew task={data} />
-        <div className="flex flex-col gap-4">
-          <TaskDescription task={data} />
-          <TaskDeveloperFeedback task={data} />
+      <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <TaskOveriew task={data} className="h-[280px]" />
+          <TaskDescription task={data} className="h-[280px]" />
+          <TaskDeveloperFeedback task={data} className="h-[280px]" />
         </div>
       </div>
       <EditTaskModal />
