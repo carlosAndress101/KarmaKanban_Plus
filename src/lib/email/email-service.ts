@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer";
-import { SECRET_EMAIL, PASS } from "@/features/auth/constants";
 
 export interface EmailConfig {
   service: string;
@@ -183,9 +182,9 @@ export class EmailService {
 
 // Configuración del servicio de email
 const emailConfig: EmailConfig = {
-  service: "gmail",
-  user: SECRET_EMAIL,
-  pass: PASS, // En producción, usar variables de entorno
+  service: process.env.EMAIL_SERVICE || "gmail",
+  user: process.env.EMAIL_USER || "",
+  pass: process.env.EMAIL_PASS || "",
 };
 
 export const emailService = new EmailService(emailConfig);
