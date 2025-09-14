@@ -56,6 +56,13 @@ export default function LoginForm() {
             </Button>
           </form>
         </Form>
+        <div className="mt-4 text-center">
+          <Link href="/forgot-password">
+            <span className="text-sm text-blue-700 hover:text-blue-800 underline">
+              ¿Olvidaste tu contraseña?
+            </span>
+          </Link>
+        </div>
       </CardContent>
       <div className="px-7">
         <Separator />

@@ -23,7 +23,7 @@ services:
     image: dpage/pgadmin4
     container_name: kkplus_pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: carlos@gmail.com
+      PGADMIN_DEFAULT_EMAIL: user@gmail.com
       PGADMIN_DEFAULT_PASSWORD: admin123
     ports:
       - "5050:80"

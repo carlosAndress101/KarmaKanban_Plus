@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "id": "45c1365c-1122-4e5e-8eda-2b9f1948e9f2",
+=======
+  "id": "01668469-dede-4766-a25c-68339f7a9da9",
+>>>>>>> 0612577 (feat(auth): implement forgot password, resend OTP, reset password, and verify OTP functionalities)
   "prevId": "b3d1a753-85f1-42d5-9395-f02188011efd",
   "version": "7",
   "dialect": "postgresql",
@@ -167,6 +171,69 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+<<<<<<< HEAD
+=======
+    "public.password_reset_tokens": {
+      "name": "password_reset_tokens",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "used": {
+          "name": "used",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "password_reset_tokens_token_unique": {
+          "name": "password_reset_tokens_token_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "token"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+>>>>>>> 0612577 (feat(auth): implement forgot password, resend OTP, reset password, and verify OTP functionalities)
     "public.projects": {
       "name": "projects",
       "schema": "",
@@ -544,6 +611,7 @@
           "primaryKey": false,
           "notNull": true
         },
+<<<<<<< HEAD
         "archived": {
           "name": "archived",
           "type": "boolean",
@@ -551,6 +619,8 @@
           "notNull": true,
           "default": false
         },
+=======
+>>>>>>> 0612577 (feat(auth): implement forgot password, resend OTP, reset password, and verify OTP functionalities)
         "position": {
           "name": "position",
           "type": "integer",
