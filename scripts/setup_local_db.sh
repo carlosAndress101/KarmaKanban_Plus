@@ -38,6 +38,12 @@ else
 fi
 
 echo "DATABASE_URL=$DB_URL" > "$ENV_FILE"
+echo "PORT=3000" >> "$ENV_FILE" # Puerto por defecto
+echo "SECRET_JWT=$SECRET_JWT" >> "$ENV_FILE"
+echo "COOKIE_SECRET=$COOKIE_SECRET" >> "$ENV_FILE" #
+echo "NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL" >> "$ENV_FILE" # URL pública de la app
+echo "SECRET_EMAIL=$SECRET_EMAIL" >> "$ENV_FILE" # Email para notificaciones de sistema
+echo "PASS=$PASS" >> "$ENV_FILE" # Contraseña del email
 
 echo "Variables de entorno guardadas en $ENV_FILE:"
 cat "$ENV_FILE"

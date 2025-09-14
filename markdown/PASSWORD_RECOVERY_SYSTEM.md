@@ -8,7 +8,7 @@ Este documento describe la implementación completa del sistema de recuperación
 - **Validación estricta**: Control de intentos y tokens únicos
 - **UI/UX intuitiva**: Interfaz moderna y responsive
 - **Notificaciones por email**: Templates HTML profesionales
-- **Validación de contraseñas**: Indicador de fortaleza y requisitos mínimos
+- **Validación de contraseñas**: Indicador de fortaleza y requisitos mínimos para que cada usuario se esfuerce a la hora de asignar una contrasena mejor
 
 ## 📁 Estructura del Proyecto
 
@@ -22,7 +22,7 @@ Este documento describe la implementación completa del sistema de recuperación
 
 #### Servicios
 - **EmailService** (`src/lib/email/email-service.ts`)
-  - Envío de emails con templates HTML
+  - Envío de emails con templates HTML fue la mejor opcion y no instalar una libreria adicional
   - Confirmaciones de cambio de contraseña
   
 - **OTPService** (`src/lib/email/otp-service.ts`)
@@ -58,7 +58,7 @@ Este documento describe la implementación completa del sistema de recuperación
 
 ```bash
 bun add otp-generator
-# nodemailer ya está instalado
+bun add nodemailer
 ```
 
 ### 2. Configurar Base de Datos
@@ -66,9 +66,6 @@ bun add otp-generator
 ```bash
 # Generar migración
 bun run db:generate
-
-# Crear tabla manualmente (si hay problemas con la migración)
-bun run create-password-table
 ```
 
 ### 3. Configuración de Email
@@ -78,7 +75,7 @@ Actualiza las credenciales en `src/lib/email/email-service.ts`:
 ```typescript
 const emailConfig: EmailConfig = {
   service: "gmail",
-  user: "tu-email@gmail.com",
+  user: "tu-email@gmail.com", // Correo de envio
   pass: "tu-app-password", // Password de aplicación de Gmail
 };
 ```
@@ -128,7 +125,6 @@ const emailConfig: EmailConfig = {
 
 ### Diseño
 - **Responsive**: Adaptable a todos los dispositivos
-- **Gradientes**: Fondo moderno con gradiente azul
 - **Iconografía**: Lucide Icons para consistencia
 - **Colores**: Sistema de colores semánticos
 
@@ -163,12 +159,6 @@ const emailConfig: EmailConfig = {
 ```bash
 # Desarrollo
 bun run dev
-
-# Crear tabla de tokens
-bun run create-password-table
-
-# Linting
-bun run lint
 ```
 
 ### Testing Manual
