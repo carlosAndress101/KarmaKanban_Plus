@@ -161,7 +161,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen flex items-center justify-center to-indigo-100 p-4">
       <div className="w-full max-w-2xl">
         <Card className="shadow-xl border-0">
           <CardHeader className="space-y-2 text-center pb-8 px-8">
@@ -176,7 +176,7 @@ export default function ResetPasswordPage() {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-8 px-8 pb-8">
+          <CardContent className="space-y-6 px-26 pb-8">
             {message && (
               <Alert
                 className={
@@ -217,7 +217,7 @@ export default function ResetPasswordPage() {
                             placeholder="Ingresa tu nueva contraseña"
                             type={showPassword ? "text" : "password"}
                             disabled={loading}
-                            className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500 pr-10 text-base"
+                            className="h-14 border-gray-300 focus:border-blue-500 focus:ring-blue-500 pr-10 text-base"
                             {...field}
                             onChange={(e) => {
                               field.onChange(e);
@@ -293,7 +293,7 @@ export default function ResetPasswordPage() {
                             placeholder="Confirma tu nueva contraseña"
                             type={showConfirmPassword ? "text" : "password"}
                             disabled={loading}
-                            className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500 pr-10 text-base"
+                            className="h-14 border-gray-300 focus:border-blue-500 focus:ring-blue-500 pr-10 text-base"
                             {...field}
                           />
                           <Button
