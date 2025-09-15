@@ -36,6 +36,12 @@ const verifyOtpSchema = z.object({
 
 type VerifyOtpForm = z.infer<typeof verifyOtpSchema>;
 
+interface VerifyOtpSuccess {
+  success: boolean;
+  message: string;
+  resetToken: string;
+}
+
 export default function VerifyOtpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -96,7 +102,10 @@ export default function VerifyOtpPage() {
     form.setValue("otp", newOtp.join(""));
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
     if (e.key === "Backspace" && !e.currentTarget.value && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -123,7 +132,8 @@ export default function VerifyOtpPage() {
 
           // Redirigir a reset-password con el token
           setTimeout(() => {
-            router.push(`/reset-password?token=${result.resetToken}`);
+            const response = result as VerifyOtpSuccess;
+            router.push(`/reset-password?token=${response.resetToken}`);
           }, 1500);
         },
         onError: (error) => {
@@ -132,7 +142,7 @@ export default function VerifyOtpPage() {
             text: error.message || "Error interno del servidor",
           });
         },
-      },
+      }
     );
   };
 
@@ -144,7 +154,7 @@ export default function VerifyOtpPage() {
     resendOtp(
       { json: { email } },
       {
-        onSuccess: (result) => {
+        onSuccess: () => {
           setMessage({
             type: "success",
             text: "Nuevo código enviado a tu email",
@@ -160,7 +170,7 @@ export default function VerifyOtpPage() {
             text: error.message || "Error al reenviar código",
           });
         },
-      },
+      }
     );
   };
 
@@ -196,7 +206,9 @@ export default function VerifyOtpPage() {
                 }
               >
                 <AlertCircle
-                  className={`h-4 w-4 ${message.type === "error" ? "text-red-600" : "text-green-600"}`}
+                  className={`h-4 w-4 ${
+                    message.type === "error" ? "text-red-600" : "text-green-600"
+                  }`}
                 />
                 <AlertDescription
                   className={
@@ -245,7 +257,9 @@ export default function VerifyOtpPage() {
                               maxLength={1}
                               value={field.value[index] || ""}
                               onChange={(e) => {
-                                const value = e.target.value.replace(/\D/g, "");
+                                const value = (
+                                  e.target as HTMLInputElement
+                                ).value.replace(/\D/g, "");
                                 handleOtpChange(value, index);
                               }}
                               onKeyDown={(e) => handleKeyDown(e, index)}

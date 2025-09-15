@@ -135,7 +135,7 @@ export default function ResetPasswordPage() {
         },
       },
       {
-        onSuccess: (result) => {
+        onSuccess: () => {
           setMessage({
             type: "success",
             text: "Contraseña actualizada correctamente",

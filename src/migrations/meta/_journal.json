@@ -68,20 +68,15 @@
     {
       "idx": 9,
       "version": "7",
-<<<<<<< HEAD
-      "when": 1757601584140,
-      "tag": "0009_purple_red_shift",
+      "when": 1757832184035,
+      "tag": "0009_curly_hiroim",
       "breakpoints": true
     },
     {
       "idx": 10,
       "version": "7",
-      "when": 1757725919433,
-      "tag": "0010_faithful_rattler",
-=======
-      "when": 1757832184035,
-      "tag": "0009_curly_hiroim",
->>>>>>> 0612577 (feat(auth): implement forgot password, resend OTP, reset password, and verify OTP functionalities)
+      "when": 1757601584140,
+      "tag": "0010_add_developer_feedback",
       "breakpoints": true
     }
   ]

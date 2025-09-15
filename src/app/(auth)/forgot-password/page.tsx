@@ -54,10 +54,10 @@ export default function ForgotPasswordPage() {
     forgotPassword(
       { json: data },
       {
-        onSuccess: (result) => {
+        onSuccess: () => {
           setMessage({
             type: "success",
-            text: result.message || "Código de verificación enviado a tu email",
+            text: "Código de verificación enviado a tu email",
           });
 
           // Redirigir a la página de verificación después de 2 segundos
@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
             text: error.message || "Error interno del servidor",
           });
         },
-      },
+      }
     );
   };
 
@@ -105,10 +105,18 @@ export default function ForgotPasswordPage() {
                 }`}
               >
                 <AlertCircle
-                  className={`h-5 w-5 ${message.type === "error" ? "text-red-500" : "text-emerald-500"}`}
+                  className={`h-5 w-5 ${
+                    message.type === "error"
+                      ? "text-red-500"
+                      : "text-emerald-500"
+                  }`}
                 />
                 <AlertDescription
-                  className={`font-medium ${message.type === "error" ? "text-red-700" : "text-emerald-700"}`}
+                  className={`font-medium ${
+                    message.type === "error"
+                      ? "text-red-700"
+                      : "text-emerald-700"
+                  }`}
                 >
                   {message.text}
                 </AlertDescription>
