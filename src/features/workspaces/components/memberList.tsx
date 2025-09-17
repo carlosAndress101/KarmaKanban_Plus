@@ -6,6 +6,7 @@ import { ArrowLeftIcon, MoreVerticalIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useCurrent } from "@/features/auth/api/use-current";
 import { useGetMember } from "@/features/members/api/useGetMember";
 import { MemberAvatar } from "@/features/members/components/meberAvatar";
 import { useUpdateMember } from "@/features/members/api/useUpdateMember";
@@ -29,7 +30,21 @@ export const MemberList = () => {
     "This member will be removed from the workspace"
   );
 
-  const { data } = useGetMember({ workspaceId });
+  const { data: currentUser } = useCurrent();
+  const { data: membersData } = useGetMember({ workspaceId });
+
+  // More robust deduplication and unique key generation
+  const members = membersData?.reduce((unique, member, index) => {
+    const exists = unique.find((m) => m.id === member.id);
+    if (!exists) {
+      unique.push({
+        ...member,
+        uniqueIndex: index, // Add index for unique key generation
+      });
+    }
+    return unique;
+  }, [] as Array<(typeof membersData)[0] & { uniqueIndex: number }>);
+
   const { mutate: deleteMember, isPending: isDeletingMember } =
     useDeleteMember();
   const { mutate: updateMember, isPending: isUpdatingMember } =
@@ -76,20 +91,27 @@ export const MemberList = () => {
         <Separator />
       </div>
       <CardContent className="p-7">
-        {data?.map((member, index) => {
-          // Encontrar el usuario actual correctamente
-          const currentUser = data.find((m) => m.userId); // Asumiendo que tienes esta propiedad
-
-          const isCurrentUserAdmin = currentUser?.role === userRoles[1]; // admin
+        {members?.map((member, index) => {
+          // Check if this member is the current logged-in user
+          const isSelf = currentUser?.id === member.userId;
           const isTargetAdmin = member.role === userRoles[1]; // admin
-          const isSelf = currentUser?.id === member.id;
 
-          // Lógica de permisos mejorada
+          // Find current user's membership in this workspace to check their role
+          const currentUserMembership = members?.find(
+            (m) => m.userId === currentUser?.id
+          );
+          const isCurrentUserAdmin =
+            currentUserMembership?.role === userRoles[1];
+
+          // Permission logic
           const canUpdateRole = isCurrentUserAdmin && !isSelf;
           const canDelete = (isCurrentUserAdmin && !isTargetAdmin) || isSelf;
 
+          // Create a truly unique key combining multiple identifiers
+          const uniqueKey = `member-${member.id}-${member.uniqueIndex}-${workspaceId}`;
+
           return (
-            <Fragment key={member.id}>
+            <Fragment key={uniqueKey}>
               <div className="flex items-center gap-2">
                 <MemberAvatar
                   className="size-10"
@@ -149,7 +171,9 @@ export const MemberList = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              {index < data.length - 1 && <Separator className="my-2.5" />}
+              {index < (members?.length ?? 0) - 1 && (
+                <Separator className="my-2.5" />
+              )}
             </Fragment>
           );
         })}

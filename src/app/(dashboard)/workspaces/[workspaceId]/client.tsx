@@ -192,7 +192,7 @@ export const MemberList = ({ data, total }: MemberListProps) => {
 
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.map((member) => (
-            <li key={member.userId}>
+            <li key={`dashboard-member-${member.id}-${member.userId}`}>
               <Card className="shadow-none rounded-lg overflow-hidden">
                 <CardContent className="p-3 flex flex-col items-center gap-x-2">
                   <MemberAvatar name={member.name} className="size-12" />
