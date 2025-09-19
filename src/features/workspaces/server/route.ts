@@ -196,8 +196,27 @@ const app = new Hono()
         .from(workspaces)
         .where(eq(workspaces.id, workspaceId));
 
+      if (!workspace[0]) {
+        return c.json({ error: "Workspace not found" }, 404);
+      }
+
       if (workspace[0].inviteCode !== inviteCode) {
         return c.json({ error: "Invalid invitation code" }, 400);
+      }
+
+      // Verificar si el usuario ya es miembro del workspace
+      const existingMember = await db
+        .select()
+        .from(members)
+        .where(
+          and(eq(members.workspaceId, workspaceId), eq(members.userId, user.id))
+        );
+
+      if (existingMember.length > 0) {
+        return c.json(
+          { error: "You are already a member of this workspace" },
+          400
+        );
       }
 
       await db.insert(members).values({

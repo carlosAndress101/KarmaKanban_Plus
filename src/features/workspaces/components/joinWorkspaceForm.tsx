@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,8 +28,12 @@ export const JoinWorkspaceForm = ({ initalValues }: JoinWorkspaceFormProps) => {
   const workspaceId = useWorkspaceId();
   const inviteCode = useInviteCode();
   const { mutate, isPending } = useJoinWorkspace();
+  const [error, setError] = useState<string | null>(null);
 
   const onSubmit = () => {
+    // Limpiar errores anteriores
+    setError(null);
+
     mutate(
       {
         param: { workspaceId },
@@ -37,6 +42,9 @@ export const JoinWorkspaceForm = ({ initalValues }: JoinWorkspaceFormProps) => {
       {
         onSuccess: ({ data }) => {
           router.push(`/workspaces/${data[0].id}`);
+        },
+        onError: (error) => {
+          setError(error.message || "Failed to join workspace");
         },
       }
     );
@@ -57,6 +65,11 @@ export const JoinWorkspaceForm = ({ initalValues }: JoinWorkspaceFormProps) => {
         <Separator />
       </div>
       <CardContent className="p-7">
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+            <p className="text-red-600 text-sm">{error}</p>
+          </div>
+        )}
         <div className="flex flex-col lg:flex-row gap-2 items-center justify-between">
           <Button
             className="w-full lg:w-fit"
@@ -74,7 +87,7 @@ export const JoinWorkspaceForm = ({ initalValues }: JoinWorkspaceFormProps) => {
             disabled={isPending}
             onClick={onSubmit}
           >
-            Join the workspace
+            {isPending ? "Joining..." : "Join the workspace"}
           </Button>
         </div>
       </CardContent>
