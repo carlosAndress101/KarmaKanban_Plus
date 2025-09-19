@@ -25,7 +25,11 @@ export const useUpdateProjectManager = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update project manager");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to update project manager";
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -35,8 +39,8 @@ export const useUpdateProjectManager = () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({ queryKey: ["project"] });
     },
-    onError: () => {
-      toast.error("Failed to update project manager");
+    onError: (error) => {
+      toast.error(error.message || "Failed to update project manager");
     },
   });
 

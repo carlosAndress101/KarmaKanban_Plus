@@ -15,7 +15,10 @@ export const useLogout = () => {
     mutationFn: async () => {
       const response = await client.api.auth.logout["$post"]();
       if (!response.ok) {
-        throw new Error("Failed to log out");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = (errorData as any)?.error || "Failed to log out";
+        throw new Error(errorMessage);
       }
       return await response.json();
     },
@@ -25,8 +28,8 @@ export const useLogout = () => {
       queryClient.invalidateQueries({ queryKey: ["current"] });
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
     },
-    onError: () => {
-      toast.error("An error occurred while logging out");
+    onError: (error) => {
+      toast.error(error.message || "An error occurred while logging out");
     },
   });
 

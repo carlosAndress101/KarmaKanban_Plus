@@ -4,13 +4,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
 
-type ResponseType = InferResponseType<
-  (typeof client.api.tasks)["$post"],
-  200
->;
-type RequestType = InferRequestType<
-  (typeof client.api.tasks)["$post"]
->;
+type ResponseType = InferResponseType<(typeof client.api.tasks)["$post"], 200>;
+type RequestType = InferRequestType<(typeof client.api.tasks)["$post"]>;
 
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
@@ -20,7 +15,11 @@ export const useCreateTask = () => {
       const response = await client.api.tasks["$post"]({ json });
 
       if (!response.ok) {
-        throw new Error("Failed to create task");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to create task";
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -32,8 +31,8 @@ export const useCreateTask = () => {
       queryClient.invalidateQueries({ queryKey: ["workspace-analytics"] });
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
-    onError: () => {
-      toast.error("Failed to create task");
+    onError: (error) => {
+      toast.error(error.message || "Failed to create task");
     },
   });
   return mutation;

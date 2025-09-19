@@ -15,7 +15,11 @@ export const useGetStoreItems = ({ workspaceId }: UseGetStoreItemsProps) => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch store items");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to fetch store items";
+        throw new Error(errorMessage);
       }
 
       const { data } = await response.json();

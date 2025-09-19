@@ -4,8 +4,13 @@ import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
 
-type ResponseType = InferResponseType<typeof client.api.tasks[":taskId"]["archive"]["$patch"], 200>;
-type RequestType = InferRequestType<typeof client.api.tasks[":taskId"]["archive"]["$patch"]>;
+type ResponseType = InferResponseType<
+  (typeof client.api.tasks)[":taskId"]["archive"]["$patch"],
+  200
+>;
+type RequestType = InferRequestType<
+  (typeof client.api.tasks)[":taskId"]["archive"]["$patch"]
+>;
 
 export const useArchiveTask = () => {
   const queryClient = useQueryClient();
@@ -17,7 +22,11 @@ export const useArchiveTask = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to archive task");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to archive task";
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -26,8 +35,8 @@ export const useArchiveTask = () => {
       toast.success("Task archived");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
-    onError: () => {
-      toast.error("Failed to archive task");
+    onError: (error) => {
+      toast.error(error.message || "Failed to archive task");
     },
   });
 

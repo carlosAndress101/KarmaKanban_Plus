@@ -23,7 +23,11 @@ export const useUpdateTask = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update task");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to update task";
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -38,8 +42,8 @@ export const useUpdateTask = () => {
       queryClient.invalidateQueries({ queryKey: ["members"] }); // Refresh member data for points
       queryClient.invalidateQueries({ queryKey: ["gamification-stats"] }); // Refresh gamification stats
     },
-    onError: () => {
-      toast.error("Failed to update task");
+    onError: (error) => {
+      toast.error(error.message || "Failed to update task");
     },
   });
   return mutation;

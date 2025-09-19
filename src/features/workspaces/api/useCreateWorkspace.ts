@@ -19,7 +19,11 @@ export const useCreateWorkspace = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create workspace");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to create workspace";
+        throw new Error(errorMessage);
       }
       return await response.json();
     },
@@ -28,8 +32,8 @@ export const useCreateWorkspace = () => {
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
     },
-    onError: () => {
-      toast.error("Failed to create workspace");
+    onError: (error) => {
+      toast.error(error.message || "Failed to create workspace");
     },
   });
 

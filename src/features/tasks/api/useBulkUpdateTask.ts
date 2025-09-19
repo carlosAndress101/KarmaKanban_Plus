@@ -29,7 +29,11 @@ export const useBulkUpdateTask = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update tasks");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to update tasks";
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -81,7 +85,7 @@ export const useBulkUpdateTask = () => {
       if (typedContext?.previousTasks) {
         queryClient.setQueryData(["tasks"], typedContext.previousTasks);
       }
-      toast.error("Failed to update tasks");
+      toast.error(err.message || "Failed to update tasks");
     },
 
     onSuccess: () => {

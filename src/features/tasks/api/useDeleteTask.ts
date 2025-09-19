@@ -17,12 +17,14 @@ export const useDeleteTask = () => {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
-      const response = await client.api.tasks[":taskId"]["$delete"](
-        { param }
-      );
+      const response = await client.api.tasks[":taskId"]["$delete"]({ param });
 
       if (!response.ok) {
-        throw new Error("Failed to delete task");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to delete task";
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -35,8 +37,8 @@ export const useDeleteTask = () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["task", data.id] });
     },
-    onError: () => {
-      toast.error("Failed to delete task");
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete task");
     },
   });
   return mutation;

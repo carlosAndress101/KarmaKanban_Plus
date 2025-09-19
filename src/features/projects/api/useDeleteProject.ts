@@ -22,7 +22,11 @@ export const useDeleteProject = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete project");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to delete project";
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -33,8 +37,8 @@ export const useDeleteProject = () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({ queryKey: ["project", data.id] });
     },
-    onError: () => {
-      toast.error("Failed to delete project");
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete project");
     },
   });
   return mutation;

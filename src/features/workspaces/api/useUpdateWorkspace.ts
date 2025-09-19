@@ -25,7 +25,12 @@ export const useUpdateWorkspace = () => {
       });
 
       if (!response.ok) {
-        throw new Error("An error occurred while updating the workspace");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error ||
+          "An error occurred while updating the workspace";
+        throw new Error(errorMessage);
       }
       return await response.json();
     },
@@ -36,8 +41,10 @@ export const useUpdateWorkspace = () => {
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
       queryClient.invalidateQueries({ queryKey: ["workspace", data[0].id] });
     },
-    onError: () => {
-      toast.error("An error occurred while updating the workspace");
+    onError: (error) => {
+      toast.error(
+        error.message || "An error occurred while updating the workspace"
+      );
     },
   });
 

@@ -4,20 +4,31 @@ import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
 
-type ResponseType = InferResponseType<typeof client.api.tasks[":taskId"]["unarchive"]["$patch"], 200>;
-type RequestType = InferRequestType<typeof client.api.tasks[":taskId"]["unarchive"]["$patch"]>;
+type ResponseType = InferResponseType<
+  (typeof client.api.tasks)[":taskId"]["unarchive"]["$patch"],
+  200
+>;
+type RequestType = InferRequestType<
+  (typeof client.api.tasks)[":taskId"]["unarchive"]["$patch"]
+>;
 
 export const useUnarchiveTask = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
-      const response = await client.api.tasks[":taskId"]["unarchive"]["$patch"]({
-        param,
-      });
+      const response = await client.api.tasks[":taskId"]["unarchive"]["$patch"](
+        {
+          param,
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to unarchive task");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to unarchive task";
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -26,8 +37,8 @@ export const useUnarchiveTask = () => {
       toast.success("Task restored");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
-    onError: () => {
-      toast.error("Failed to restore task");
+    onError: (error) => {
+      toast.error(error.message || "Failed to restore task");
     },
   });
 

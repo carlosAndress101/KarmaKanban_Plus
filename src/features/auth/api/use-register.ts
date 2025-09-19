@@ -22,7 +22,10 @@ export const useRegister = () => {
       if (response.ok) {
         return await response.json();
       } else {
-        throw new Error();
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = (errorData as any)?.error || "Registration failed";
+        throw new Error(errorMessage);
       }
     },
     onSuccess: () => {
@@ -30,8 +33,8 @@ export const useRegister = () => {
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
     },
-    onError: () => {
-      toast.error("Registration failed");
+    onError: (error) => {
+      toast.error(error.message || "Registration failed");
     },
   });
 

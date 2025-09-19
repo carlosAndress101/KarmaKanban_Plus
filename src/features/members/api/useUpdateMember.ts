@@ -25,7 +25,11 @@ export const useUpdateMember = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update the member");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to update the member";
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -36,8 +40,8 @@ export const useUpdateMember = () => {
       router.push("/");
       queryClient.invalidateQueries({ queryKey: ["members"] });
     },
-    onError: () => {
-      toast.error("Failed to update the member");
+    onError: (error) => {
+      toast.error(error.message || "Failed to update the member");
     },
   });
   return mutation;

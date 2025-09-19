@@ -21,7 +21,11 @@ export const useLogin = () => {
       if (response.ok) {
         return await response.json();
       } else {
-        throw new Error();
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "An error occurred while logging in";
+        throw new Error(errorMessage);
       }
     },
     onSuccess: () => {
@@ -29,8 +33,8 @@ export const useLogin = () => {
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
     },
-    onError: () => {
-      toast.error("An error occurred while logging in");
+    onError: (error) => {
+      toast.error(error.message || "An error occurred while logging in");
     },
   });
 

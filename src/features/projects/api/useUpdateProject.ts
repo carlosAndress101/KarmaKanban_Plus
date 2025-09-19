@@ -23,7 +23,11 @@ export const useUpdateProject = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update the project");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to update the project";
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -34,8 +38,8 @@ export const useUpdateProject = () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({ queryKey: ["project", data.id] });
     },
-    onError: () => {
-      toast.error("Failed to update the project");
+    onError: (error) => {
+      toast.error(error.message || "Failed to update the project");
     },
   });
   return mutation;

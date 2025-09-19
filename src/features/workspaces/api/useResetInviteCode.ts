@@ -25,7 +25,11 @@ export const useResetInviteCode = (onSuccessCallback?: OnSuccessCallback) => {
       ]["$post"]({ param });
 
       if (!response.ok) {
-        throw new Error("Failed to reset the invitation code");
+        // Capturar el mensaje de error específico del backend
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to reset the invitation code";
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -42,8 +46,8 @@ export const useResetInviteCode = (onSuccessCallback?: OnSuccessCallback) => {
         onSuccessCallback(response);
       }
     },
-    onError: () => {
-      toast.error("Failed to reset the invitation code");
+    onError: (error) => {
+      toast.error(error.message || "Failed to reset the invitation code");
     },
   });
   return mutation;
