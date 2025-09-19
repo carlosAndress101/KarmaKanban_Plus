@@ -33,10 +33,7 @@ export class GamificationService {
       .where(eq(members.id, memberId));
 
     // Check for new badge achievements
-    const newBadges = await this.checkAndAwardBadges(
-      memberId,
-      task.workspaceId
-    );
+    await this.checkAndAwardBadges(memberId, task.workspaceId);
   }
 
   /**
@@ -153,17 +150,14 @@ export class GamificationService {
 
     // Update member's earned badges if there are new ones
     if (newBadges.length > 0) {
-      // Filter out nulls/invalids before saving
-      const filteredBadges = earnedBadgeIds.filter(
-        (id) => typeof id === "string" && !!id
-      );
+      // Save earned badges to member record
       await db
         .update(members)
         .set({
           earnedBadges: JSON.stringify(earnedBadgeIds),
         })
         .where(eq(members.id, memberId));
-    } 
+    }
 
     return newBadges;
   }

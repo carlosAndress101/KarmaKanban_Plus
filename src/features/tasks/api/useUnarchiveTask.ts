@@ -3,6 +3,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
+import { parseApiError } from "@/lib/api-error-types";
 
 type ResponseType = InferResponseType<
   (typeof client.api.tasks)[":taskId"]["unarchive"]["$patch"],
@@ -26,15 +27,19 @@ export const useUnarchiveTask = () => {
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "Failed to unarchive task";
+        const errorMessage = parseApiError(
+          errorData,
+          "Failed to unarchive task"
+        );
         throw new Error(errorMessage);
       }
 
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Task restored");
+      toast.success(
+        "Task restored successfully. It's now available in your active list"
+      );
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (error) => {

@@ -7,6 +7,11 @@ import { useRouter } from "next/navigation";
 
 type ResponseType = InferResponseType<(typeof client.api.auth.logout)["$post"]>;
 
+// Type for API error response
+type ApiErrorResponse = {
+  error?: string;
+};
+
 export const useLogout = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -16,14 +21,16 @@ export const useLogout = () => {
       const response = await client.api.auth.logout["$post"]();
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
-        const errorData = await response.json().catch(() => ({}));
-        const errorMessage = (errorData as any)?.error || "Failed to log out";
+        const errorData = (await response
+          .json()
+          .catch(() => ({}))) as ApiErrorResponse;
+        const errorMessage = errorData?.error || "Failed to log out";
         throw new Error(errorMessage);
       }
       return await response.json();
     },
     onSuccess: () => {
-      toast("Logged out");
+      toast.success("Logged out successfully. See you soon!");
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });

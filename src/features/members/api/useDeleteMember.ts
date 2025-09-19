@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
+import { parseApiError } from "@/lib/api-error-types";
 
 type ResponseType = InferResponseType<
   (typeof client.api.members)[":memberId"]["$delete"],
@@ -25,8 +26,10 @@ export const useDeleteMember = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "Failed to remove the member";
+        const errorMessage = parseApiError(
+          errorData,
+          "Failed to remove the member"
+        );
 
         throw new Error(errorMessage);
       }
@@ -34,7 +37,9 @@ export const useDeleteMember = () => {
       return await response.json();
     },
     onSuccess: (data) => {
-      const message = (data as any)?.data?.message || "Member removed";
+      const message =
+        (data as ResponseType)?.data?.message ||
+        "Member removed successfully! The member has been removed from the workspace";
       toast.success(message);
 
       // Invalidar las queries antes de la redirección

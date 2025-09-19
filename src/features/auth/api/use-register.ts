@@ -10,6 +10,11 @@ type ResponseType = InferResponseType<
 >;
 type RequestType = InferRequestType<(typeof client.api.auth.register)["$post"]>;
 
+// Type for API error response
+type ApiErrorResponse = {
+  error?: string;
+};
+
 export const useRegister = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -23,13 +28,15 @@ export const useRegister = () => {
         return await response.json();
       } else {
         // Capturar el mensaje de error específico del backend
-        const errorData = await response.json().catch(() => ({}));
-        const errorMessage = (errorData as any)?.error || "Registration failed";
+        const errorData = (await response
+          .json()
+          .catch(() => ({}))) as ApiErrorResponse;
+        const errorMessage = errorData?.error || "Registration failed";
         throw new Error(errorMessage);
       }
     },
     onSuccess: () => {
-      toast.success("Registration successful");
+      toast.success("Account created successfully! Welcome to KarmaKanban");
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
     },

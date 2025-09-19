@@ -22,7 +22,7 @@ export class EmailService {
   async sendOTPEmail(
     to: string,
     otp: string,
-    userName: string,
+    userName: string
   ): Promise<boolean> {
     try {
       const mailOptions = {
@@ -95,7 +95,7 @@ export class EmailService {
         `,
       };
 
-      const info = await this.transporter.sendMail(mailOptions);
+      await this.transporter.sendMail(mailOptions);
       return true;
     } catch (error) {
       console.error("Error sending OTP email:", error);
@@ -105,7 +105,7 @@ export class EmailService {
 
   async sendPasswordResetConfirmation(
     to: string,
-    userName: string,
+    userName: string
   ): Promise<boolean> {
     try {
       const mailOptions = {
@@ -141,7 +141,9 @@ export class EmailService {
 
                   <p>Tu contraseña de KarmaKanban Plus ha sido cambiada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.</p>
 
-                  <p><strong>Fecha de actualización:</strong> ${new Date().toLocaleString("es-ES")}</p>
+                  <p><strong>Fecha de actualización:</strong> ${new Date().toLocaleString(
+                    "es-ES"
+                  )}</p>
 
                   <p>Si no has realizado este cambio, contacta inmediatamente a nuestro equipo de soporte.</p>
 
@@ -168,6 +170,8 @@ export class EmailService {
           © 2024 KarmaKanban Plus
         `,
       };
+
+      await this.transporter.sendMail(mailOptions);
       return true;
     } catch (error) {
       console.error("Error sending password reset confirmation email:", error);

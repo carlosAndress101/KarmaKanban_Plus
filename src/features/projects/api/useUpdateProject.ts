@@ -3,6 +3,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
+import { parseApiError } from "@/lib/api-error-types";
 
 type ResponseType = InferResponseType<
   (typeof client.api.projects)[":projectId"]["$patch"],
@@ -25,15 +26,17 @@ export const useUpdateProject = () => {
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "Failed to update the project";
+        const errorMessage = parseApiError(
+          errorData,
+          "Failed to update the project"
+        );
         throw new Error(errorMessage);
       }
 
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      toast.success("Project updated");
+      toast.success("Project updated successfully! Changes have been saved");
 
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({ queryKey: ["project", data.id] });

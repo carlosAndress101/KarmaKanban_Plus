@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 import { StoreItem } from "../types";
+import { parseApiError } from "@/lib/api-error-types";
 
 interface UseGetStoreItemsProps {
   workspaceId: string;
@@ -17,8 +18,10 @@ export const useGetStoreItems = ({ workspaceId }: UseGetStoreItemsProps) => {
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "Failed to fetch store items";
+        const errorMessage = parseApiError(
+          errorData,
+          "Failed to fetch store items"
+        );
         throw new Error(errorMessage);
       }
 

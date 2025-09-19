@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from "hono";
 
 import { client } from "@/lib/rpc";
 import { useRouter } from "next/navigation";
+import { parseApiError } from "@/lib/api-error-types";
 
 type ResponseType = InferResponseType<(typeof client.api.auth.login)["$post"]>;
 type RequestType = InferRequestType<(typeof client.api.auth.login)["$post"]>;
@@ -23,13 +24,15 @@ export const useLogin = () => {
       } else {
         // Capturar el mensaje de error específico del backend
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "An error occurred while logging in";
+        const errorMessage = parseApiError(
+          errorData,
+          "An error occurred while logging in"
+        );
         throw new Error(errorMessage);
       }
     },
     onSuccess: () => {
-      toast.success("Logged in");
+      toast.success("Welcome! You have successfully logged in");
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
     },

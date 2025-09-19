@@ -7,6 +7,11 @@ import { client } from "@/lib/rpc";
 type ResponseType = InferResponseType<(typeof client.api.tasks)["$post"], 200>;
 type RequestType = InferRequestType<(typeof client.api.tasks)["$post"]>;
 
+// Type for API error response
+type ApiErrorResponse = {
+  error?: string;
+};
+
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
 
@@ -16,16 +21,19 @@ export const useCreateTask = () => {
 
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
-        const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "Failed to create task";
+        const errorData = (await response
+          .json()
+          .catch(() => ({}))) as ApiErrorResponse;
+        const errorMessage = errorData?.error || "Failed to create task";
         throw new Error(errorMessage);
       }
 
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Task created");
+      toast.success(
+        "Task created successfully! You can now start working on it"
+      );
 
       queryClient.invalidateQueries({ queryKey: ["project-analytics"] });
       queryClient.invalidateQueries({ queryKey: ["workspace-analytics"] });

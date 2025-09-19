@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
 import { Task } from "../types";
+import { parseApiError } from "@/lib/api-error-types";
 
 type ResponseType = InferResponseType<
   (typeof client.api.tasks)["bulk-update"]["$post"],
@@ -31,8 +32,7 @@ export const useBulkUpdateTask = () => {
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "Failed to update tasks";
+        const errorMessage = parseApiError(errorData, "Failed to update tasks");
         throw new Error(errorMessage);
       }
 

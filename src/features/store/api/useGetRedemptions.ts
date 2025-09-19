@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 import { RedemptionRequest } from "../types";
+import { parseApiError } from "@/lib/api-error-types";
 
 interface UseGetRedemptionsProps {
   workspaceId: string;
@@ -17,8 +18,10 @@ export const useGetRedemptions = ({ workspaceId }: UseGetRedemptionsProps) => {
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "Failed to fetch redemption requests";
+        const errorMessage = parseApiError(
+          errorData,
+          "Failed to fetch redemption requests"
+        );
         throw new Error(errorMessage);
       }
 

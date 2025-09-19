@@ -3,6 +3,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
+import { parseApiError } from "@/lib/api-error-types";
 
 type ResponseType = InferResponseType<
   (typeof client.api.workspaces)[":workspaceId"]["reset-invite-code"]["$post"],
@@ -27,15 +28,19 @@ export const useResetInviteCode = (onSuccessCallback?: OnSuccessCallback) => {
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "Failed to reset the invitation code";
+        const errorMessage = parseApiError(
+          errorData,
+          "Failed to reset the invitation code"
+        );
         throw new Error(errorMessage);
       }
 
       return await response.json();
     },
     onSuccess: (response) => {
-      toast.success("Invitation code reset");
+      toast.success(
+        "Invitation code reset successfully. Share the new link with your team"
+      );
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
       queryClient.invalidateQueries({
         queryKey: ["workspace", response.data[0].id],

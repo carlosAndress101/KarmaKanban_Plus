@@ -3,6 +3,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
+import { parseApiError } from "@/lib/api-error-types";
 
 type ResponseType = InferResponseType<
   (typeof client.api.projects)[":projectId"]["$delete"],
@@ -24,15 +25,19 @@ export const useDeleteProject = () => {
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "Failed to delete project";
+        const errorMessage = parseApiError(
+          errorData,
+          "Failed to delete project"
+        );
         throw new Error(errorMessage);
       }
 
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      toast.success("Project deleted");
+      toast.success(
+        "Project deleted successfully. All associated tasks have been removed"
+      );
 
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({ queryKey: ["project", data.id] });

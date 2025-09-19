@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
+import { parseApiError } from "@/lib/api-error-types";
 
 type ResponseType = InferResponseType<
   (typeof client.api.members)[":memberId"]["$patch"],
@@ -27,15 +28,17 @@ export const useUpdateMember = () => {
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "Failed to update the member";
+        const errorMessage = parseApiError(
+          errorData,
+          "Failed to update the member"
+        );
         throw new Error(errorMessage);
       }
 
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Member updated");
+      toast.success("Member information updated successfully");
 
       router.push("/");
       queryClient.invalidateQueries({ queryKey: ["members"] });

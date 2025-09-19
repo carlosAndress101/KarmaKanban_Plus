@@ -3,6 +3,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
+import { parseApiError } from "@/lib/api-error-types";
 
 type ResponseType = InferResponseType<
   (typeof client.api.tasks)[":taskId"]["archive"]["$patch"],
@@ -24,15 +25,16 @@ export const useArchiveTask = () => {
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error || "Failed to archive task";
+        const errorMessage = parseApiError(errorData, "Failed to archive task");
         throw new Error(errorMessage);
       }
 
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Task archived");
+      toast.success(
+        "Task archived successfully. You can find it in the archived section"
+      );
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (error) => {

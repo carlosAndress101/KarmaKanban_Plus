@@ -13,6 +13,11 @@ type RequestType = InferRequestType<
   (typeof client.api.workspaces)[":workspaceId"]["$delete"]
 >;
 
+// Type for API error response
+type ApiErrorResponse = {
+  error?: string;
+};
+
 export const useDeleteWorkspace = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -25,16 +30,20 @@ export const useDeleteWorkspace = () => {
 
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
-        const errorData = await response.json().catch(() => ({}));
+        const errorData = (await response
+          .json()
+          .catch(() => ({}))) as ApiErrorResponse;
         const errorMessage =
-          (errorData as any)?.error || "Failed to delete the workspace";
+          errorData?.error || "Failed to delete the workspace";
         throw new Error(errorMessage);
       }
 
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      toast.success("Workspace deleted");
+      toast.success(
+        "Workspace deleted successfully. All data has been removed"
+      );
 
       router.push("/");
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });

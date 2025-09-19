@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from "hono";
 
 import { client } from "@/lib/rpc";
 import { useRouter } from "next/navigation";
+import { parseApiError } from "@/lib/api-error-types";
 
 type ResponseType = InferResponseType<
   (typeof client.api.workspaces)[":workspaceId"]["$patch"],
@@ -27,15 +28,16 @@ export const useUpdateWorkspace = () => {
       if (!response.ok) {
         // Capturar el mensaje de error específico del backend
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage =
-          (errorData as any)?.error ||
-          "An error occurred while updating the workspace";
+        const errorMessage = parseApiError(
+          errorData,
+          "An error occurred while updating the workspace"
+        );
         throw new Error(errorMessage);
       }
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      toast.success("Workspace updated");
+      toast.success("Workspace updated successfully! Changes have been saved");
 
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
