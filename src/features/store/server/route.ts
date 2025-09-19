@@ -143,7 +143,6 @@ const app = new Hono()
           400
         );
       }
-      console.log("[PATCH /store/:storeItemId] Incoming data:", data);
       // workspaceId must be inferred from the store item
       // Get the store item first
       const [item] = await db

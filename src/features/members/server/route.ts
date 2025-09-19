@@ -90,7 +90,7 @@ const app = new Hono()
       return c.json({ error: "You are not a member of this workspace" }, 403);
     }
 
-    const isSelf = requestingMember.id === memberToDelete.id;
+    const isSelf = requestingMember.userId === memberToDelete.userId;
     const isRequestingAdmin = requestingMember.role === userRoles[1]; // "admin"
     const isTargetAdmin = memberToDelete.role === userRoles[1]; // "admin"
 

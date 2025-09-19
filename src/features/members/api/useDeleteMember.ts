@@ -24,19 +24,30 @@ export const useDeleteMember = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to remove the member");
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          (errorData as any)?.error || "Failed to remove the member";
+
+        throw new Error(errorMessage);
       }
 
       return await response.json();
     },
-    onSuccess: () => {
-      toast.success("Member removed");
+    onSuccess: (data) => {
+      const message = (data as any)?.data?.message || "Member removed";
+      toast.success(message);
 
-      router.push("/");
+      // Invalidar las queries antes de la redirección
       queryClient.invalidateQueries({ queryKey: ["members"] });
+      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+
+      // Redirigir a workspaces después de un breve delay para permitir que las queries se actualicen
+      setTimeout(() => {
+        router.push("/");
+      }, 100);
     },
-    onError: () => {
-      toast.error("Failed to remove the member");
+    onError: (error) => {
+      toast.error(error.message || "Failed to remove the member");
     },
   });
   return mutation;

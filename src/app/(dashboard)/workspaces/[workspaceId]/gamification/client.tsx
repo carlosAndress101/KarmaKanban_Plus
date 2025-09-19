@@ -137,9 +137,6 @@ export const GamificationClient = ({
       const storageKey = `gamification_${currentUser.id}_${workspaceId}`;
       localStorage.setItem(storageKey, JSON.stringify(updatedData));
     }
-
-    // TODO: Here you would make an API call to update the member's gamification data
-    console.log("Updating gamification data:", updatedData);
   };
 
   // Create member stats for badge system using real statistics

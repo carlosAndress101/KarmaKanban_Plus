@@ -45,8 +45,6 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
   const workspaceId = useWorkspaceId();
   const { data: members } = useGetMember({ workspaceId });
   const { mutate } = useBulkUpdateTask();
-  // Depuración: mostrar el array de tareas recibido
-  console.log("DataKanban data:", data);
 
   const buildTaskState = (taskList: Task[]): TasksState => {
     const cleanData = removeDuplicateTasks(taskList);

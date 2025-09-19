@@ -25,9 +25,18 @@ import { UserRole, userRoles } from "@/lib/schemas_drizzle";
 
 export const MemberList = () => {
   const workspaceId = useWorkspaceId();
-  const [ConfirmDialog, confirm] = useConfirm(
-    "Remove member",
-    "This member will be removed from the workspace"
+
+  // Diálogos de confirmación
+  const [DeleteMemberDialog, confirmDeleteMember] = useConfirm(
+    "Remove Member",
+    "Are you sure you want to remove this member from the workspace? They will lose access to all projects and tasks.",
+    "destructive"
+  );
+
+  const [LeaveWorkspaceDialog, confirmLeaveWorkspace] = useConfirm(
+    "Leave Workspace",
+    "Are you sure you want to leave this workspace? You will lose access to all projects and tasks.",
+    "destructive"
   );
 
   const { data: currentUser } = useCurrent();
@@ -57,16 +66,24 @@ export const MemberList = () => {
     );
   };
 
-  const handleDeleteMember = async (memberId: string) => {
-    const ok = await confirm();
+  const handleDeleteMember = async (
+    memberId: string,
+    memberName: string,
+    isSelf: boolean
+  ) => {
+    // Usar el dialog correcto según si es él mismo o no
+    const confirmed = isSelf
+      ? await confirmLeaveWorkspace()
+      : await confirmDeleteMember();
 
-    if (!ok) return;
+    if (!confirmed) return;
 
     deleteMember(
       { param: { memberId } },
       {
         onSuccess: () => {
-          window.location.reload();
+          // No necesitamos recargar la página manualmente,
+          // el hook se encarga de la redirección y actualización
         },
       }
     );
@@ -74,7 +91,8 @@ export const MemberList = () => {
 
   return (
     <Card className="w-full h-full border-none shadow-none">
-      <ConfirmDialog />
+      <DeleteMemberDialog />
+      <LeaveWorkspaceDialog />
       <CardHeader className="flex flex-row items-center gap-x-4 p-7 space-y-0">
         <Button asChild variant="secondary" size="sm">
           <Link
@@ -163,7 +181,9 @@ export const MemberList = () => {
                     {/* Opción de eliminar con lógica mejorada */}
                     <DropdownMenuItem
                       className="font-medium text-amber-700"
-                      onClick={() => handleDeleteMember(member.id)}
+                      onClick={() =>
+                        handleDeleteMember(member.id, member.name, isSelf)
+                      }
                       disabled={isDeletingMember || !canDelete}
                     >
                       {isSelf ? "Leave the workspace" : `Delete ${member.name}`}

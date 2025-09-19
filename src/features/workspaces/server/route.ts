@@ -113,9 +113,6 @@ const app = new Hono()
 
     const { workspaceId } = c.req.param();
 
-    console.log(workspaceId);
-    console.log(user.id);
-
     const member = await getMember(workspaceId, user.id);
 
     if (!member) {

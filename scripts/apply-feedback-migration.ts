@@ -12,7 +12,6 @@ async function applyMigration() {
     await pool.query(`
       ALTER TABLE "tasks" ADD COLUMN IF NOT EXISTS "developer_feedback" text;
     `);
-    console.log("Migration applied successfully!");
   } catch (error) {
     console.error("Error applying migration:", error);
   } finally {

@@ -92,8 +92,6 @@ export const TaskViewSwticher = ({
         ] as "Easy" | "Medium" | "Hard",
       };
     }) ?? [];
-  // Depuración: mostrar el array de tareas normalizadas antes de pasarlo al Kanban
-  console.log("TaskViewSwticher normalizedTasks:", normalizedTasks);
 
   return (
     <>

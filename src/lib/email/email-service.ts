@@ -96,7 +96,6 @@ export class EmailService {
       };
 
       const info = await this.transporter.sendMail(mailOptions);
-      console.log("OTP Email sent:", info.messageId);
       return true;
     } catch (error) {
       console.error("Error sending OTP email:", error);
@@ -169,9 +168,6 @@ export class EmailService {
           © 2024 KarmaKanban Plus
         `,
       };
-
-      const info = await this.transporter.sendMail(mailOptions);
-      console.log("Password reset confirmation email sent:", info.messageId);
       return true;
     } catch (error) {
       console.error("Error sending password reset confirmation email:", error);
