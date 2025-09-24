@@ -26,9 +26,9 @@ export class EmailService {
   ): Promise<boolean> {
     try {
       const mailOptions = {
-        from: '"KarmaKanban Plus" <carlostheoro@gmail.com>',
+        from: '"KarmaKanban"',
         to: to,
-        subject: "Código de Verificación - Recuperar Contraseña",
+        subject: "Verification Code - Password Recovery",
         html: `
           <!DOCTYPE html>
           <html>
@@ -47,51 +47,51 @@ export class EmailService {
             <body>
               <div class="container">
                 <div class="header">
-                  <h1>🔐 Recuperación de Contraseña</h1>
-                  <p>KarmaKanban Plus</p>
+                  <h1>🔐 Password Recovery</h1>
+                  <p>KarmaKanban</p>
                 </div>
                 <div class="content">
-                  <h2>¡Hola ${userName}!</h2>
-                  <p>Has solicitado recuperar tu contraseña. Utiliza el siguiente código de verificación para continuar:</p>
+                  <h2>Hello ${userName}!</h2>
+                  <p>You have requested to recover your password. Use the following verification code to continue:</p>
 
                   <div class="otp-code">${otp}</div>
 
                   <div class="warning">
-                    <strong>⚠️ Importante:</strong>
+                    <strong>⚠️ Important:</strong>
                     <ul>
-                      <li>Este código expira en 10 minutos</li>
-                      <li>Solo puede ser utilizado una vez</li>
-                      <li>No compartas este código con nadie</li>
+                      <li>This code expires in 10 minutes</li>
+                      <li>It can only be used once</li>
+                      <li>Don't share this code with anyone</li>
                     </ul>
                   </div>
 
-                  <p>Si no has solicitado este código, puedes ignorar este mensaje de forma segura.</p>
+                  <p>If you haven't requested this code, you can safely ignore this message.</p>
 
-                  <p>Si necesitas ayuda, contacta a nuestro equipo de soporte.</p>
+                  <p>If you need help, contact our support team.</p>
                 </div>
                 <div class="footer">
-                  <p>© 2024 KarmaKanban Plus - Sistema de Gestión de Proyectos</p>
-                  <p>Este es un mensaje automático, por favor no responder.</p>
+                  <p>© ${new Date().getFullYear()} KarmaKanban - Project Management System</p>
+                  <p>This is an automated message, please do not reply.</p>
                 </div>
               </div>
             </body>
           </html>
         `,
         text: `
-          KarmaKanban Plus - Recuperación de Contraseña
+          KarmaKanban - Password Recovery
 
-          ¡Hola ${userName}!
+          Hello ${userName}!
 
-          Has solicitado recuperar tu contraseña. Tu código de verificación es: ${otp}
+          You have requested to recover your password. Your verification code is: ${otp}
 
-          IMPORTANTE:
-          - Este código expira en 10 minutos
-          - Solo puede ser utilizado una vez
-          - No compartas este código con nadie
+          IMPORTANT:
+          - This code expires in 10 minutes
+          - It can only be used once
+          - Don't share this code with anyone
 
-          Si no has solicitado este código, puedes ignorar este mensaje.
+          If you haven't requested this code, you can ignore this message.
 
-          © 2024 KarmaKanban Plus
+          © ${new Date().getFullYear()} KarmaKanban
         `,
       };
 
@@ -109,9 +109,9 @@ export class EmailService {
   ): Promise<boolean> {
     try {
       const mailOptions = {
-        from: '"KarmaKanban Plus" <carlostheoro@gmail.com>',
+        from: '"KarmaKanban"',
         to: to,
-        subject: "Contraseña Actualizada Exitosamente",
+        subject: "Password Updated Successfully",
         html: `
           <!DOCTYPE html>
           <html>
@@ -129,45 +129,45 @@ export class EmailService {
             <body>
               <div class="container">
                 <div class="header">
-                  <h1>✅ Contraseña Actualizada</h1>
-                  <p>KarmaKanban Plus</p>
+                  <h1>✅ Password Updated</h1>
+                  <p>KarmaKanban</p>
                 </div>
                 <div class="content">
-                  <h2>¡Hola ${userName}!</h2>
+                  <h2>Hello ${userName}!</h2>
 
                   <div class="success">
-                    <strong>🎉 ¡Éxito!</strong> Tu contraseña ha sido actualizada correctamente.
+                    <strong>🎉 Success!</strong> Your password has been updated successfully.
                   </div>
 
-                  <p>Tu contraseña de KarmaKanban Plus ha sido cambiada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.</p>
+                  <p>Your KarmaKanban password has been successfully changed. You can now sign in with your new password.</p>
 
-                  <p><strong>Fecha de actualización:</strong> ${new Date().toLocaleString(
-                    "es-ES"
+                  <p><strong>Update date:</strong> ${new Date().toLocaleString(
+                    "en-US"
                   )}</p>
 
-                  <p>Si no has realizado este cambio, contacta inmediatamente a nuestro equipo de soporte.</p>
+                  <p>If you haven't made this change, contact our support team immediately.</p>
 
-                  <p>Gracias por usar KarmaKanban Plus.</p>
+                  <p>Thank you for using KarmaKanban.</p>
                 </div>
                 <div class="footer">
-                  <p>© 2024 KarmaKanban Plus - Sistema de Gestión de Proyectos</p>
-                  <p>Este es un mensaje automático, por favor no responder.</p>
+                  <p>© ${new Date().getFullYear()} KarmaKanban - Project Management System</p>
+                  <p>This is an automated message, please do not reply.</p>
                 </div>
               </div>
             </body>
           </html>
         `,
         text: `
-          KarmaKanban Plus - Contraseña Actualizada
+          KarmaKanban - Password Updated
 
-          ¡Hola ${userName}!
+          Hello ${userName}!
 
-          Tu contraseña ha sido actualizada correctamente.
-          Fecha: ${new Date().toLocaleString("es-ES")}
+          Your password has been updated successfully.
+          Date: ${new Date().toLocaleString("en-US")}
 
-          Si no has realizado este cambio, contacta a soporte inmediatamente.
+          If you haven't made this change, contact support immediately.
 
-          © 2024 KarmaKanban Plus
+          © ${new Date().getFullYear()} KarmaKanban
         `,
       };
 
@@ -180,7 +180,7 @@ export class EmailService {
   }
 }
 
-// Configuración del servicio de email
+// Email service configuration
 const emailConfig: EmailConfig = {
   service: process.env.EMAIL_SERVICE || "gmail",
   user: process.env.EMAIL_USER || "",

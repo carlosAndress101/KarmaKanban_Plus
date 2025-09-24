@@ -31,7 +31,7 @@ import { useVerifyOtp } from "@/features/auth/api/use-verify-otp";
 import { useResendOtp } from "@/features/auth/api/use-resend-otp";
 
 const verifyOtpSchema = z.object({
-  otp: z.string().length(6, "El código OTP debe tener 6 dígitos"),
+  otp: z.string().length(6, "OTP code must be 6 digits"),
 });
 
 type VerifyOtpForm = z.infer<typeof verifyOtpSchema>;
@@ -51,7 +51,7 @@ export default function VerifyOtpPage() {
     type: "success" | "error";
     text: string;
   } | null>(null);
-  const [timeRemaining, setTimeRemaining] = useState(600); // 10 minutos en segundos
+  const [timeRemaining, setTimeRemaining] = useState(600); // 10 minutes in seconds
   const [canResend, setCanResend] = useState(false);
 
   const { mutate: verifyOtp, isPending: loading } = useVerifyOtp();
@@ -66,14 +66,14 @@ export default function VerifyOtpPage() {
     },
   });
 
-  // Redirigir si no hay email
+  // Redirect if no email
   useEffect(() => {
     if (!email) {
       router.push("/forgot-password");
     }
   }, [email, router]);
 
-  // Temporizador
+  // Timer
   useEffect(() => {
     if (timeRemaining > 0) {
       const timer = setTimeout(() => {
@@ -127,10 +127,10 @@ export default function VerifyOtpPage() {
         onSuccess: (result) => {
           setMessage({
             type: "success",
-            text: "Código verificado correctamente",
+            text: "Code verified successfully",
           });
 
-          // Redirigir a reset-password con el token
+          // Redirect to reset-password with token
           setTimeout(() => {
             const response = result as VerifyOtpSuccess;
             router.push(`/reset-password?token=${response.resetToken}`);
@@ -139,7 +139,7 @@ export default function VerifyOtpPage() {
         onError: (error) => {
           setMessage({
             type: "error",
-            text: error.message || "Error interno del servidor",
+            text: error.message || "Internal server error",
           });
         },
       }
@@ -157,17 +157,17 @@ export default function VerifyOtpPage() {
         onSuccess: () => {
           setMessage({
             type: "success",
-            text: "Nuevo código enviado a tu email",
+            text: "New code sent to your email",
           });
 
-          setTimeRemaining(600); // Reiniciar timer
+          setTimeRemaining(600); // Reset timer
           setCanResend(false);
           form.setValue("otp", "");
         },
         onError: (error) => {
           setMessage({
             type: "error",
-            text: error.message || "Error al reenviar código",
+            text: error.message || "Error resending code",
           });
         },
       }
@@ -175,7 +175,7 @@ export default function VerifyOtpPage() {
   };
 
   if (!email) {
-    return null; // O un loading spinner
+    return null; // Or a loading spinner
   }
 
   return (
@@ -187,10 +187,10 @@ export default function VerifyOtpPage() {
               <Shield className="h-6 w-6 text-blue-600" />
             </div>
             <CardTitle className="text-2xl font-bold text-gray-900">
-              Verificar código
+              Verify code
             </CardTitle>
             <CardDescription className="text-gray-600">
-              Ingresa el código de 6 dígitos enviado a
+              Enter the 6-digit code sent to
               <br />
               <span className="font-medium text-blue-600">{email}</span>
             </CardDescription>
@@ -225,8 +225,8 @@ export default function VerifyOtpPage() {
                 <Clock className="h-4 w-4" />
                 <span className="font-medium">
                   {timeRemaining > 0
-                    ? `Expira en ${formatTime(timeRemaining)}`
-                    : "Código expirado"}
+                    ? `Expires in ${formatTime(timeRemaining)}`
+                    : "Code expired"}
                 </span>
               </div>
             </div>
@@ -242,7 +242,7 @@ export default function VerifyOtpPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-gray-700 text-center block font-medium">
-                        Código de verificación
+                        Verification code
                       </FormLabel>
                       <FormControl>
                         <div className="flex justify-center space-x-2">
@@ -282,12 +282,12 @@ export default function VerifyOtpPage() {
                   {loading ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                      Verificando...
+                      Verifying...
                     </>
                   ) : (
                     <>
                       <Shield className="h-4 w-4 mr-2" />
-                      Verificar código
+                      Verify code
                     </>
                   )}
                 </Button>
@@ -295,7 +295,7 @@ export default function VerifyOtpPage() {
             </Form>
 
             <div className="text-center space-y-3">
-              <p className="text-sm text-gray-600">¿No recibiste el código?</p>
+              <p className="text-sm text-gray-600">Didn't receive the code?</p>
 
               <Button
                 variant="outline"
@@ -306,14 +306,14 @@ export default function VerifyOtpPage() {
                 {resendLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400 mr-2" />
-                    Reenviando...
+                    Resending...
                   </>
                 ) : (
                   <>
                     <RotateCcw className="h-4 w-4 mr-2" />
                     {canResend
-                      ? "Reenviar código"
-                      : `Reenviar en ${formatTime(timeRemaining)}`}
+                      ? "Resend code"
+                      : `Resend in ${formatTime(timeRemaining)}`}
                   </>
                 )}
               </Button>
@@ -325,7 +325,7 @@ export default function VerifyOtpPage() {
                 className="inline-flex items-center text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium"
               >
                 <ArrowLeft className="h-4 w-4 mr-1" />
-                Cambiar email
+                Change email
               </Link>
             </div>
           </CardContent>

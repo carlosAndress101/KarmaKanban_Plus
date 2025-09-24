@@ -28,7 +28,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useForgotPassword } from "@/features/auth/api/use-forgot-password";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email("Ingresa un email válido"),
+  email: z.string().email("Enter a valid email"),
 });
 
 type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>;
@@ -57,10 +57,10 @@ export default function ForgotPasswordPage() {
         onSuccess: () => {
           setMessage({
             type: "success",
-            text: "Código de verificación enviado a tu email",
+            text: "Verification code sent to your email",
           });
 
-          // Redirigir a la página de verificación después de 2 segundos
+          // Redirect to verification page after 2 seconds
           setTimeout(() => {
             router.push(`/verify-otp?email=${encodeURIComponent(data.email)}`);
           }, 2000);
@@ -68,7 +68,7 @@ export default function ForgotPasswordPage() {
         onError: (error) => {
           setMessage({
             type: "error",
-            text: error.message || "Error interno del servidor",
+            text: error.message || "Internal server error",
           });
         },
       }
@@ -86,11 +86,11 @@ export default function ForgotPasswordPage() {
 
             <div className="space-y-2">
               <CardTitle className="text-3xl font-bold text-gray-900">
-                ¿Olvidaste tu contraseña?
+                Forgot your password?
               </CardTitle>
               <CardDescription className="text-gray-600 text-lg leading-relaxed max-w-md mx-auto">
-                No te preocupes, te enviaremos un código de verificación para
-                recuperar tu cuenta
+                Don't worry, we'll send you a verification code to recover your
+                account
               </CardDescription>
             </div>
           </CardHeader>
@@ -134,12 +134,12 @@ export default function ForgotPasswordPage() {
                   render={({ field }) => (
                     <FormItem className="space-y-2">
                       <FormLabel className="text-gray-700 font-semibold text-base">
-                        Correo electrónico
+                        Email address
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
-                            placeholder="tu@email.com"
+                            placeholder="your@email.com"
                             type="email"
                             disabled={loading}
                             className="h-14 text-base border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 pl-12 bg-white"
@@ -161,12 +161,12 @@ export default function ForgotPasswordPage() {
                   {loading ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-3" />
-                      Enviando código...
+                      Sending code...
                     </>
                   ) : (
                     <>
                       <Mail className="h-5 w-5 mr-3" />
-                      Enviar código de verificación
+                      Send verification code
                     </>
                   )}
                 </Button>
@@ -180,17 +180,17 @@ export default function ForgotPasswordPage() {
                   className="inline-flex items-center text-base text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium group"
                 >
                   <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
-                  Volver al inicio de sesión
+                  Back to sign in
                 </Link>
               </div>
 
               <div className="text-center border-t border-gray-200 pt-4">
-                <p className="text-gray-500 mb-2">¿No tienes cuenta?</p>
+                <p className="text-gray-500 mb-2">Don't have an account?</p>
                 <Link
                   href="/sign-up"
                   className="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-300 hover:underline"
                 >
-                  Regístrate aquí
+                  Sign up here
                 </Link>
               </div>
             </div>

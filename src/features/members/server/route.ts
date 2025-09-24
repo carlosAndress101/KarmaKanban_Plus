@@ -57,7 +57,7 @@ const app = new Hono()
       return c.json({ error: "Authentication required" }, 401);
     }
 
-    // Buscar el miembro a eliminar
+    // Find the member to delete
     const memberToDelete = await db.query.members.findFirst({
       where: (fields) => eq(fields.id, memberId),
     });
@@ -66,7 +66,7 @@ const app = new Hono()
       return c.json({ error: "Member not found" }, 404);
     }
 
-    // Verificar que no sea el último miembro del workspace
+    // Verify it's not the last member of the workspace
     const allMembers = await db
       .select()
       .from(members)
@@ -79,7 +79,7 @@ const app = new Hono()
       );
     }
 
-    // Buscar el miembro que hace la petición
+    // Find the member making the request
     const requestingMember = await db.query.members.findFirst({
       where: (fields) =>
         eq(fields.workspaceId, memberToDelete.workspaceId) &&
@@ -94,13 +94,13 @@ const app = new Hono()
     const isRequestingAdmin = requestingMember.role === userRoles[1]; // "admin"
     const isTargetAdmin = memberToDelete.role === userRoles[1]; // "admin"
 
-    // Reglas de eliminación:
-    // 1. Solo puedes eliminarte a ti mismo
-    // 2. Solo los admins pueden eliminar a otros miembros (pero NO a otros admins)
-    // 3. Los admins NO pueden eliminar a otros admins
+    // Deletion rules:
+    // 1. You can only delete yourself
+    // 2. Only admins can delete other members (but NOT other admins)
+    // 3. Admins CANNOT delete other admins
 
     if (!isSelf) {
-      // Si no es él mismo, debe ser admin para eliminar a otros
+      // If not themselves, must be admin to delete others
       if (!isRequestingAdmin) {
         return c.json(
           { error: "Only administrators can remove other members" },
@@ -108,7 +108,7 @@ const app = new Hono()
         );
       }
 
-      // Los admins no pueden eliminar a otros admins
+      // Admins cannot delete other admins
       if (isTargetAdmin) {
         return c.json(
           { error: "Administrators cannot remove other administrators" },
@@ -117,7 +117,7 @@ const app = new Hono()
       }
     }
 
-    // Si es él mismo eliminándose y es admin, verificar que haya otro admin
+    // If deleting themselves and is admin, verify there's another admin
     if (isSelf && isRequestingAdmin) {
       const otherAdmins = allMembers.filter(
         (m) => m.role === userRoles[1] && m.id !== memberToDelete.id
@@ -134,7 +134,7 @@ const app = new Hono()
       }
     }
 
-    // Proceder con la eliminación
+    // Proceed with deletion
     await db.delete(members).where(eq(members.id, memberId));
 
     return c.json({
@@ -159,7 +159,7 @@ const app = new Hono()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
-      // 1. Buscar el miembro a actualizar
+      // 1. Find the member to update
       const memberToUpdate = await db.query.members.findFirst({
         where: (fields) => eq(fields.id, memberId),
       });
@@ -178,7 +178,7 @@ const app = new Hono()
         return c.json({ error: "Cannot downgrade the only member" }, 400);
       }
 
-      // 3. Verificar que el usuario que realiza la acción es ADMIN
+      // 3. Verify that the user performing the action is ADMIN
       const requestingMember = await db.query.members.findFirst({
         where: (fields) =>
           eq(fields.workspaceId, memberToUpdate.workspaceId) &&
@@ -193,7 +193,7 @@ const app = new Hono()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
-      // 4. Actualizar el rol
+      // 4. Update the role
       await db.update(members).set({ role }).where(eq(members.id, memberId));
 
       return c.json({ data: { id: memberToUpdate.id } });

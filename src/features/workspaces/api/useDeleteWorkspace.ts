@@ -29,7 +29,7 @@ export const useDeleteWorkspace = () => {
       });
 
       if (!response.ok) {
-        // Capturar el mensaje de error específico del backend
+        // Capture specific error message from backend
         const errorData = (await response
           .json()
           .catch(() => ({}))) as ApiErrorResponse;

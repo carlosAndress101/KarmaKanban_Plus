@@ -17,7 +17,7 @@ export function ResponsiveModal({
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="w-full sm:max-w-lg p-0 border-none overflow-y-auto hide-scrollbar max-h-[85vh]">
-          {/* Eliminado título para evitar duplicidad */}
+          {/* Removed title to avoid duplication */}
           {children}
         </DialogContent>
       </Dialog>

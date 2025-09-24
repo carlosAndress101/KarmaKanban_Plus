@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const loginSchema = z.object({
   email: z.string().min(3),
-  password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 export const registerSchema = z
@@ -10,13 +10,11 @@ export const registerSchema = z
     name: z.string().min(3),
     lastName: z.string().min(3),
     email: z.string().email(),
-    password: z
-      .string()
-      .min(8, "La contraseña debe tener al menos 8 caracteres"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(8),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
@@ -27,24 +25,22 @@ export const registerSchemaRest = z.object({
 });
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().email("Ingresa un email válido"),
+  email: z.string().email("Enter a valid email"),
 });
 
 export const verifyOtpSchema = z.object({
   email: z.string().email(),
-  otp: z.string().length(6, "El código OTP debe tener 6 dígitos"),
+  otp: z.string().length(6, "OTP code must be 6 digits"),
 });
 
 export const resetPasswordSchema = z
   .object({
-    token: z.string().min(1, "Token requerido"),
-    password: z
-      .string()
-      .min(8, "La contraseña debe tener al menos 8 caracteres"),
+    token: z.string().min(1, "Token required"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(8),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 

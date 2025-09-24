@@ -42,11 +42,11 @@ export const useDeleteMember = () => {
         "Member removed successfully! The member has been removed from the workspace";
       toast.success(message);
 
-      // Invalidar las queries antes de la redirección
+      // Invalidate queries before redirection
       queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
 
-      // Redirigir a workspaces después de un breve delay para permitir que las queries se actualicen
+      // Redirect to workspaces after a brief delay to allow queries to update
       setTimeout(() => {
         router.push("/");
       }, 100);

@@ -59,7 +59,7 @@ export default function LoginForm() {
         <div className="mt-4 text-center">
           <Link href="/forgot-password">
             <span className="text-sm text-blue-700 hover:text-blue-800 underline">
-              ¿Olvidaste tu contraseña?
+              Forgot your password?
             </span>
           </Link>
         </div>
@@ -69,7 +69,7 @@ export default function LoginForm() {
       </div>
       <CardContent className="p-7 flex items-center justify-center">
         <p>
-          No tiene cuenta?{" "}
+          Don't have an account?{" "}
           <Link href="/sign-up">
             <span className="text-blue-700">&nbsp;Sign Up</span>
           </Link>

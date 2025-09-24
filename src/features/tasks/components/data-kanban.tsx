@@ -9,7 +9,7 @@ import {
 import { Task, TaskStatus } from "../types";
 import { KanbanCard } from "./kanban-card";
 import { KanbanColumnHeader } from "./kanban-column-header";
-import { useBulkUpdateTask } from "../api/useBulkUpdateTask"; // Importa tu hook aquí
+import { useBulkUpdateTask } from "../api/useBulkUpdateTask"; // Import your hook here
 import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
 import { useGetMember } from "@/features/members/api/useGetMember";
 
@@ -32,7 +32,7 @@ interface DataKanbanProps {
   ) => void;
 }
 
-// Helper para eliminar duplicados por id
+// Helper to remove duplicates by id
 const removeDuplicateTasks = (tasks: Task[]) => {
   const uniqueTasks: Record<string, Task> = {};
   for (const task of tasks) {
@@ -59,7 +59,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
       if (task.status && boards.includes(task.status)) {
         initial[task.status].push(task);
       } else {
-        console.warn("Tarea ignorada por status inválido:", task);
+        console.warn("Task ignored due to invalid status:", task);
       }
     }
     for (const status of boards) {
@@ -134,7 +134,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
         return newTasks;
       });
 
-      // Enviar cambios directamente usando mutate
+      // Send changes directly using mutate
       mutate({ json: { tasks: updatesPayload }, members });
     },
     [mutate, members]

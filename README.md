@@ -1,6 +1,6 @@
-# ⭐KarmaKanban Plus⭐
+# ⭐KarmaKanban⭐
 
-KarmaKanban Plus es una aplicación de gestión de proyectos y tareas tipo Kanban, con soporte para gamificación, múltiples workspaces y analíticas. Construida con Next.js, Drizzle ORM, PostgreSQL y Docker.
+KarmaKanban es una aplicación de gestión de proyectos y tareas tipo Kanban, con soporte para gamificación, múltiples workspaces y analíticas. Construida con Next.js, Drizzle ORM, PostgreSQL y Docker.
 
 ---
 
@@ -39,12 +39,15 @@ KarmaKanban Plus es una aplicación de gestión de proyectos y tareas tipo Kanba
    ```
 2. **Configura la base de datos y variables de entorno:**
    Ejecuta el script interactivo:
+
    ```bash
    ./scripts/setup_local_db.sh
    ```
+
    > ⚠️ En Windows, usa WSL o Git Bash. No compatible con CMD/PowerShell puro.
 
 3. **Inicia el servidor de desarrollo:**
+
    ```bash
    bun dev
    # o npm run dev, yarn dev, pnpm dev
@@ -52,7 +55,6 @@ KarmaKanban Plus es una aplicación de gestión de proyectos y tareas tipo Kanba
 
 4. **Accede a la app:**
    - [http://localhost:3000](http://localhost:3000)
-   
 5. **Accede a pgAdmin (opcional):**
    - [http://localhost:5050](http://localhost:5050)
    - Usuario: admin@kkplus.com
@@ -87,18 +89,19 @@ DATABASE_URL=postgres://kkplus_user:kkplus_pass@localhost:5432/kkplus_db
 # PORT=4321
 
 ```
+
 ## 🧑‍💻Authors
 
 - [@Samuel-Aroca](https://www.github.com/SamuelAroca)
 - [@Jim-Diaz](https://www.github.com/JimDiazC)
 - [@Carlos-Andrés](https://www.github.com/carlosandress101)
 
-
 ## Support
 
-For support, email carloshinestroza101@gmail.com 
+For support, email carloshinestroza101@gmail.com
 
 ## Recursos
+
 - [Next.js Docs](https://nextjs.org/docs)
 - [Drizzle ORM](https://orm.drizzle.team/)
 - [Docker Compose](https://docs.docker.com/compose/)

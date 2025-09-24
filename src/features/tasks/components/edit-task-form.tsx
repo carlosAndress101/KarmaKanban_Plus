@@ -64,12 +64,12 @@ export function EditTaskForm({
   }, [initialValues, form]);
 
   const onSubmit = (values: z.infer<typeof schema>) => {
-    // Enviar solo el id del miembro asignado como assigneeId
+    // Send only the assigned member's id as assigneeId
     const selectedAssignee = memberOptions.find(
       (m) => m.id === values.assignee
     );
 
-    // Excluir 'assignee' del objeto enviado al backend sin error ESLint
+    // Exclude 'assignee' from object sent to backend without ESLint error
     const rest: Record<string, unknown> = { ...values };
     delete rest.assignee;
     const payload = {
@@ -108,11 +108,11 @@ export function EditTaskForm({
             border: 0,
           }}
         >
-          Editar tarea
+          Edit task
         </DialogTitle>
-        {/* Título visual */}
+        {/* Visual title */}
         <div className="mb-6">
-          <h2 className="text-xl font-bold text-center">Editar tarea</h2>
+          <h2 className="text-xl font-bold text-center">Edit task</h2>
           <DottedSeparator className="mt-4" />
         </div>
         <Form {...form}>
@@ -164,9 +164,9 @@ export function EditTaskForm({
                       </FormControl>
                       <FormMessage />
                       <SelectContent>
-                        <SelectItem value="Easy">Fácil</SelectItem>
-                        <SelectItem value="Medium">Media</SelectItem>
-                        <SelectItem value="Hard">Difícil</SelectItem>
+                        <SelectItem value="Easy">Easy</SelectItem>
+                        <SelectItem value="Medium">Medium</SelectItem>
+                        <SelectItem value="Hard">Hard</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>

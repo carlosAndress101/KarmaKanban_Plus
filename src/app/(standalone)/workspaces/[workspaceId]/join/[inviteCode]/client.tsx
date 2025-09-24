@@ -24,7 +24,7 @@ export const WorkspaceIdJoinClient = () => {
     workspaceId,
   });
 
-  // Verificar si el usuario ya es miembro del workspace
+  // Check if user is already a member of the workspace
   useEffect(() => {
     if (currentUser && members && !isLoadingMembers) {
       const isMember = members.some(
@@ -45,7 +45,7 @@ export const WorkspaceIdJoinClient = () => {
     return <PageError message="Workspace not found" />;
   }
 
-  // Si el usuario ya es miembro, mostrar loading mientras redirige
+  // If user is already a member, show loading while redirecting
   if (currentUser && members) {
     const isMember = members.some((member) => member.userId === currentUser.id);
     if (isMember) {

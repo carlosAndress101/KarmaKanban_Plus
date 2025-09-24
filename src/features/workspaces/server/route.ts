@@ -19,7 +19,7 @@ const app = new Hono()
       return c.json({ error: "Unauthorized" }, 401);
     }
 
-    // Obtener todos los workspace IDs en una sola consulta si no necesitas más del objeto members
+    // Get all workspace IDs in a single query if you don't need more from the members object
     const workspaceIds = await db
       .select({ workspaceId: members.workspaceId })
       .from(members)
@@ -31,7 +31,7 @@ const app = new Hono()
 
     const ids = workspaceIds.map((w) => w.workspaceId);
 
-    // Obtener los workspaces ordenados por fecha de creación
+    // Get workspaces ordered by creation date
     const workspaces_ = await db
       .select()
       .from(workspaces)
@@ -204,7 +204,7 @@ const app = new Hono()
         return c.json({ error: "Invalid invitation code" }, 400);
       }
 
-      // Verificar si el usuario ya es miembro del workspace
+      // Check if user is already a member of the workspace
       const existingMember = await db
         .select()
         .from(members)
@@ -250,20 +250,20 @@ const app = new Hono()
       return result[0]?.count ?? 0;
     };
 
-    // Contar todas las tareas actuales
+    // Count all current tasks
     const taskCount = await countTasks(and(eq(tasks.workspaceId, workspaceId)));
 
-    // Contar tareas creadas en la última semana para la diferencia
+    // Count tasks created in the last week for the difference
     const recentTaskCount = await countTasks(
       and(eq(tasks.workspaceId, workspaceId), gte(tasks.createdAt, oneWeekAgo))
     );
 
-    // Asignadas al usuario actual
+    // Assigned to current user
     const assignedTaskCount = await countTasks(
       and(eq(tasks.workspaceId, workspaceId), eq(tasks.assigneeId, member.id))
     );
 
-    // Asignadas al usuario en la última semana
+    // Assigned to user in the last week
     const recentAssignedTaskCount = await countTasks(
       and(
         eq(tasks.workspaceId, workspaceId),
@@ -272,12 +272,12 @@ const app = new Hono()
       )
     );
 
-    // Completadas
+    // Completed
     const completedTaskCount = await countTasks(
       and(eq(tasks.workspaceId, workspaceId), eq(tasks.status, TaskStatus.DONE))
     );
 
-    // Completadas en la última semana
+    // Completed in the last week
     const recentCompletedTaskCount = await countTasks(
       and(
         eq(tasks.workspaceId, workspaceId),
@@ -286,7 +286,7 @@ const app = new Hono()
       )
     );
 
-    // Incompletas
+    // Incomplete
     const inCompleteTaskCount = await countTasks(
       and(
         eq(tasks.workspaceId, workspaceId),
@@ -294,7 +294,7 @@ const app = new Hono()
       )
     );
 
-    // Incompletas creadas en la última semana
+    // Incomplete created in the last week
     const recentInCompleteTaskCount = await countTasks(
       and(
         eq(tasks.workspaceId, workspaceId),
@@ -303,7 +303,7 @@ const app = new Hono()
       )
     );
 
-    // Vencidas
+    // Overdue
     const overDueTaskCount = await countTasks(
       and(
         eq(tasks.workspaceId, workspaceId),
@@ -312,7 +312,7 @@ const app = new Hono()
       )
     );
 
-    // Vencidas en la última semana
+    // Overdue in the last week
     const recentOverDueTaskCount = await countTasks(
       and(
         eq(tasks.workspaceId, workspaceId),

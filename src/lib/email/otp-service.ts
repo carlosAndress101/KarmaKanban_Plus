@@ -21,7 +21,7 @@ export class OTPService {
   }
 
   /**
-   * Genera un código OTP de 6 dígitos
+   * Generates a 6-digit OTP code
    */
   generateOTP(): string {
     return otpGenerator.generate(6, {
@@ -32,11 +32,11 @@ export class OTPService {
   }
 
   /**
-   * Guarda un OTP en memoria con expiración de 10 minutos
+   * Stores an OTP in memory with 10-minute expiration
    */
   async storeOTP(email: string, otp: string): Promise<void> {
     const expiresAt = new Date();
-    expiresAt.setMinutes(expiresAt.getMinutes() + 10); // Expira en 10 minutos
+    expiresAt.setMinutes(expiresAt.getMinutes() + 10); // Expires in 10 minutes
 
     this.otpStore.set(email, {
       otp,
@@ -44,73 +44,70 @@ export class OTPService {
       attempts: 0,
     });
 
-    // Limpiar OTP expirado después de 15 minutos (para dar margen)
-    setTimeout(
-      () => {
-        this.otpStore.delete(email);
-      },
-      15 * 60 * 1000,
-    );
+    // Clean expired OTP after 15 minutes (to give margin)
+    setTimeout(() => {
+      this.otpStore.delete(email);
+    }, 15 * 60 * 1000);
   }
 
   /**
-   * Verifica si un OTP es válido
+   * Verifies if an OTP is valid
    */
   async verifyOTP(
     email: string,
-    providedOTP: string,
+    providedOTP: string
   ): Promise<{ valid: boolean; message: string }> {
     const storedData = this.otpStore.get(email);
 
     if (!storedData) {
       return {
         valid: false,
-        message: "No se encontró código OTP para este email o ha expirado",
+        message: "OTP code not found for this email or has expired",
       };
     }
 
-    // Verificar si ha expirado
+    // Check if expired
     if (new Date() > storedData.expiresAt) {
       this.otpStore.delete(email);
       return {
         valid: false,
-        message: "El código OTP ha expirado. Solicita uno nuevo",
+        message: "OTP code has expired. Request a new one",
       };
     }
 
-    // Incrementar intentos
+    // Increment attempts
     storedData.attempts++;
 
-    // Máximo 5 intentos
+    // Maximum 5 attempts
     if (storedData.attempts > 5) {
       this.otpStore.delete(email);
       return {
         valid: false,
-        message: "Demasiados intentos fallidos. Solicita un nuevo código",
+        message: "Too many failed attempts. Request a new code",
       };
     }
 
-    // Verificar el código
+    // Verify the code
     if (storedData.otp === providedOTP) {
-      // OTP válido, eliminarlo del store
+      // Valid OTP, remove it from store
       this.otpStore.delete(email);
       return {
         valid: true,
-        message: "Código OTP verificado correctamente",
+        message: "OTP code verified successfully",
       };
     }
 
     return {
       valid: false,
-      message: `Código incorrecto. Intentos restantes: ${5 - storedData.attempts}`,
+      message: `Incorrect code. Remaining attempts: ${5 - storedData.attempts}`,
     };
   }
 
   /**
-   * Genera un token único para el reset de contraseña
+   * Generates a unique token for password reset
    */
   async generateResetToken(email: string): Promise<string> {
-    // Generar un token único
+    // Generate a unique token
     const token = otpGenerator.generate(32, {
       lowerCaseAlphabets: true,
       upperCaseAlphabets: true,
@@ -118,14 +115,14 @@ export class OTPService {
     });
 
     const expiresAt = new Date();
-    expiresAt.setMinutes(expiresAt.getMinutes() + 30); // Expira en 30 minutos
+    expiresAt.setMinutes(expiresAt.getMinutes() + 30); // Expires in 30 minutes
 
-    // Eliminar tokens anteriores para este email
+    // Remove previous tokens for this email
     await db
       .delete(passwordResetTokens)
       .where(eq(passwordResetTokens.email, email));
 
-    // Crear nuevo token en la base de datos
+    // Create new token in database
     await db.insert(passwordResetTokens).values({
       email,
       token,
@@ -137,10 +134,10 @@ export class OTPService {
   }
 
   /**
-   * Verifica si un token de reset es válido
+   * Verifies if a reset token is valid
    */
   async verifyResetToken(
-    token: string,
+    token: string
   ): Promise<{ valid: boolean; email?: string; message: string }> {
     const tokenData = await db
       .select()
@@ -149,26 +146,26 @@ export class OTPService {
         and(
           eq(passwordResetTokens.token, token),
           eq(passwordResetTokens.used, false),
-          gt(passwordResetTokens.expiresAt, new Date()),
-        ),
+          gt(passwordResetTokens.expiresAt, new Date())
+        )
       );
 
     if (tokenData.length === 0) {
       return {
         valid: false,
-        message: "Token inválido o expirado",
+        message: "Invalid or expired token",
       };
     }
 
     return {
       valid: true,
       email: tokenData[0].email,
-      message: "Token válido",
+      message: "Valid token",
     };
   }
 
   /**
-   * Marca un token como usado
+   * Marks a token as used
    */
   async markTokenAsUsed(token: string): Promise<void> {
     await db
@@ -178,7 +175,7 @@ export class OTPService {
   }
 
   /**
-   * Limpia tokens expirados de la base de datos
+   * Cleans expired tokens from database
    */
   async cleanupExpiredTokens(): Promise<void> {
     await db
@@ -187,21 +184,21 @@ export class OTPService {
   }
 
   /**
-   * Elimina un OTP específico del store (útil para testing)
+   * Removes a specific OTP from store (useful for testing)
    */
   removeOTP(email: string): void {
     this.otpStore.delete(email);
   }
 
   /**
-   * Verifica si existe un OTP para un email
+   * Checks if an OTP exists for an email
    */
   hasOTP(email: string): boolean {
     return this.otpStore.has(email);
   }
 
   /**
-   * Obtiene el tiempo restante para un OTP en segundos
+   * Gets the remaining time for an OTP in seconds
    */
   getOTPTimeRemaining(email: string): number {
     const storedData = this.otpStore.get(email);
@@ -210,7 +207,7 @@ export class OTPService {
     const now = new Date();
     const timeRemaining = Math.max(
       0,
-      Math.floor((storedData.expiresAt.getTime() - now.getTime()) / 1000),
+      Math.floor((storedData.expiresAt.getTime() - now.getTime()) / 1000)
     );
 
     return timeRemaining;

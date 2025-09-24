@@ -25,7 +25,10 @@ const app = new Hono()
         search: z.string().nullish(),
         dueDate: z.string().nullish(),
         difficulty: z.nativeEnum(TaskDifficulty).nullish(),
-        archived: z.string().nullish().transform((v) => v === "true"),
+        archived: z
+          .string()
+          .nullish()
+          .transform((v) => v === "true"),
       })
     ),
     async (c) => {
@@ -69,7 +72,7 @@ const app = new Hono()
         whereConditions.push(eq(tasks.dueDate, new Date(dueDate)));
       }
 
-      // Agregar búsqueda por nombre directamente en la query
+      // Add search by name directly in the query
       if (search) {
         if (typeof search === "string") {
           whereConditions.push(like(tasks.name, `%${search.toLowerCase()}%`));
@@ -157,7 +160,7 @@ const app = new Hono()
 
     if (!member) return c.json({ error: "Unauthorized" }, 401);
 
-    // Buscar tarea con mayor posición en ese workspace + estado
+    // Find task with highest position in that workspace + status
     const [highestTask] = await db
       .select()
       .from(tasks)
@@ -167,7 +170,7 @@ const app = new Hono()
 
     const newPosition = highestTask ? highestTask.position + 1000 : 1000;
 
-    // Crear nueva tarea
+    // Create new task
     const [Task] = await db
       .insert(tasks)
       .values({
@@ -237,7 +240,7 @@ const app = new Hono()
       if (values.assigneeId) {
         updatePayload.assigneeId = values.assigneeId;
       }
-      
+
       if ("assignee" in updatePayload) {
         delete updatePayload.assignee;
       }
@@ -546,77 +549,63 @@ const app = new Hono()
       });
     }
   )
-  .patch(
-    "/:taskId/archive",
-    sessionMiddleware,
-    async (c) => {
-      const user = c.get("user");
-      const { taskId } = c.req.param();
+  .patch("/:taskId/archive", sessionMiddleware, async (c) => {
+    const user = c.get("user");
+    const { taskId } = c.req.param();
 
-      if (!user) {
-        return c.json({ error: "Unauthorized" }, 401);
-      }
-
-      // Get the task to check workspace access
-      const [task] = await db
-        .select()
-        .from(tasks)
-        .where(eq(tasks.id, taskId));
-
-      if (!task) {
-        return c.json({ error: "Task not found" }, 404);
-      }
-
-      const [member] = await getMember(task.workspaceId, user.id);
-      if (!member) return c.json({ error: "Unauthorized" }, 401);
-
-      // Archive the task
-      await db
-        .update(tasks)
-        .set({ 
-          archived: true,
-          updatedAt: new Date(),
-        })
-        .where(eq(tasks.id, taskId));
-
-      return c.json({ data: { archived: true } });
+    if (!user) {
+      return c.json({ error: "Unauthorized" }, 401);
     }
-  )
-  .patch(
-    "/:taskId/unarchive",
-    sessionMiddleware,
-    async (c) => {
-      const user = c.get("user");
-      const { taskId } = c.req.param();
 
-      if (!user) {
-        return c.json({ error: "Unauthorized" }, 401);
-      }
+    // Get the task to check workspace access
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId));
 
-      // Get the task to check workspace access
-      const [task] = await db
-        .select()
-        .from(tasks)
-        .where(eq(tasks.id, taskId));
-
-      if (!task) {
-        return c.json({ error: "Task not found" }, 404);
-      }
-
-      const [member] = await getMember(task.workspaceId, user.id);
-      if (!member) return c.json({ error: "Unauthorized" }, 401);
-
-      // Unarchive the task
-      await db
-        .update(tasks)
-        .set({ 
-          archived: false,
-          updatedAt: new Date(),
-        })
-        .where(eq(tasks.id, taskId));
-
-      return c.json({ data: { archived: false } });
+    if (!task) {
+      return c.json({ error: "Task not found" }, 404);
     }
-  );
+
+    const [member] = await getMember(task.workspaceId, user.id);
+    if (!member) return c.json({ error: "Unauthorized" }, 401);
+
+    // Archive the task
+    await db
+      .update(tasks)
+      .set({
+        archived: true,
+        updatedAt: new Date(),
+      })
+      .where(eq(tasks.id, taskId));
+
+    return c.json({ data: { archived: true } });
+  })
+  .patch("/:taskId/unarchive", sessionMiddleware, async (c) => {
+    const user = c.get("user");
+    const { taskId } = c.req.param();
+
+    if (!user) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    // Get the task to check workspace access
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId));
+
+    if (!task) {
+      return c.json({ error: "Task not found" }, 404);
+    }
+
+    const [member] = await getMember(task.workspaceId, user.id);
+    if (!member) return c.json({ error: "Unauthorized" }, 401);
+
+    // Unarchive the task
+    await db
+      .update(tasks)
+      .set({
+        archived: false,
+        updatedAt: new Date(),
+      })
+      .where(eq(tasks.id, taskId));
+
+    return c.json({ data: { archived: false } });
+  });
 
 export default app;

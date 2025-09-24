@@ -195,7 +195,6 @@ export const CreateTaskForm = ({
                         <SelectItem value={TaskStatus.IN_REVIEW}>
                           In Review
                         </SelectItem>
-                        <SelectItem value={TaskStatus.DONE}>Done</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>

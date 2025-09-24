@@ -28,7 +28,7 @@ interface DataTableProps<TData extends { id: string }, TValue> {
   data: TData[];
 }
 
-// Función genérica para eliminar objetos duplicados por `id`
+// Generic function to remove duplicate objects by `id`
 function removeDuplicateById<T extends { id: string }>(array: T[]): T[] {
   const unique: Record<string, T> = {};
   for (const item of array) {

@@ -31,15 +31,15 @@ const resetPasswordSchema = z
   .object({
     password: z
       .string()
-      .min(8, "La contraseña debe tener al menos 8 caracteres")
+      .min(8, "Password must be at least 8 characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Debe contener al menos una mayúscula, una minúscula y un número",
+        "Must contain at least one uppercase, one lowercase and one number"
       ),
     confirmPassword: z.string().min(8),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
@@ -61,7 +61,7 @@ export default function ResetPasswordPage() {
     score: number;
     label: string;
     color: string;
-  }>({ score: 0, label: "Muy débil", color: "bg-red-500" });
+  }>({ score: 0, label: "Very weak", color: "bg-red-500" });
 
   const form = useForm<ResetPasswordForm>({
     resolver: zodResolver(resetPasswordSchema),
@@ -71,17 +71,17 @@ export default function ResetPasswordPage() {
     },
   });
 
-  // Redirigir si no hay token
+  // Redirect if no token
   useEffect(() => {
     if (!token) {
       router.push("/forgot-password");
     }
   }, [token, router]);
 
-  // Evaluar fortaleza de contraseña
+  // Evaluate password strength
   const evaluatePasswordStrength = (password: string) => {
     let score = 0;
-    let label = "Muy débil";
+    let label = "Very weak";
     let color = "bg-red-500";
 
     if (password.length >= 8) score++;
@@ -93,11 +93,11 @@ export default function ResetPasswordPage() {
     switch (score) {
       case 0:
       case 1:
-        label = "Muy débil";
+        label = "Very weak";
         color = "bg-red-500";
         break;
       case 2:
-        label = "Débil";
+        label = "Weak";
         color = "bg-orange-500";
         break;
       case 3:
@@ -105,11 +105,11 @@ export default function ResetPasswordPage() {
         color = "bg-yellow-500";
         break;
       case 4:
-        label = "Fuerte";
+        label = "Strong";
         color = "bg-blue-500";
         break;
       case 5:
-        label = "Muy fuerte";
+        label = "Very strong";
         color = "bg-green-500";
         break;
     }
@@ -138,10 +138,10 @@ export default function ResetPasswordPage() {
         onSuccess: () => {
           setMessage({
             type: "success",
-            text: "Contraseña actualizada correctamente",
+            text: "Password updated successfully",
           });
 
-          // Redirigir al login después de 3 segundos
+          // Redirect to login after 3 seconds
           setTimeout(() => {
             router.push("/sign-in?message=password-reset-success");
           }, 3000);
@@ -149,10 +149,10 @@ export default function ResetPasswordPage() {
         onError: (error) => {
           setMessage({
             type: "error",
-            text: error.message || "Error interno del servidor",
+            text: error.message || "Internal server error",
           });
         },
-      },
+      }
     );
   };
 
@@ -169,10 +169,10 @@ export default function ResetPasswordPage() {
               <Key className="h-8 w-8 text-purple-600" />
             </div>
             <CardTitle className="text-3xl font-bold text-gray-900">
-              Nueva contraseña
+              New Password
             </CardTitle>
             <CardDescription className="text-gray-600 text-lg">
-              Ingresa tu nueva contraseña segura
+              Enter your new secure password
             </CardDescription>
           </CardHeader>
 
@@ -186,7 +186,9 @@ export default function ResetPasswordPage() {
                 }
               >
                 <AlertCircle
-                  className={`h-4 w-4 ${message.type === "error" ? "text-red-600" : "text-green-600"}`}
+                  className={`h-4 w-4 ${
+                    message.type === "error" ? "text-red-600" : "text-green-600"
+                  }`}
                 />
                 <AlertDescription
                   className={
@@ -209,12 +211,12 @@ export default function ResetPasswordPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-gray-700 text-base font-medium">
-                        Nueva contraseña
+                        New Password
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
-                            placeholder="Ingresa tu nueva contraseña"
+                            placeholder="Enter your new password"
                             type={showPassword ? "text" : "password"}
                             disabled={loading}
                             className="h-14 border-gray-300 focus:border-blue-500 focus:ring-blue-500 pr-10 text-base"
@@ -245,19 +247,19 @@ export default function ResetPasswordPage() {
                         <div className="space-y-3">
                           <div className="flex justify-between items-center text-sm">
                             <span className="text-gray-600 font-medium">
-                              Fortaleza:
+                              Strength:
                             </span>
                             <span
                               className={`font-semibold ${
                                 passwordStrength.score <= 1
                                   ? "text-red-600"
                                   : passwordStrength.score <= 2
-                                    ? "text-orange-600"
-                                    : passwordStrength.score <= 3
-                                      ? "text-yellow-600"
-                                      : passwordStrength.score <= 4
-                                        ? "text-blue-600"
-                                        : "text-green-600"
+                                  ? "text-orange-600"
+                                  : passwordStrength.score <= 3
+                                  ? "text-yellow-600"
+                                  : passwordStrength.score <= 4
+                                  ? "text-blue-600"
+                                  : "text-green-600"
                               }`}
                             >
                               {passwordStrength.label}
@@ -285,12 +287,12 @@ export default function ResetPasswordPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-gray-700 text-base font-medium">
-                        Confirmar contraseña
+                        Confirm Password
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
-                            placeholder="Confirma tu nueva contraseña"
+                            placeholder="Confirm your new password"
                             type={showConfirmPassword ? "text" : "password"}
                             disabled={loading}
                             className="h-14 border-gray-300 focus:border-blue-500 focus:ring-blue-500 pr-10 text-base"
@@ -320,7 +322,7 @@ export default function ResetPasswordPage() {
                 />
 
                 <div className="text-base text-gray-600 space-y-3 bg-gray-50 p-4 rounded-lg">
-                  <p className="font-semibold">Tu contraseña debe contener:</p>
+                  <p className="font-semibold">Your password must contain:</p>
                   <ul className="space-y-2">
                     <li className="flex items-center space-x-3">
                       <CheckCircle
@@ -330,7 +332,7 @@ export default function ResetPasswordPage() {
                             : "text-gray-300"
                         }`}
                       />
-                      <span>Al menos 8 caracteres</span>
+                      <span>At least 8 characters</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle
@@ -340,7 +342,7 @@ export default function ResetPasswordPage() {
                             : "text-gray-300"
                         }`}
                       />
-                      <span>Una letra mayúscula</span>
+                      <span>One uppercase letter</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle
@@ -350,7 +352,7 @@ export default function ResetPasswordPage() {
                             : "text-gray-300"
                         }`}
                       />
-                      <span>Una letra minúscula</span>
+                      <span>One lowercase letter</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <CheckCircle
@@ -360,7 +362,7 @@ export default function ResetPasswordPage() {
                             : "text-gray-300"
                         }`}
                       />
-                      <span>Un número</span>
+                      <span>One number</span>
                     </li>
                   </ul>
                 </div>
@@ -373,12 +375,12 @@ export default function ResetPasswordPage() {
                   {loading ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
-                      Actualizando contraseña...
+                      Updating password...
                     </>
                   ) : (
                     <>
                       <Key className="h-5 w-5 mr-2" />
-                      Actualizar contraseña
+                      Update Password
                     </>
                   )}
                 </Button>
@@ -390,7 +392,7 @@ export default function ResetPasswordPage() {
                 href="/sign-in"
                 className="text-base text-gray-600 hover:text-blue-600 transition-colors font-medium"
               >
-                Volver al inicio de sesión
+                Back to sign in
               </Link>
             </div>
           </CardContent>

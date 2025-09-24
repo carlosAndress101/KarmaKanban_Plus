@@ -36,7 +36,7 @@ export const useResendOtp = () => {
 
       if (!response.ok) {
         const errorData = (await response.json()) as ErrorResponse;
-        throw new Error(errorData.error || "Error al reenviar código OTP");
+        throw new Error(errorData.error || "Error resending OTP code");
       }
 
       const data = await response.json();
@@ -47,11 +47,11 @@ export const useResendOtp = () => {
     },
     onSuccess: (data) => {
       if (isSuccessResponse(data)) {
-        toast.success(data.message || "Nuevo código de verificación enviado");
+        toast.success(data.message || "New verification code sent");
       }
     },
     onError: (error) => {
-      toast.error(error.message || "Error al reenviar código OTP");
+      toast.error(error.message || "Error resending OTP code");
     },
   });
 

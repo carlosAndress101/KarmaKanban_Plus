@@ -25,16 +25,16 @@ export const useForgotPassword = () => {
       const data = (await response.json()) as ApiResponse;
 
       if (!response.ok || !data.success) {
-        throw new Error(data.success ? "Error desconocido" : data.error);
+        throw new Error(data.success ? "Unknown error" : data.error);
       }
 
       return { success: true, message: data.message };
     },
     onSuccess: (data) => {
-      toast.success(data.message || "Código de verificación enviado");
+      toast.success(data.message || "Verification code sent");
     },
     onError: (error) => {
-      toast.error(error.message || "Error al enviar código de verificación");
+      toast.error(error.message || "Error sending verification code");
     },
   });
 

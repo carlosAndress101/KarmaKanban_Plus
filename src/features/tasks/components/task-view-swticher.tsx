@@ -35,7 +35,7 @@ export const TaskViewSwticher = ({
 }: TaskViewSwticherProps) => {
   const [{ assigneeId, dueDate, projectId, search, status }] = useTaskFilters();
   const [view, setView] = useQueryState("task-view", { defaultValue: "table" });
-  
+
   const isArchivedView = view === "archived";
 
   const workspaceId = useWorkspaceId();
@@ -75,7 +75,7 @@ export const TaskViewSwticher = ({
         (TaskStatus as Record<string, TaskStatus>)[task.status] ??
         TaskStatus.NEW;
       if (!Object.values(TaskStatus).includes(normalizedStatus)) {
-        console.warn("Status inválido en tarea:", task);
+        console.warn("Invalid status in task:", task);
       }
       return {
         ...task,
@@ -144,7 +144,7 @@ export const TaskViewSwticher = ({
                 <DataTable columns={columns} data={normalizedTasks} />
               </TabsContent>
               <TabsContent value="kanban" className="mt-0">
-                {/* Forzar re-render usando key única */}
+                {/* Force re-render using unique key */}
                 <DataKanban
                   key={workspaceId + "-" + normalizedTasks.length}
                   data={normalizedTasks}
@@ -161,10 +161,10 @@ export const TaskViewSwticher = ({
           )}
         </div>
       </Tabs>
-      {/* Modal de edición de tarea */}
-      {/* Modal de edición de tarea con refetch al editar */}
+      {/* Task edit modal */}
+      {/* Task edit modal with refetch on edit */}
       <EditTaskModal onEditSuccess={handleTaskEditSuccess} />
     </>
   );
-  // ...eliminado código duplicado y residual...
+  // ...removed duplicate and residual code...
 };

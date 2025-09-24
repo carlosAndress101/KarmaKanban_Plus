@@ -1,5 +1,11 @@
 import { useRouter } from "next/navigation";
-import { ExternalLinkIcon, PencilIcon, TrashIcon, ArchiveIcon, ArchiveRestoreIcon } from "lucide-react";
+import {
+  ExternalLinkIcon,
+  PencilIcon,
+  TrashIcon,
+  ArchiveIcon,
+  ArchiveRestoreIcon,
+} from "lucide-react";
 
 import { useConfirm } from "@/hooks/useConfirm";
 import { useWorkspaceId } from "@/features/workspaces/hooks/useWorkspaceId";
@@ -23,7 +29,12 @@ interface TaskActionsProps {
   archived?: boolean;
 }
 
-export const TaskActions = ({ children, id, projectId, archived = false }: TaskActionsProps) => {
+export const TaskActions = ({
+  children,
+  id,
+  projectId,
+  archived = false,
+}: TaskActionsProps) => {
   const router = useRouter();
   const workspaceId = useWorkspaceId();
   const { open } = useEditTaskModal();
@@ -42,7 +53,8 @@ export const TaskActions = ({ children, id, projectId, archived = false }: TaskA
   );
   const { mutate, isPending } = useDeleteTask();
   const { mutate: archiveTask, isPending: isArchiving } = useArchiveTask();
-  const { mutate: unarchiveTask, isPending: isUnarchiving } = useUnarchiveTask();
+  const { mutate: unarchiveTask, isPending: isUnarchiving } =
+    useUnarchiveTask();
 
   const onDelete = async () => {
     const ok = await confirm();
@@ -98,7 +110,7 @@ export const TaskActions = ({ children, id, projectId, archived = false }: TaskA
             className="font-medium p-[10px]"
           >
             <PencilIcon className="size-4 mr-2 stroke-2" />
-            Editar tarea
+            Edit task
           </DropdownMenuItem>
 
           <DropdownMenuItem

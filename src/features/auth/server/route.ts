@@ -64,20 +64,23 @@ const app = new Hono()
     if (!regex.test(name)) {
       return c.json({ success: false, message: "Invalid name" }, 400);
     }
-    // Verificar si el usuario ya existe
+    // Check if user already exists
     const existingUser = await db
       .select({ id: users.id })
       .from(users)
       .where(eq(users.email, email));
 
     if (existingUser.length > 1) {
-      return c.json({ success: false, message: "The user already exists" }, 409);
+      return c.json(
+        { success: false, message: "The user already exists" },
+        409
+      );
     }
 
-    // Generar hash de la contraseña
+    // Generate password hash
     const passhash = await bcrypt.hash(password, 10);
 
-    // Insertar usuario en la base de datos
+    // Insert user in database
     const userDt = await db
       .insert(users)
       .values({
@@ -119,76 +122,73 @@ const app = new Hono()
       const { email } = c.req.valid("json");
 
       try {
-        // Verificar si el usuario existe
+        // Check if user exists
         const userDt = await db
           .select()
           .from(users)
           .where(eq(users.email, email));
 
         if (userDt.length === 0) {
-          // Por seguridad, no revelamos si el email existe o no
+          // For security, we don't reveal if the email exists or not
           return c.json({
             success: true,
             message:
-              "Si el email está registrado, recibirás un código de verificación",
+              "If the email is registered, you will receive a verification code",
           });
         }
 
         const user = userDt[0];
 
-        // Generar OTP
+        // Generate OTP
         const otp = otpService.generateOTP();
 
-        // Almacenar OTP
+        // Store OTP
         await otpService.storeOTP(email, otp);
 
-        // Enviar email con OTP
+        // Send email with OTP
         const emailSent = await emailService.sendOTPEmail(
           email,
           otp,
-          user.name,
+          user.name
         );
 
         if (!emailSent) {
-          return c.json(
-            { error: "Error al enviar el código de verificación" },
-            500,
-          );
+          return c.json({ error: "Error sending verification code" }, 500);
         }
 
         return c.json({
           success: true,
-          message: "Código de verificación enviado a tu email",
+          message: "Verification code sent to your email",
           timeRemaining: otpService.getOTPTimeRemaining(email),
         });
       } catch (error) {
         console.error("Error in forgot-password:", error);
-        return c.json({ error: "Error interno del servidor" }, 500);
+        return c.json({ error: "Internal server error" }, 500);
       }
-    },
+    }
   )
   .post("/verify-otp", zValidator("json", verifyOtpSchema), async (c) => {
     const { email, otp } = c.req.valid("json");
 
     try {
-      // Verificar OTP
+      // Verify OTP
       const verification = await otpService.verifyOTP(email, otp);
 
       if (!verification.valid) {
         return c.json({ error: verification.message }, 400);
       }
 
-      // Generar token para reset de contraseña
+      // Generate token for password reset
       const resetToken = await otpService.generateResetToken(email);
 
       return c.json({
         success: true,
-        message: "Código verificado correctamente",
+        message: "Code verified successfully",
         resetToken: resetToken,
       });
     } catch (error) {
       console.error("Error in verify-otp:", error);
-      return c.json({ error: "Error interno del servidor" }, 500);
+      return c.json({ error: "Internal server error" }, 500);
     }
   })
   .post(
@@ -198,7 +198,7 @@ const app = new Hono()
       const { token, password } = c.req.valid("json");
 
       try {
-        // Verificar token
+        // Verify token
         const tokenVerification = await otpService.verifyResetToken(token);
 
         if (!tokenVerification.valid || !tokenVerification.email) {
@@ -207,96 +207,93 @@ const app = new Hono()
 
         const email = tokenVerification.email;
 
-        // Obtener usuario
+        // Get user
         const userDt = await db
           .select()
           .from(users)
           .where(eq(users.email, email));
 
         if (userDt.length === 0) {
-          return c.json({ error: "Usuario no encontrado" }, 404);
+          return c.json({ error: "User not found" }, 404);
         }
 
         const user = userDt[0];
 
-        // Hash nueva contraseña
+        // Hash new password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Actualizar contraseña
+        // Update password
         await db
           .update(users)
           .set({ password: hashedPassword })
           .where(eq(users.email, email));
 
-        // Marcar token como usado
+        // Mark token as used
         await otpService.markTokenAsUsed(token);
 
-        // Enviar email de confirmación
+        // Send confirmation email
         await emailService.sendPasswordResetConfirmation(email, user.name);
 
         return c.json({
           success: true,
-          message: "Contraseña actualizada correctamente",
+          message: "Password updated successfully",
         });
       } catch (error) {
         console.error("Error in reset-password:", error);
-        return c.json({ error: "Error interno del servidor" }, 500);
+        return c.json({ error: "Internal server error" }, 500);
       }
-    },
+    }
   )
   .post("/resend-otp", zValidator("json", forgotPasswordSchema), async (c) => {
     const { email } = c.req.valid("json");
 
     try {
-      // Verificar si el usuario existe
+      // Check if user exists
       const userDt = await db
         .select()
         .from(users)
         .where(eq(users.email, email));
 
       if (userDt.length === 0) {
-        return c.json({ error: "Email no registrado" }, 404);
+        return c.json({ error: "Email not registered" }, 404);
       }
 
-      // Verificar si ya existe un OTP activo
+      // Check if an active OTP already exists
       const timeRemaining = otpService.getOTPTimeRemaining(email);
       if (timeRemaining > 480) {
-        // Si quedan más de 8 minutos (de 10 total)
+        // If more than 8 minutes remain (out of 10 total)
         return c.json(
           {
-            error: "Debes esperar antes de solicitar un nuevo código",
+            error: "You must wait before requesting a new code",
             timeRemaining: timeRemaining,
           },
-          429,
+          429
         );
       }
 
       const user = userDt[0];
 
-      // Generar nuevo OTP
+      // Generate new OTP
       const otp = otpService.generateOTP();
 
-      // Almacenar OTP (esto reemplaza el anterior si existe)
+      // Store OTP (this replaces the previous one if it exists)
       await otpService.storeOTP(email, otp);
 
-      // Enviar email con OTP
+      // Send email with OTP
       const emailSent = await emailService.sendOTPEmail(email, otp, user.name);
 
       if (!emailSent) {
-        return c.json(
-          { error: "Error al enviar el código de verificación" },
-          500,
-        );
+        return c.json({ error: "Error sending verification code" }, 500);
       }
 
       return c.json({
         success: true,
-        message: "Nuevo código de verificación enviado",
+        message: "New verification code sent",
         timeRemaining: otpService.getOTPTimeRemaining(email),
       });
     } catch (error) {
       console.error("Error in resend-otp:", error);
-      return c.json({ error: "Error interno del servidor" }, 500);
+      return c.json({ error: "Internal server error" }, 500);
     }
   });
 

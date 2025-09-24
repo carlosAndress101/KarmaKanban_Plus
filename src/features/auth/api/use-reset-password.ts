@@ -37,7 +37,7 @@ export const useResetPassword = () => {
 
       if (!response.ok) {
         const errorData = (await response.json()) as ErrorResponse;
-        throw new Error(errorData.error || "Error al actualizar contraseña");
+        throw new Error(errorData.error || "Error updating password");
       }
 
       const data = await response.json();
@@ -52,7 +52,7 @@ export const useResetPassword = () => {
       }
     },
     onError: (error) => {
-      toast.error(error.message || "Error al actualizar contraseña");
+      toast.error(error.message || "Error updating password");
     },
   });
 

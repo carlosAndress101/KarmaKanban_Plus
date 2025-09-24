@@ -26,7 +26,7 @@ import { UserRole, userRoles } from "@/lib/schemas_drizzle";
 export const MemberList = () => {
   const workspaceId = useWorkspaceId();
 
-  // Diálogos de confirmación
+  // Confirmation dialogs
   const [DeleteMemberDialog, confirmDeleteMember] = useConfirm(
     "Remove Member",
     "Are you sure you want to remove this member from the workspace? They will lose access to all projects and tasks.",
@@ -71,7 +71,7 @@ export const MemberList = () => {
     memberName: string,
     isSelf: boolean
   ) => {
-    // Usar el dialog correcto según si es él mismo o no
+    // Use the correct dialog based on whether it's themselves or not
     const confirmed = isSelf
       ? await confirmLeaveWorkspace()
       : await confirmDeleteMember();
@@ -82,8 +82,8 @@ export const MemberList = () => {
       { param: { memberId } },
       {
         onSuccess: () => {
-          // No necesitamos recargar la página manualmente,
-          // el hook se encarga de la redirección y actualización
+          // We don't need to reload the page manually,
+          // the hook handles redirection and updates
         },
       }
     );
@@ -154,7 +154,7 @@ export const MemberList = () => {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent side="bottom" align="end">
-                    {/* Solo mostrar opciones de rol si se puede actualizar */}
+                    {/* Only show role options if can update */}
                     {canUpdateRole && (
                       <>
                         <DropdownMenuItem
@@ -178,7 +178,7 @@ export const MemberList = () => {
                       </>
                     )}
 
-                    {/* Opción de eliminar con lógica mejorada */}
+                    {/* Delete option with improved logic */}
                     <DropdownMenuItem
                       className="font-medium text-amber-700"
                       onClick={() =>
