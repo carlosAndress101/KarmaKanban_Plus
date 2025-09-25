@@ -8,7 +8,7 @@ const TaskIdPage = async () => {
 
   if (!user) redirect("/sign-in");
 
-  return ( <TaskIdClient /> );
+  return <TaskIdClient />;
 };
 
 export default TaskIdPage;

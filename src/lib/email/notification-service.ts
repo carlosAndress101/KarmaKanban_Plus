@@ -14,6 +14,8 @@ export class NotificationService {
       priority: string;
       dueDate?: Date;
       description?: string;
+      workspaceId: string;
+      taskId: string;
     }
   ): Promise<boolean> {
     try {
@@ -27,6 +29,8 @@ export class NotificationService {
               day: "numeric",
             })
           : undefined,
+        workspaceId: taskData.workspaceId,
+        taskId: taskData.taskId,
       };
 
       return await emailService.sendTaskAssignedEmail(
@@ -72,6 +76,7 @@ export class NotificationService {
       pointsCost: number;
       workspaceName: string;
       notes?: string;
+      workspaceId: string;
     }
   ): Promise<boolean> {
     try {
@@ -103,6 +108,7 @@ export class NotificationService {
       workspaceName: string;
       reviewerName: string;
       reviewNotes?: string;
+      workspaceId: string;
     }
   ): Promise<boolean> {
     try {

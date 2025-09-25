@@ -242,6 +242,8 @@ const app = new Hono()
             priority: Task.difficulty || "medium",
             dueDate: Task.dueDate || undefined,
             description: Task.description || undefined,
+            workspaceId: workspaceId,
+            taskId: Task.id,
           }).catch((error) => {
             console.error("❌ Failed to send task assignment email:", error);
           });

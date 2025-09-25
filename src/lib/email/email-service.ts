@@ -113,13 +113,14 @@ export class EmailService {
       priority: string;
       dueDate?: string;
       description?: string;
+      workspaceId: string;
+      taskId: string;
     }
   ): Promise<boolean> {
-    console.log("📧 DEBUG: sendTaskAssignedEmail called with:", {
-      to,
-      taskData,
-    });
     try {
+      const taskUrl =
+        `${process.env.NEXT_PUBLIC_APP_URL}/workspaces/${taskData.workspaceId}/tasks/${taskData.taskId}`.trim();
+
       const priorityColors: Record<string, string> = {
         low: "#28a745",
         medium: "#ffc107",
@@ -131,7 +132,7 @@ export class EmailService {
         priorityColors[taskData.priority.toLowerCase()] || "#6c757d";
 
       const mailOptions = {
-        from: '"KarmaKanban Plus" <soportekarmakanban@gmail.com>',
+        from: '"KarmaKanban" <soportekarmakanban@gmail.com>',
         to: to,
         subject: `New Task Assigned: ${taskData.taskName}`,
         html: `
@@ -154,7 +155,7 @@ export class EmailService {
               <div class="container">
                 <div class="header">
                   <h1>📋 New Task Assigned</h1>
-                  <p>KarmaKanban Plus</p>
+                  <p>KarmaKanban</p>
                 </div>
                 <div class="content">
                   <h2>You have a new task!</h2>
@@ -184,14 +185,12 @@ export class EmailService {
                     }
                   </div>
 
-                  <a href="${
-                    process.env.NEXT_PUBLIC_APP_URL
-                  }" class="cta-button">View Task</a>
-
                   <p>Start working on this task to earn points and help your team reach their goals!</p>
+                  
+                  <p style="font-size: 12px; color: #666; margin: 10px 0;">You can access your task in KarmaKanban by logging into your workspace.</p>
                 </div>
                 <div class="footer">
-                  <p>© ${new Date().getFullYear()} KarmaKanban Plus - Project Management System</p>
+                  <p>© ${new Date().getFullYear()} KarmaKanban - Project Management System</p>
                   <p>This is an automated message, please do not reply.</p>
                 </div>
               </div>
@@ -199,7 +198,7 @@ export class EmailService {
           </html>
         `,
         text: `
-          KarmaKanban Plus - New Task Assigned
+          KarmaKanban - New Task Assigned
 
           You have a new task!
 
@@ -211,16 +210,14 @@ export class EmailService {
           ${taskData.dueDate ? `Due Date: ${taskData.dueDate}` : ""}
           ${taskData.description ? `Description: ${taskData.description}` : ""}
 
-          Visit ${
-            process.env.NEXT_PUBLIC_APP_URL
-          } to view and start working on your task.
+          View Task Details: ${taskUrl}
 
-          © ${new Date().getFullYear()} KarmaKanban Plus
+          © ${new Date().getFullYear()} KarmaKanban
         `,
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log("✅ DEBUG: Task assigned email sent successfully to:", to);
+
       return true;
     } catch (error) {
       console.error("❌ Error sending task assigned email:", error);
@@ -240,7 +237,7 @@ export class EmailService {
       const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/workspaces/join?code=${inviteData.inviteCode}`;
 
       const mailOptions = {
-        from: '"KarmaKanban Plus" <soportekarmakanban@gmail.com>',
+        from: '"KarmaKanban" <soportekarmakanban@gmail.com>',
         to: to,
         subject: `Invitation to join ${inviteData.workspaceName} workspace`,
         html: `
@@ -263,7 +260,7 @@ export class EmailService {
               <div class="container">
                 <div class="header">
                   <h1>🎉 You&apos;re Invited!</h1>
-                  <p>KarmaKanban Plus</p>
+                  <p>KarmaKanban</p>
                 </div>
                 <div class="content">
                   <h2>Join ${inviteData.workspaceName}</h2>
@@ -271,7 +268,7 @@ export class EmailService {
                     inviteData.inviterName
                   }</strong> has invited you to collaborate in the <strong>${
           inviteData.workspaceName
-        }</strong> workspace on KarmaKanban Plus!</p>
+        }</strong> workspace on KarmaKanban!</p>
 
                   <div class="invite-card">
                     <h3 style="color: #059669; margin: 0 0 15px 0;">🚀 Get Started</h3>
@@ -284,12 +281,12 @@ export class EmailService {
                   </div>
 
                   <div style="background: #e0f2fe; border-left: 4px solid #0284c7; padding: 15px; margin: 20px 0;">
-                    <h4 style="margin: 0 0 10px 0; color: #0284c7;">What is KarmaKanban Plus?</h4>
+                    <h4 style="margin: 0 0 10px 0; color: #0284c7;">What is KarmaKanban?</h4>
                     <p style="margin: 0;">A gamified project management platform where you can track tasks, earn points, unlock achievements, and collaborate effectively with your team!</p>
                   </div>
                 </div>
                 <div class="footer">
-                  <p>© ${new Date().getFullYear()} KarmaKanban Plus - Project Management System</p>
+                  <p>© ${new Date().getFullYear()} KarmaKanban - Project Management System</p>
                   <p>This is an automated message, please do not reply.</p>
                 </div>
               </div>
@@ -297,7 +294,7 @@ export class EmailService {
           </html>
         `,
         text: `
-          KarmaKanban Plus - Workspace Invitation
+          KarmaKanban - Workspace Invitation
 
           You're invited to join ${inviteData.workspaceName}!
 
@@ -311,7 +308,7 @@ export class EmailService {
 
           Visit ${process.env.NEXT_PUBLIC_APP_URL} to get started.
 
-          © ${new Date().getFullYear()} KarmaKanban Plus
+          © ${new Date().getFullYear()} KarmaKanban
         `,
       };
 
@@ -331,11 +328,12 @@ export class EmailService {
       pointsCost: number;
       workspaceName: string;
       notes?: string;
+      workspaceId: string;
     }
   ): Promise<boolean> {
     try {
       const mailOptions = {
-        from: '"KarmaKanban Plus" <soportekarmakanban@gmail.com>',
+        from: '"KarmaKanban" <soportekarmakanban@gmail.com>',
         to: to,
         subject: `New Redemption Request: ${requestData.itemName}`,
         html: `
@@ -358,7 +356,7 @@ export class EmailService {
               <div class="container">
                 <div class="header">
                   <h1>🛒 New Redemption Request</h1>
-                  <p>KarmaKanban Plus</p>
+                  <p>KarmaKanban</p>
                 </div>
                 <div class="content">
                   <h2>Action Required: Review Redemption Request</h2>
@@ -384,14 +382,14 @@ export class EmailService {
                     }
                   </div>
 
-                  <a href="${
-                    process.env.NEXT_PUBLIC_APP_URL
-                  }" class="cta-button">Review Request</a>
+                  <a href="${process.env.NEXT_PUBLIC_APP_URL}/workspaces/${
+          requestData.workspaceId
+        }/store" style="background: #f59e0b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; font-weight: bold;" target="_blank" rel="noopener noreferrer">Review Request</a>
 
                   <p>Please review and approve or reject this redemption request in your dashboard.</p>
                 </div>
                 <div class="footer">
-                  <p>© ${new Date().getFullYear()} KarmaKanban Plus - Project Management System</p>
+                  <p>© ${new Date().getFullYear()} KarmaKanban - Project Management System</p>
                   <p>This is an automated message, please do not reply.</p>
                 </div>
               </div>
@@ -399,7 +397,7 @@ export class EmailService {
           </html>
         `,
         text: `
-          KarmaKanban Plus - New Redemption Request
+          KarmaKanban - New Redemption Request
 
           Action Required: Review Redemption Request
 
@@ -409,9 +407,11 @@ export class EmailService {
           Points Cost: ${requestData.pointsCost} pts
           ${requestData.notes ? `Notes: ${requestData.notes}` : ""}
 
-          Please review this request at ${process.env.NEXT_PUBLIC_APP_URL}
+          Review this request at: ${
+            process.env.NEXT_PUBLIC_APP_URL
+          }/workspaces/${requestData.workspaceId}/store
 
-          © ${new Date().getFullYear()} KarmaKanban Plus
+          © ${new Date().getFullYear()} KarmaKanban
         `,
       };
 
@@ -431,6 +431,7 @@ export class EmailService {
       workspaceName: string;
       reviewerName: string;
       reviewNotes?: string;
+      workspaceId: string;
     }
   ): Promise<boolean> {
     try {
@@ -440,7 +441,7 @@ export class EmailService {
       const statusText = isApproved ? "Approved" : "Rejected";
 
       const mailOptions = {
-        from: '"KarmaKanban Plus" <soportekarmakanban@gmail.com>',
+        from: '"KarmaKanban" <soportekarmakanban@gmail.com>',
         to: to,
         subject: `Redemption ${statusText}: ${statusData.itemName}`,
         html: `
@@ -463,7 +464,7 @@ export class EmailService {
               <div class="container">
                 <div class="header">
                   <h1>${statusIcon} Redemption ${statusText}</h1>
-                  <p>KarmaKanban Plus</p>
+                  <p>KarmaKanban</p>
                 </div>
                 <div class="content">
                   <h2>Your redemption request has been ${statusText.toLowerCase()}</h2>
@@ -492,12 +493,12 @@ export class EmailService {
                       : `<p>Unfortunately, your redemption request has been rejected. Please contact your project manager for more details.</p>`
                   }
 
-                  <a href="${
-                    process.env.NEXT_PUBLIC_APP_URL
-                  }" class="cta-button">View Store</a>
+                  <a href="${process.env.NEXT_PUBLIC_APP_URL}/workspaces/${
+          statusData.workspaceId
+        }/store" style="background: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; font-weight: bold;" target="_blank" rel="noopener noreferrer">View Store</a>
                 </div>
                 <div class="footer">
-                  <p>© ${new Date().getFullYear()} KarmaKanban Plus - Project Management System</p>
+                  <p>© ${new Date().getFullYear()} KarmaKanban - Project Management System</p>
                   <p>This is an automated message, please do not reply.</p>
                 </div>
               </div>
@@ -505,7 +506,7 @@ export class EmailService {
           </html>
         `,
         text: `
-          KarmaKanban Plus - Redemption ${statusText}
+          KarmaKanban - Redemption ${statusText}
 
           Your redemption request has been ${statusText.toLowerCase()}
 
@@ -515,9 +516,11 @@ export class EmailService {
           Reviewed by: ${statusData.reviewerName}
           ${statusData.reviewNotes ? `Notes: ${statusData.reviewNotes}` : ""}
 
-          Visit ${process.env.NEXT_PUBLIC_APP_URL} to view your store.
+          View Store: ${process.env.NEXT_PUBLIC_APP_URL}/workspaces/${
+          statusData.workspaceId
+        }/store
 
-          © ${new Date().getFullYear()} KarmaKanban Plus
+          © ${new Date().getFullYear()} KarmaKanban
         `,
       };
 

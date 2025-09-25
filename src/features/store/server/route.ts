@@ -444,6 +444,7 @@ const app = new Hono()
                 pointsCost: item.pointsCost,
                 workspaceName: workspace.name,
                 notes: notes || undefined,
+                workspaceId: workspaceId,
               }
             );
           }
@@ -594,6 +595,7 @@ const app = new Hono()
                 reviewerName:
                   user.name + (user.lastName ? ` ${user.lastName}` : ""),
                 reviewNotes: adminNotes || undefined,
+                workspaceId: workspaceId,
               }
             );
           }
