@@ -31,9 +31,17 @@ export const useLogout = () => {
     },
     onSuccess: () => {
       toast.success("Logged out successfully. See you soon!");
-      router.refresh();
-      queryClient.invalidateQueries({ queryKey: ["current"] });
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      
+      // Clear all queries first
+      queryClient.clear();
+      
+      // Navigate to login page immediately
+      router.push("/sign-in");
+      
+      // Refresh the page to ensure clean state
+      setTimeout(() => {
+        router.refresh();
+      }, 100);
     },
     onError: (error) => {
       toast.error(error.message || "An error occurred while logging out");

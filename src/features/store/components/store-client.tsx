@@ -27,7 +27,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export const StoreClient = () => {
   const workspaceId = useWorkspaceId();
-  const { data: currentUser } = useCurrent();
+  const { data: currentUser, isLoading: userLoading } = useCurrent();
   const { data: members } = useGetMember({ workspaceId });
   const { data: storeItems, isLoading } = useGetStoreItems({ workspaceId });
   const createRedemptionMutation = useCreateRedemption({ workspaceId });
@@ -45,6 +45,19 @@ export const StoreClient = () => {
     (member) => member.userId === currentUser?.id
   );
   const userPoints = currentMember?.points ?? 0;
+
+  // Early return if user is loading or not authenticated
+  if (userLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return null; // This will trigger redirect by parent components
+  }
 
   // Check if user is Project Manager or Admin
   const isProjectManager =
