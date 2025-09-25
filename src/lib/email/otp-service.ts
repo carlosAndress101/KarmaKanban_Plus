@@ -2,7 +2,7 @@ import otpGenerator from "otp-generator";
 
 import { db } from "@/lib/drizzle";
 import { passwordResetTokens } from "@/lib/schemas_drizzle";
-import { eq, and, gt } from "drizzle-orm";
+import { eq, and, gt, lt } from "drizzle-orm";
 
 export class OTPService {
   private static instance: OTPService;
@@ -178,9 +178,10 @@ export class OTPService {
    * Cleans expired tokens from database
    */
   async cleanupExpiredTokens(): Promise<void> {
+    // Remove tokens that are already expired (expiresAt < now)
     await db
       .delete(passwordResetTokens)
-      .where(gt(passwordResetTokens.expiresAt, new Date()));
+      .where(lt(passwordResetTokens.expiresAt, new Date()));
   }
 
   /**
