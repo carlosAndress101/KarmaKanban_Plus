@@ -31,13 +31,13 @@ export const useLogout = () => {
     },
     onSuccess: () => {
       toast.success("Logged out successfully. See you soon!");
-      
+
       // Clear all queries first
       queryClient.clear();
-      
+
       // Navigate to login page immediately
       router.push("/sign-in");
-      
+
       // Refresh the page to ensure clean state
       setTimeout(() => {
         router.refresh();

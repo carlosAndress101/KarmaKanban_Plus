@@ -4,10 +4,17 @@ import { zValidator } from "@hono/zod-validator";
 
 import { getMember } from "@/features/members/utils";
 import { sessionMiddleware } from "@/lib/session";
+import { NotificationService } from "@/lib/email/notification-service";
 
 import { BulkUpdateTasksSchema, taskSchema } from "../schemas";
 import { TaskStatus, TaskDifficulty } from "../types";
-import { members, projects, tasks, users } from "@/lib/schemas_drizzle";
+import {
+  members,
+  projects,
+  tasks,
+  users,
+  workspaces,
+} from "@/lib/schemas_drizzle";
 import { and, eq, desc, inArray, like } from "drizzle-orm";
 import { db } from "@/lib/drizzle";
 
@@ -185,6 +192,65 @@ const app = new Hono()
         difficulty,
       })
       .returning();
+
+    // Send email notification if task is assigned to someone
+    if (Task.assigneeId) {
+      try {
+        // Get assignee email by joining members with users (assigneeId is member.id)
+        const [assigneeData] = await db
+          .select({
+            email: users.email,
+            name: users.name,
+          })
+          .from(members)
+          .innerJoin(users, eq(members.userId, users.id))
+          .where(eq(members.id, Task.assigneeId))
+          .limit(1);
+
+        if (!assigneeData?.email) {
+          console.log("⚠️ DEBUG: Member not found for ID:", Task.assigneeId);
+        } else {
+          // Get workspace details
+          const [workspace] = await db
+            .select({ name: workspaces.name })
+            .from(workspaces)
+            .where(eq(workspaces.id, workspaceId))
+            .limit(1);
+
+          // Get project details (if task has a project)
+          let projectName = "No Project";
+          if (Task.projectId) {
+            const [project] = await db
+              .select({ name: projects.name })
+              .from(projects)
+              .where(eq(projects.id, Task.projectId))
+              .limit(1);
+
+            if (project) {
+              projectName = project.name;
+            }
+          }
+
+          const workspaceName = workspace?.name || "Unknown Workspace";
+
+          // Send notification asynchronously (don't block the response)
+          NotificationService.sendTaskAssignedNotification(assigneeData.email, {
+            taskName: Task.name,
+            projectName: projectName,
+            workspaceName: workspaceName,
+            assignedByName: user.name || "Unknown User",
+            priority: Task.difficulty || "medium",
+            dueDate: Task.dueDate || undefined,
+            description: Task.description || undefined,
+          }).catch((error) => {
+            console.error("❌ Failed to send task assignment email:", error);
+          });
+        }
+      } catch (error) {
+        // Log error but don't fail the task creation
+        console.error("❌ Error sending task assignment notification:", error);
+      }
+    }
 
     // Formatear la respuesta igual que en el GET
     const formattedTask = {

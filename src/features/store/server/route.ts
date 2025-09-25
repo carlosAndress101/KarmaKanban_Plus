@@ -6,11 +6,13 @@ import {
   redemptionRequests,
   members,
   users,
+  workspaces,
 } from "@/lib/schemas_drizzle";
 import { sessionMiddleware } from "@/lib/session";
 import { getMember } from "@/features/members/utils";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
+import { NotificationService } from "@/lib/email/notification-service";
 
 const app = new Hono()
   .get(
@@ -405,6 +407,55 @@ const app = new Hono()
         }
       }
 
+      // Send email notification to project managers and admins
+      try {
+        // Get workspace details and managers/admins
+        const [workspace] = await db
+          .select({ name: workspaces.name })
+          .from(workspaces)
+          .where(eq(workspaces.id, workspaceId));
+
+        if (workspace) {
+          // Get all project managers and admins in the workspace
+          const managersAndAdmins = await db
+            .select({
+              email: users.email,
+              name: sql`CONCAT(${users.name}, ' ', ${users.lastName})`.as(
+                "fullName"
+              ),
+            })
+            .from(members)
+            .innerJoin(users, eq(members.userId, users.id))
+            .where(
+              and(
+                eq(members.workspaceId, workspaceId),
+                sql`(${members.role} = 'admin' OR ${members.gamificationRole} = 'Project Manager')`
+              )
+            );
+
+          if (managersAndAdmins.length > 0) {
+            const emails = managersAndAdmins.map((manager) => manager.email);
+            await NotificationService.sendStoreRedemptionRequestNotification(
+              emails,
+              {
+                requesterName:
+                  user.name + (user.lastName ? ` ${user.lastName}` : ""),
+                itemName: item.name,
+                pointsCost: item.pointsCost,
+                workspaceName: workspace.name,
+                notes: notes || undefined,
+              }
+            );
+          }
+        }
+      } catch (error) {
+        console.error(
+          "Failed to send store redemption request notification:",
+          error
+        );
+        // Don't fail the request if email notification fails
+      }
+
       return c.json({
         data: { message: "Redemption request created successfully" },
       });
@@ -506,6 +557,52 @@ const app = new Hono()
           }
         }
       }
+
+      // Send email notification to the requester about status change
+      try {
+        if (status === "approved" || status === "rejected") {
+          // Get requester details and item details
+          const [requesterDetails] = await db
+            .select({
+              email: users.email,
+              requesterName:
+                sql`CONCAT(${users.name}, ' ', ${users.lastName})`.as(
+                  "requesterName"
+                ),
+            })
+            .from(members)
+            .innerJoin(users, eq(members.userId, users.id))
+            .where(eq(members.id, currentRequest.requesterId));
+
+          const [itemDetails] = await db
+            .select({ name: storeItems.name })
+            .from(storeItems)
+            .where(eq(storeItems.id, currentRequest.storeItemId));
+
+          const [workspaceDetails] = await db
+            .select({ name: workspaces.name })
+            .from(workspaces)
+            .where(eq(workspaces.id, workspaceId));
+
+          if (requesterDetails && itemDetails && workspaceDetails) {
+            await NotificationService.sendRedemptionStatusNotification(
+              requesterDetails.email,
+              {
+                itemName: itemDetails.name,
+                status: status as "approved" | "rejected",
+                workspaceName: workspaceDetails.name,
+                reviewerName:
+                  user.name + (user.lastName ? ` ${user.lastName}` : ""),
+                reviewNotes: adminNotes || undefined,
+              }
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Failed to send redemption status notification:", error);
+        // Don't fail the request if email notification fails
+      }
+
       return c.json({
         data: { message: "Redemption request updated successfully" },
       });

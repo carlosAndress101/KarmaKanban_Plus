@@ -103,6 +103,432 @@ export class EmailService {
     }
   }
 
+  async sendTaskAssignedEmail(
+    to: string,
+    taskData: {
+      taskName: string;
+      projectName: string;
+      workspaceName: string;
+      assignedBy: string;
+      priority: string;
+      dueDate?: string;
+      description?: string;
+    }
+  ): Promise<boolean> {
+    console.log("📧 DEBUG: sendTaskAssignedEmail called with:", {
+      to,
+      taskData,
+    });
+    try {
+      const priorityColors: Record<string, string> = {
+        low: "#28a745",
+        medium: "#ffc107",
+        high: "#fd7e14",
+        urgent: "#dc3545",
+      };
+
+      const priorityColor =
+        priorityColors[taskData.priority.toLowerCase()] || "#6c757d";
+
+      const mailOptions = {
+        from: '"KarmaKanban Plus" <soportekarmakanban@gmail.com>',
+        to: to,
+        subject: `New Task Assigned: ${taskData.taskName}`,
+        html: `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+                .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+                .task-card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0; }
+                .priority-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; color: white; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+                .cta-button { background: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
+                .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>📋 New Task Assigned</h1>
+                  <p>KarmaKanban Plus</p>
+                </div>
+                <div class="content">
+                  <h2>You have a new task!</h2>
+                  <p>Hello! <strong>${
+                    taskData.assignedBy
+                  }</strong> has assigned you a new task in the <strong>${
+          taskData.workspaceName
+        }</strong> workspace.</p>
+
+                  <div class="task-card">
+                    <h3 style="margin: 0 0 10px 0; color: #4f46e5;">${
+                      taskData.taskName
+                    }</h3>
+                    <p><strong>Project:</strong> ${taskData.projectName}</p>
+                    <p><strong>Priority:</strong> <span class="priority-badge" style="background-color: ${priorityColor};">${
+          taskData.priority
+        }</span></p>
+                    ${
+                      taskData.dueDate
+                        ? `<p><strong>Due Date:</strong> ${taskData.dueDate}</p>`
+                        : ""
+                    }
+                    ${
+                      taskData.description
+                        ? `<p><strong>Description:</strong> ${taskData.description}</p>`
+                        : ""
+                    }
+                  </div>
+
+                  <a href="${
+                    process.env.NEXT_PUBLIC_APP_URL
+                  }" class="cta-button">View Task</a>
+
+                  <p>Start working on this task to earn points and help your team reach their goals!</p>
+                </div>
+                <div class="footer">
+                  <p>© ${new Date().getFullYear()} KarmaKanban Plus - Project Management System</p>
+                  <p>This is an automated message, please do not reply.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `,
+        text: `
+          KarmaKanban Plus - New Task Assigned
+
+          You have a new task!
+
+          Task: ${taskData.taskName}
+          Project: ${taskData.projectName}
+          Workspace: ${taskData.workspaceName}
+          Assigned by: ${taskData.assignedBy}
+          Priority: ${taskData.priority}
+          ${taskData.dueDate ? `Due Date: ${taskData.dueDate}` : ""}
+          ${taskData.description ? `Description: ${taskData.description}` : ""}
+
+          Visit ${
+            process.env.NEXT_PUBLIC_APP_URL
+          } to view and start working on your task.
+
+          © ${new Date().getFullYear()} KarmaKanban Plus
+        `,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      console.log("✅ DEBUG: Task assigned email sent successfully to:", to);
+      return true;
+    } catch (error) {
+      console.error("❌ Error sending task assigned email:", error);
+      return false;
+    }
+  }
+
+  async sendWorkspaceInviteEmail(
+    to: string,
+    inviteData: {
+      workspaceName: string;
+      inviterName: string;
+      inviteCode: string;
+    }
+  ): Promise<boolean> {
+    try {
+      const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/workspaces/join?code=${inviteData.inviteCode}`;
+
+      const mailOptions = {
+        from: '"KarmaKanban Plus" <soportekarmakanban@gmail.com>',
+        to: to,
+        subject: `Invitation to join ${inviteData.workspaceName} workspace`,
+        html: `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #059669 0%, #0d9488 100%); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+                .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+                .invite-card { background: white; border: 2px dashed #059669; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center; }
+                .cta-button { background: #059669; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; font-weight: bold; }
+                .invite-code { font-family: monospace; font-size: 18px; font-weight: bold; background: #f3f4f6; padding: 10px; border-radius: 4px; margin: 10px 0; }
+                .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>🎉 You&apos;re Invited!</h1>
+                  <p>KarmaKanban Plus</p>
+                </div>
+                <div class="content">
+                  <h2>Join ${inviteData.workspaceName}</h2>
+                  <p><strong>${
+                    inviteData.inviterName
+                  }</strong> has invited you to collaborate in the <strong>${
+          inviteData.workspaceName
+        }</strong> workspace on KarmaKanban Plus!</p>
+
+                  <div class="invite-card">
+                    <h3 style="color: #059669; margin: 0 0 15px 0;">🚀 Get Started</h3>
+                    <p>Click the button below to join the workspace and start collaborating with your team!</p>
+                    
+                    <a href="${inviteUrl}" class="cta-button">Join Workspace</a>
+                    
+                    <p style="margin-top: 20px; font-size: 14px; color: #6b7280;">Or use the invite code manually:</p>
+                    <div class="invite-code">${inviteData.inviteCode}</div>
+                  </div>
+
+                  <div style="background: #e0f2fe; border-left: 4px solid #0284c7; padding: 15px; margin: 20px 0;">
+                    <h4 style="margin: 0 0 10px 0; color: #0284c7;">What is KarmaKanban Plus?</h4>
+                    <p style="margin: 0;">A gamified project management platform where you can track tasks, earn points, unlock achievements, and collaborate effectively with your team!</p>
+                  </div>
+                </div>
+                <div class="footer">
+                  <p>© ${new Date().getFullYear()} KarmaKanban Plus - Project Management System</p>
+                  <p>This is an automated message, please do not reply.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `,
+        text: `
+          KarmaKanban Plus - Workspace Invitation
+
+          You're invited to join ${inviteData.workspaceName}!
+
+          ${inviteData.inviterName} has invited you to collaborate in the ${
+          inviteData.workspaceName
+        } workspace.
+
+          Join using this link: ${inviteUrl}
+          
+          Or use the invite code: ${inviteData.inviteCode}
+
+          Visit ${process.env.NEXT_PUBLIC_APP_URL} to get started.
+
+          © ${new Date().getFullYear()} KarmaKanban Plus
+        `,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error("Error sending workspace invite email:", error);
+      return false;
+    }
+  }
+
+  async sendStoreRedemptionRequestEmail(
+    to: string,
+    requestData: {
+      requesterName: string;
+      itemName: string;
+      pointsCost: number;
+      workspaceName: string;
+      notes?: string;
+    }
+  ): Promise<boolean> {
+    try {
+      const mailOptions = {
+        from: '"KarmaKanban Plus" <soportekarmakanban@gmail.com>',
+        to: to,
+        subject: `New Redemption Request: ${requestData.itemName}`,
+        html: `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+                .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+                .request-card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0; }
+                .points-badge { background: #f59e0b; color: white; padding: 6px 12px; border-radius: 20px; font-weight: bold; }
+                .cta-button { background: #f59e0b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
+                .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>🛒 New Redemption Request</h1>
+                  <p>KarmaKanban Plus</p>
+                </div>
+                <div class="content">
+                  <h2>Action Required: Review Redemption Request</h2>
+                  <p>A team member has requested to redeem an item from the workspace store.</p>
+
+                  <div class="request-card">
+                    <h3 style="margin: 0 0 15px 0; color: #f59e0b;">📦 ${
+                      requestData.itemName
+                    }</h3>
+                    <p><strong>Requested by:</strong> ${
+                      requestData.requesterName
+                    }</p>
+                    <p><strong>Workspace:</strong> ${
+                      requestData.workspaceName
+                    }</p>
+                    <p><strong>Points Cost:</strong> <span class="points-badge">${
+                      requestData.pointsCost
+                    } pts</span></p>
+                    ${
+                      requestData.notes
+                        ? `<p><strong>Notes:</strong> ${requestData.notes}</p>`
+                        : ""
+                    }
+                  </div>
+
+                  <a href="${
+                    process.env.NEXT_PUBLIC_APP_URL
+                  }" class="cta-button">Review Request</a>
+
+                  <p>Please review and approve or reject this redemption request in your dashboard.</p>
+                </div>
+                <div class="footer">
+                  <p>© ${new Date().getFullYear()} KarmaKanban Plus - Project Management System</p>
+                  <p>This is an automated message, please do not reply.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `,
+        text: `
+          KarmaKanban Plus - New Redemption Request
+
+          Action Required: Review Redemption Request
+
+          Item: ${requestData.itemName}
+          Requested by: ${requestData.requesterName}
+          Workspace: ${requestData.workspaceName}
+          Points Cost: ${requestData.pointsCost} pts
+          ${requestData.notes ? `Notes: ${requestData.notes}` : ""}
+
+          Please review this request at ${process.env.NEXT_PUBLIC_APP_URL}
+
+          © ${new Date().getFullYear()} KarmaKanban Plus
+        `,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error("Error sending store redemption request email:", error);
+      return false;
+    }
+  }
+
+  async sendRedemptionStatusEmail(
+    to: string,
+    statusData: {
+      itemName: string;
+      status: "approved" | "rejected";
+      workspaceName: string;
+      reviewerName: string;
+      reviewNotes?: string;
+    }
+  ): Promise<boolean> {
+    try {
+      const isApproved = statusData.status === "approved";
+      const statusColor = isApproved ? "#059669" : "#dc2626";
+      const statusIcon = isApproved ? "✅" : "❌";
+      const statusText = isApproved ? "Approved" : "Rejected";
+
+      const mailOptions = {
+        from: '"KarmaKanban Plus" <soportekarmakanban@gmail.com>',
+        to: to,
+        subject: `Redemption ${statusText}: ${statusData.itemName}`,
+        html: `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, ${statusColor} 0%, ${statusColor}dd 100%); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+                .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+                .status-card { background: white; border-left: 4px solid ${statusColor}; border-radius: 8px; padding: 20px; margin: 20px 0; }
+                .status-badge { background: ${statusColor}; color: white; padding: 6px 12px; border-radius: 20px; font-weight: bold; }
+                .cta-button { background: ${statusColor}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
+                .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>${statusIcon} Redemption ${statusText}</h1>
+                  <p>KarmaKanban Plus</p>
+                </div>
+                <div class="content">
+                  <h2>Your redemption request has been ${statusText.toLowerCase()}</h2>
+                  
+                  <div class="status-card">
+                    <h3 style="margin: 0 0 15px 0; color: ${statusColor};">📦 ${
+          statusData.itemName
+        }</h3>
+                    <p><strong>Status:</strong> <span class="status-badge">${statusText}</span></p>
+                    <p><strong>Workspace:</strong> ${
+                      statusData.workspaceName
+                    }</p>
+                    <p><strong>Reviewed by:</strong> ${
+                      statusData.reviewerName
+                    }</p>
+                    ${
+                      statusData.reviewNotes
+                        ? `<p><strong>Notes:</strong> ${statusData.reviewNotes}</p>`
+                        : ""
+                    }
+                  </div>
+
+                  ${
+                    isApproved
+                      ? `<p>🎉 Great news! Your redemption request has been approved. You should receive your reward soon!</p>`
+                      : `<p>Unfortunately, your redemption request has been rejected. Please contact your project manager for more details.</p>`
+                  }
+
+                  <a href="${
+                    process.env.NEXT_PUBLIC_APP_URL
+                  }" class="cta-button">View Store</a>
+                </div>
+                <div class="footer">
+                  <p>© ${new Date().getFullYear()} KarmaKanban Plus - Project Management System</p>
+                  <p>This is an automated message, please do not reply.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `,
+        text: `
+          KarmaKanban Plus - Redemption ${statusText}
+
+          Your redemption request has been ${statusText.toLowerCase()}
+
+          Item: ${statusData.itemName}
+          Status: ${statusText}
+          Workspace: ${statusData.workspaceName}
+          Reviewed by: ${statusData.reviewerName}
+          ${statusData.reviewNotes ? `Notes: ${statusData.reviewNotes}` : ""}
+
+          Visit ${process.env.NEXT_PUBLIC_APP_URL} to view your store.
+
+          © ${new Date().getFullYear()} KarmaKanban Plus
+        `,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error("Error sending redemption status email:", error);
+      return false;
+    }
+  }
+
   async sendPasswordResetConfirmation(
     to: string,
     userName: string
