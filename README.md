@@ -54,7 +54,8 @@ KarmaKanban es una aplicación de gestión de proyectos y tareas tipo Kanban, co
    ```
 
 4. **Accede a la app:**
-   - [http://localhost:3000](http://localhost:3000)
+   - **Desarrollo local:** [http://localhost:3000](http://localhost:3000) (con `bun dev`)
+   - **Docker:** [http://localhost:5000](http://localhost:5000) (con `docker compose up`)
 5. **Accede a pgAdmin (opcional):**
    - [http://localhost:5050](http://localhost:5050)
    - Usuario: admin@kkplus.com
@@ -64,12 +65,21 @@ KarmaKanban es una aplicación de gestión de proyectos y tareas tipo Kanban, co
 
 - `./scripts/setup_local_db.sh` — Automatiza la creación/configuración de la base de datos y variables de entorno.
 - `docker compose up -d db pgadmin` — Levanta la base de datos y el panel visual.
+- `docker compose up` — Levanta toda la aplicación (incluye Next.js en puerto 5000).
 - `bunx drizzle-kit push` — Aplica migraciones manualmente.
 
 ## Despliegue
 
+**Desarrollo local:**
+
+- Usa `bun dev` para desarrollo con hot-reload (puerto 3000)
+- Usa `docker compose up` para entorno containerizado (puerto 5000)
+
+**Producción:**
+
 - Puedes desplegar fácilmente en Vercel o cualquier plataforma compatible con Next.js.
 - Para producción, configura las variables de entorno y la base de datos en tu entorno de despliegue.
+- El Dockerfile está optimizado para usar Bun como runtime.
 
 ## Variables de entorno (ejemplo)
 
@@ -79,16 +89,34 @@ Crea un archivo `.env.local` en la raíz del proyecto con el siguiente contenido
 # (requerida) URL de conexión a la base de datos
 DATABASE_URL=postgres://kkplus_user:kkplus_pass@localhost:5432/kkplus_db
 
-# (requerido) Clave secreta para JWT u otras integraciones
-# JWT_SECRET=tu_clave_secreta
+# (requerido) Clave secreta para JWT
+SECRET_JWT=tu_clave_secreta_muy_larga_y_segura
 
-# (requerido) Configuración de correo, APIs externas, etc.
-# COOKIE_SECRET=smtp.example.com
+# (requerido) Clave secreta para cookies
+COOKIE_SECRET=otra_clave_secreta_para_cookies
 
-# (requerido) Puerto de la app.
-# PORT=4321
+# (requerido) URL pública de la aplicación
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 
+# (opcional) Puerto para desarrollo local
+PORT=3000
+
+# (opcional) Path base para la aplicación
+NEXT_PUBLIC_BASE_PATH=
+
+# (requerido) Configuración de email para notificaciones
+EMAIL_USER=tu_email@gmail.com
+EMAIL_PASS=tu_app_password_de_gmail
+EMAIL_SERVICE=gmail
+
+# (requerido) Configuración SMTP
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=tu_email@gmail.com
+SMTP_PASS=tu_app_password_de_gmail
 ```
+
+> ⚠️ **Importante:** Nunca subas este archivo al repositorio. Usa contraseñas de aplicación para Gmail y claves seguras aleatorias para JWT/Cookie secrets.
 
 ## 🧑‍💻Authors
 

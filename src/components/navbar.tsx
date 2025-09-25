@@ -1,3 +1,6 @@
+"use client";
+
+import React from "react";
 import UserButton from "@/features/auth/components/userButton";
 import MobileSidebar from "./mobile-sidebar";
 import { usePathname } from "next/navigation";
@@ -24,6 +27,7 @@ const Navbar = () => {
   const pathnameKey = pathnameParts[3] as keyof typeof pathnameMap;
 
   const { title, description } = pathnameMap[pathnameKey] || defaultMap;
+
   return (
     <nav className="pt-4 px-6 flex items-center justify-between">
       <div className="flex-col hidden lg:flex">
@@ -31,7 +35,10 @@ const Navbar = () => {
         <p className="text-muted-foreground">{description}</p>
       </div>
       <MobileSidebar />
-      <UserButton />
+      <div className="flex items-center gap-4">
+        {/* Eliminado: Patch Notes Notification, solo sidebar */}
+        <UserButton />
+      </div>
     </nav>
   );
 };

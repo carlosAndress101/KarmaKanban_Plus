@@ -50,7 +50,8 @@ const app = new Hono()
     setCookie(c, AUTH_COOKIE, tk, {
       path: "/",
       httpOnly: true,
-      secure: true,
+      // Allow non-HTTPS in local development
+      secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
       maxAge: 60 * 60 * 24 * 30,
     });
@@ -70,7 +71,7 @@ const app = new Hono()
       .from(users)
       .where(eq(users.email, email));
 
-    if (existingUser.length > 1) {
+    if (existingUser.length >= 1) {
       return c.json(
         { success: false, message: "The user already exists" },
         409
@@ -102,7 +103,7 @@ const app = new Hono()
     setCookie(c, AUTH_COOKIE, tk, {
       path: "/",
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
       maxAge: 60 * 60 * 24 * 30,
     });
