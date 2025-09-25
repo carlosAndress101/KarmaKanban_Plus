@@ -295,7 +295,9 @@ export default function VerifyOtpPage() {
             </Form>
 
             <div className="text-center space-y-3">
-              <p className="text-sm text-gray-600">Didn't receive the code?</p>
+              <p className="text-sm text-gray-600">
+                Didn&apos;t receive the code?
+              </p>
 
               <Button
                 variant="outline"

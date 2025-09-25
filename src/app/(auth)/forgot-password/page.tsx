@@ -89,8 +89,8 @@ export default function ForgotPasswordPage() {
                 Forgot your password?
               </CardTitle>
               <CardDescription className="text-gray-600 text-lg leading-relaxed max-w-md mx-auto">
-                Don't worry, we'll send you a verification code to recover your
-                account
+                Don&apos;t worry, we&apos;ll send you a verification code to
+                recover your account
               </CardDescription>
             </div>
           </CardHeader>
@@ -185,7 +185,9 @@ export default function ForgotPasswordPage() {
               </div>
 
               <div className="text-center border-t border-gray-200 pt-4">
-                <p className="text-gray-500 mb-2">Don't have an account?</p>
+                <p className="text-gray-500 mb-2">
+                  Don&apos;t have an account?
+                </p>
                 <Link
                   href="/sign-up"
                   className="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-300 hover:underline"
