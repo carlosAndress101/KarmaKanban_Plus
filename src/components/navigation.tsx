@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { usePatchNotes } from "@/features/patch-notes/hooks/usePatchNotes";
 import {
   SettingsIcon,
   UsersIcon,
@@ -64,8 +65,7 @@ export const Navigation = () => {
   const pathname = usePathname();
 
   // Importar hook para saber si hay patch notes nuevas
-  const { hasUnreadPatches, unreadPatchesCount } =
-    require("@/features/patch-notes/hooks/usePatchNotes").usePatchNotes();
+  const { hasUnreadPatches, unreadPatchesCount } = usePatchNotes();
 
   return (
     <ul className="flex flex-col">

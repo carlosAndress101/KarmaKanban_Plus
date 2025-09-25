@@ -49,8 +49,7 @@ const PRIORITY_CONFIG = {
 
 export default function PatchNotesPage() {
   const router = useRouter();
-  const { latestPatch, allPatches, markPatchAsSeen, markAllPatchesAsSeen } =
-    usePatchNotes();
+  const { latestPatch, allPatches, markAllPatchesAsSeen } = usePatchNotes();
   const [selectedPatch, setSelectedPatch] = React.useState<
     PatchNote | undefined
   >(undefined);

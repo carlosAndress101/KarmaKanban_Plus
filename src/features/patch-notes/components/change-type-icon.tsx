@@ -7,7 +7,6 @@ import {
   Shield,
   Gauge,
   Palette,
-  Plus,
 } from "lucide-react";
 import { ChangeType } from "../types";
 

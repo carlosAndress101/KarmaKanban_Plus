@@ -102,7 +102,9 @@ export const PatchNotificationBadge: React.FC<PatchNotificationBadgeProps> = ({
             <div className="space-y-1">
               <p className="font-medium">{tooltipText}</p>
               {latestPatch && (
-                <p className="text-xs text-gray-300">Click to see what's new</p>
+                <p className="text-xs text-gray-300">
+                  Click to see what&apos;s new
+                </p>
               )}
             </div>
           </TooltipContent>

@@ -4,7 +4,6 @@ import React from "react";
 import UserButton from "@/features/auth/components/userButton";
 import MobileSidebar from "./mobile-sidebar";
 import { usePathname } from "next/navigation";
-import { PatchNotificationBadgePage } from "@/features/patch-notes";
 
 const pathnameMap = {
   tasks: {

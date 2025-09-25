@@ -8,20 +8,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import {
-  Calendar,
-  ChevronRight,
-  Clock,
-  Star,
-  X,
-  ExternalLink,
-  CheckCircle,
-} from "lucide-react";
+import { Calendar, Clock, Star, X, CheckCircle } from "lucide-react";
 
 import { PatchNote, PatchChange, PatchPriority } from "../types";
 import { ChangeTypeBadge } from "./change-type-icon";
@@ -173,7 +164,7 @@ export const PatchNotesModal: React.FC<PatchNotesModalProps> = ({
       <div className="space-y-4">
         <h4 className="text-lg font-medium flex items-center gap-2">
           <Star className="h-5 w-5 text-yellow-500" />
-          What's New ({patch.changes.length} changes)
+          What&apos;s New ({patch.changes.length} changes)
         </h4>
         <div className="space-y-4">{patch.changes.map(renderPatchChange)}</div>
       </div>
@@ -194,7 +185,7 @@ export const PatchNotesModal: React.FC<PatchNotesModalProps> = ({
                   <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
                     <Star className="h-4 w-4 text-blue-600" />
                   </div>
-                  What's New
+                  What&apos;s New
                 </DialogTitle>
                 <DialogDescription>
                   Stay updated with the latest features and improvements
