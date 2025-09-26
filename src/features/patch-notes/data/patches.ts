@@ -2,30 +2,83 @@ import { PatchNote, ChangeType, PatchPriority } from "../types";
 
 export const PATCH_NOTES: PatchNote[] = [
   {
-    id: "patch-2024-06-01",
-    version: "1.3.0",
-    releaseDate: "2024-06-01",
-    title: "Filtros Avanzados para Tareas Archivadas",
+    id: "patch-2025-09-26-v2",
+    version: "1.4.0",
+    releaseDate: "2025-09-26",
+    title: "¡Notificaciones por Email y Mejoras en la App!",
     summary:
-      "Ahora puedes buscar y filtrar tareas archivadas por nombre, fecha, estado y responsable, facilitando la gestión y recuperación de información histórica.",
+      "¡Ahora recibirás emails automáticos cuando te asignen tareas o haya novedades en la tienda! También mejoramos la experiencia general de la aplicación.",
+    priority: PatchPriority.HIGH,
+    isVisible: true,
+    createdAt: "2025-09-26T12:00:00",
+    changes: [
+      {
+        id: "email-notifications",
+        type: ChangeType.NEW_FEATURE,
+        title: "📧 ¡Notificaciones por Email!",
+        description:
+          "¡Ya no te perderás nada importante! Ahora recibirás emails automáticos para mantenerte al día con tu equipo.",
+        details: [
+          "📌 Te avisamos cuando te asignen una nueva tarea",
+          "🏪 Los administradores reciben avisos de canjes en la tienda",
+          "✅ Notificaciones cuando aprueban o rechazan tus canjes",
+          "⚡ Los emails llegan súper rápido",
+        ],
+        affectedFeatures: ["Tareas", "Tienda", "Workspaces"],
+      },
+      {
+        id: "logout-fix",
+        type: ChangeType.BUG_FIX,
+        title: "🔒 Logout Mejorado",
+        description:
+          "¡Arreglamos un problemita! Ahora cuando cierras sesión desde cualquier parte de la app, funciona perfecto.",
+        details: [
+          "✨ El logout funciona correctamente desde la Tienda",
+          "🔄 Te redirige bien a la página de login",
+          "🧹 Limpia toda tu sesión cuando sales",
+        ],
+        affectedFeatures: ["Cerrar Sesión", "Tienda", "Navegación"],
+      },
+    ],
+  },
+  {
+    id: "patch-2025-09-26",
+    version: "1.3.0",
+    releaseDate: "2025-09-26",
+    title: "🔍 Filtros para Tareas Archivadas",
+    summary:
+      "¡Ahora puedes encontrar fácilmente tus tareas archivadas! Busca por nombre, fecha, estado y responsable para encontrar rápidamente lo que necesitas.",
     priority: PatchPriority.MEDIUM,
     isVisible: true,
-    createdAt: "2024-06-01T08:00:00Z",
+    createdAt: "2025-09-26T08:00:00",
     changes: [
       {
         id: "archived-filters",
         type: ChangeType.NEW_FEATURE,
-        title: "Filtros avanzados en archivados",
+        title: "🎯 Búsqueda Súper Rápida",
         description:
-          "Se agregaron filtros de búsqueda por nombre, fecha, estado y responsable en el apartado de tareas archivadas.",
+          "¡Encontrar tus tareas archivadas ahora es súper fácil! Usa los nuevos filtros para buscar exactamente lo que necesitas.",
         details: [
-          "Búsqueda por nombre de tarea",
-          "Filtrado por fecha de archivado",
-          "Filtrado por estado de la tarea",
-          "Filtrado por responsable asignado",
-          "Interfaz de filtros rápida y responsiva",
+          "🔎 Busca tareas por su nombre",
+          "📅 Filtra por cuándo las archivaste",
+          "📋 Encuentra tareas por su estado",
+          "👤 Busca por quién las hizo",
+          "⚡ Todo súper rápido y fácil de usar",
         ],
-        affectedFeatures: ["Archived Tasks", "Filters", "Search"],
+        affectedFeatures: ["Tareas Archivadas", "Búsqueda"],
+      },
+      {
+        id: "performance-improvements",
+        type: ChangeType.IMPROVEMENT,
+        title: "🚀 ¡La App Está Más Rápida!",
+        description:
+          "Hicimos varias mejoras para que KarmaKanban cargue más rápido y sea aún más suave al usarla.",
+        details: [
+          "⚡ La app carga 30% más rápido",
+          "💾 Mejoramos cómo se guardan los datos",
+          "🎯 Todo funciona más fluido",
+        ],
+        affectedFeatures: ["Velocidad", "Experiencia de Usuario"],
       },
     ],
   },
