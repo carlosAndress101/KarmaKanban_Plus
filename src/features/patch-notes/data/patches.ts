@@ -67,19 +67,6 @@ export const PATCH_NOTES: PatchNote[] = [
         ],
         affectedFeatures: ["Tareas Archivadas", "Búsqueda"],
       },
-      {
-        id: "performance-improvements",
-        type: ChangeType.IMPROVEMENT,
-        title: "🚀 ¡La App Está Más Rápida!",
-        description:
-          "Hicimos varias mejoras para que KarmaKanban cargue más rápido y sea aún más suave al usarla.",
-        details: [
-          "⚡ La app carga 30% más rápido",
-          "💾 Mejoramos cómo se guardan los datos",
-          "🎯 Todo funciona más fluido",
-        ],
-        affectedFeatures: ["Velocidad", "Experiencia de Usuario"],
-      },
     ],
   },
 ];
