@@ -216,16 +216,18 @@ export const ArchivedFilters = ({
           }
         >
           <SelectTrigger className="w-full sm:w-[180px]">
-            <div className="flex items-center gap-2">
-              <Building2 className="h-4 w-4 text-muted-foreground" />
-              <SelectValue placeholder="All Projects" />
+            <div className="flex items-center gap-2 overflow-hidden">
+              <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+              <SelectValue placeholder="All Projects" className="truncate" />
             </div>
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-[280px]">
             <SelectItem value={ALL_PROJECTS}>All Projects</SelectItem>
             {uniqueProjects.map((project) => (
               <SelectItem key={project.id} value={project.id}>
-                {project.name}
+                <span className="truncate" title={project.name}>
+                  {project.name}
+                </span>
               </SelectItem>
             ))}
           </SelectContent>
@@ -239,17 +241,19 @@ export const ArchivedFilters = ({
           }
         >
           <SelectTrigger className="w-full sm:w-[180px]">
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4 text-muted-foreground" />
-              <SelectValue placeholder="All Assignees" />
+            <div className="flex items-center gap-2 overflow-hidden">
+              <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+              <SelectValue placeholder="All Assignees" className="truncate" />
             </div>
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-[280px]">
             <SelectItem value={ALL_ASSIGNEES}>All Assignees</SelectItem>
             <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
             {uniqueAssignees.map((assignee) => (
               <SelectItem key={assignee.id} value={assignee.id}>
-                {assignee.name}
+                <span className="truncate" title={assignee.name}>
+                  {assignee.name}
+                </span>
               </SelectItem>
             ))}
           </SelectContent>
@@ -263,16 +267,18 @@ export const ArchivedFilters = ({
           }
         >
           <SelectTrigger className="w-full sm:w-[140px]">
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <SelectValue placeholder="Difficulty" />
+            <div className="flex items-center gap-2 overflow-hidden">
+              <Filter className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+              <SelectValue placeholder="Difficulty" className="truncate" />
             </div>
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-[200px]">
             <SelectItem value={ALL_DIFFICULTIES}>All Difficulties</SelectItem>
             {difficulties.map((difficulty) => (
               <SelectItem key={difficulty} value={difficulty}>
-                {difficulty}
+                <span className="truncate" title={difficulty}>
+                  {difficulty}
+                </span>
               </SelectItem>
             ))}
           </SelectContent>
@@ -349,10 +355,13 @@ export const ArchivedFilters = ({
       {activeFiltersCount > 0 && (
         <div className="flex flex-wrap gap-2">
           {filters.searchText && (
-            <Badge variant="secondary" className="text-xs">
-              Search: {filters.searchText}
+            <Badge
+              variant="secondary"
+              className="text-xs max-w-[200px] flex items-center"
+            >
+              <span className="truncate">Search: {filters.searchText}</span>
               <X
-                className="ml-1 h-3 w-3 cursor-pointer hover:text-destructive"
+                className="ml-1 h-3 w-3 cursor-pointer hover:text-destructive flex-shrink-0"
                 onClick={() =>
                   setFilters((prev) => ({ ...prev, searchText: "" }))
                 }
@@ -361,11 +370,16 @@ export const ArchivedFilters = ({
           )}
 
           {filters.projectId && filters.projectId !== ALL_PROJECTS && (
-            <Badge variant="secondary" className="text-xs">
-              Project:{" "}
-              {uniqueProjects.find((p) => p.id === filters.projectId)?.name}
+            <Badge
+              variant="secondary"
+              className="text-xs max-w-[200px] flex items-center"
+            >
+              <span className="truncate">
+                Project:{" "}
+                {uniqueProjects.find((p) => p.id === filters.projectId)?.name}
+              </span>
               <X
-                className="ml-1 h-3 w-3 cursor-pointer hover:text-destructive"
+                className="ml-1 h-3 w-3 cursor-pointer hover:text-destructive flex-shrink-0"
                 onClick={() =>
                   setFilters((prev) => ({ ...prev, projectId: ALL_PROJECTS }))
                 }
@@ -374,14 +388,19 @@ export const ArchivedFilters = ({
           )}
 
           {filters.assigneeId && filters.assigneeId !== ALL_ASSIGNEES && (
-            <Badge variant="secondary" className="text-xs">
-              Assignee:{" "}
-              {filters.assigneeId === UNASSIGNED
-                ? "Unassigned"
-                : uniqueAssignees.find((a) => a.id === filters.assigneeId)
-                    ?.name}
+            <Badge
+              variant="secondary"
+              className="text-xs max-w-[200px] flex items-center"
+            >
+              <span className="truncate">
+                Assignee:{" "}
+                {filters.assigneeId === UNASSIGNED
+                  ? "Unassigned"
+                  : uniqueAssignees.find((a) => a.id === filters.assigneeId)
+                      ?.name}
+              </span>
               <X
-                className="ml-1 h-3 w-3 cursor-pointer hover:text-destructive"
+                className="ml-1 h-3 w-3 cursor-pointer hover:text-destructive flex-shrink-0"
                 onClick={() =>
                   setFilters((prev) => ({ ...prev, assigneeId: ALL_ASSIGNEES }))
                 }
