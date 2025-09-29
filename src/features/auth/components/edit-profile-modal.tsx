@@ -72,7 +72,11 @@ export const EditProfileModal = ({
         form.reset(values); // Reset with new values
 
         // If email was changed, trigger the callback to open verification modal with new email
-        if (emailChanged && (data as any).emailChanged && onEmailChanged) {
+        if (
+          emailChanged &&
+          (data as { emailChanged?: boolean }).emailChanged &&
+          onEmailChanged
+        ) {
           onEmailChanged(values.email);
         }
       },

@@ -13,13 +13,14 @@ export const useSendVerificationEmail = () => {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          (errorData as any).error || "Failed to send verification email"
+          (errorData as { error?: string }).error ||
+            "Failed to send verification email"
         );
       }
 
       return response.json();
     },
-    onSuccess: (data: any) => {
+    onSuccess: (data: { success?: boolean }) => {
       if (data.success) {
         toast.success("Verification email sent successfully");
       }

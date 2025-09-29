@@ -20,7 +20,9 @@ export const useUpdateProfile = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error((errorData as any).error || "Failed to update profile");
+        throw new Error(
+          (errorData as { error?: string }).error || "Failed to update profile"
+        );
       }
 
       return response.json();
@@ -29,7 +31,7 @@ export const useUpdateProfile = () => {
       // Update the current user in the query cache
       queryClient.invalidateQueries({ queryKey: ["current"] });
 
-      const response = data as any;
+      const response = data as { success?: boolean; message?: string };
       if (response.success) {
         toast.success(response.message || "Profile updated successfully");
       }

@@ -10,7 +10,7 @@ import {
 
 import { useCurrent } from "../api/use-current";
 import { useLogout } from "../api/use-logout";
-import { Loader, LogOut, Settings, Mail, CheckCircle } from "lucide-react";
+import { Loader, LogOut, Settings, Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { EditProfileModal } from "./edit-profile-modal";

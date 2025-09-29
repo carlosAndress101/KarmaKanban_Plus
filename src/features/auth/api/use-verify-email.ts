@@ -21,12 +21,14 @@ export const useVerifyEmail = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error((errorData as any).error || "Failed to verify email");
+        throw new Error(
+          (errorData as { error?: string }).error || "Failed to verify email"
+        );
       }
 
       return response.json();
     },
-    onSuccess: (data: any) => {
+    onSuccess: (data: { success?: boolean }) => {
       // Update the current user in the query cache
       queryClient.invalidateQueries({ queryKey: ["current"] });
 
