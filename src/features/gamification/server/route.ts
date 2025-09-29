@@ -375,11 +375,12 @@ const app = new Hono()
           };
 
           // Get total completed tasks
-          const totalCompleted = Number(
-            tasksCompletedByDifficulty.Easy +
-            tasksCompletedByDifficulty.Medium +
-            tasksCompletedByDifficulty.Hard
-          ) || 0;
+          const totalCompleted =
+            Number(
+              tasksCompletedByDifficulty.Easy +
+                tasksCompletedByDifficulty.Medium +
+                tasksCompletedByDifficulty.Hard
+            ) || 0;
 
           // Get earned badges from member_badges table
           const memberBadgesResult = await db
@@ -429,7 +430,10 @@ const app = new Hono()
 
       // Debug: Log the first team member's stats to check data types
       if (teamStats.length > 0) {
-        console.log("Sample team member stats:", JSON.stringify(teamStats[0], null, 2));
+        console.log(
+          "Sample team member stats:",
+          JSON.stringify(teamStats[0], null, 2)
+        );
       }
 
       return c.json({

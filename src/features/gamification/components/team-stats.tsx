@@ -9,9 +9,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Users, Trophy, Target, TrendingUp, Award } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EARNABLE_BADGES } from "../constants/badges";
+import { useState } from "react";
 
 interface TeamStatsProps {
   workspaceId: string;
@@ -23,6 +30,15 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
     isLoading,
     error,
   } = useGetTeamStats({ workspaceId });
+
+  const [openPopovers, setOpenPopovers] = useState<Record<string, boolean>>({});
+
+  const togglePopover = (memberId: string) => {
+    setOpenPopovers((prev) => ({
+      ...prev,
+      [memberId]: !prev[memberId],
+    }));
+  };
 
   if (isLoading) {
     return (
@@ -71,7 +87,8 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
   const teamTasksByDifficulty = teamStats.reduce(
     (totals, member) => ({
       Easy: totals.Easy + Number(member.tasksCompletedByDifficulty?.Easy || 0),
-      Medium: totals.Medium + Number(member.tasksCompletedByDifficulty?.Medium || 0),
+      Medium:
+        totals.Medium + Number(member.tasksCompletedByDifficulty?.Medium || 0),
       Hard: totals.Hard + Number(member.tasksCompletedByDifficulty?.Hard || 0),
     }),
     { Easy: 0, Medium: 0, Hard: 0 }
@@ -365,9 +382,53 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                           );
                         })}
                         {member.earnedBadges.length > 6 && (
-                          <div className="flex items-center justify-center bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
-                            +{member.earnedBadges.length - 6} más
-                          </div>
+                          <Popover
+                            open={openPopovers[member.memberId] || false}
+                            onOpenChange={() => togglePopover(member.memberId)}
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full text-xs"
+                              >
+                                +{member.earnedBadges.length - 6} más
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-80 p-4">
+                              <div className="space-y-3">
+                                <h4 className="font-medium text-sm">
+                                  Todas las insignias de {member.name}
+                                </h4>
+                                <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                                  {member.earnedBadges.map((badgeId) => {
+                                    const badge = EARNABLE_BADGES.find(
+                                      (b) => b.id === badgeId
+                                    );
+                                    if (!badge) return null;
+
+                                    return (
+                                      <div
+                                        key={badgeId}
+                                        className="flex items-center space-x-2 p-2 bg-yellow-50 text-yellow-800 rounded-lg border border-yellow-200"
+                                        title={badge.description}
+                                      >
+                                        <badge.icon className="h-4 w-4 flex-shrink-0" />
+                                        <div className="min-w-0">
+                                          <p className="font-medium text-xs truncate">
+                                            {badge.name}
+                                          </p>
+                                          <p className="text-xs text-yellow-600 truncate">
+                                            {badge.description}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
                         )}
                       </div>
                     </div>
