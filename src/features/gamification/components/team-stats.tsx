@@ -10,12 +10,27 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Users, Trophy, Target, TrendingUp, Award } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Users,
+  Trophy,
+  Target,
+  TrendingUp,
+  Award,
+  Search,
+  X,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EARNABLE_BADGES } from "../constants/badges";
 import { useState } from "react";
@@ -32,6 +47,7 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
   } = useGetTeamStats({ workspaceId });
 
   const [openPopovers, setOpenPopovers] = useState<Record<string, boolean>>({});
+  const [searchTerm, setSearchTerm] = useState("");
 
   const togglePopover = (memberId: string) => {
     setOpenPopovers((prev) => ({
@@ -39,6 +55,17 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
       [memberId]: !prev[memberId],
     }));
   };
+
+  // Filter team stats based on search term
+  const filteredTeamStats =
+    teamStats?.filter(
+      (member) =>
+        member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        member.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        member.gamificationRole
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase())
+    ) || [];
 
   if (isLoading) {
     return (
@@ -263,18 +290,47 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
       {/* Individual Team Member Stats */}
       <Card>
         <CardHeader>
-          <div className="flex items-center space-x-2">
-            <TrendingUp className="h-5 w-5 text-blue-600" />
-            <CardTitle className="text-lg">Estadísticas por Miembro</CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <TrendingUp className="h-5 w-5 text-blue-600" />
+              <CardTitle className="text-lg">
+                Estadísticas por Miembro
+              </CardTitle>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Buscar miembro..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 pr-10 w-64"
+                />
+                {searchTerm && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-gray-100"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
           <CardDescription>
             Detalle de puntos por dificultad de tarea para cada miembro del
-            equipo
+            equipo{" "}
+            {searchTerm &&
+              `(${filteredTeamStats.length} de ${
+                teamStats?.length || 0
+              } miembros)`}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {teamStats
+            {filteredTeamStats
               .sort((a, b) => b.totalPoints - a.totalPoints) // Sort by total points descending
               .map((member) => (
                 <div
@@ -371,14 +427,31 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                           if (!badge) return null;
 
                           return (
-                            <div
-                              key={badgeId}
-                              className="flex items-center space-x-1 bg-yellow-50 text-yellow-800 px-2 py-1 rounded-full text-xs border border-yellow-200"
-                              title={badge.description}
-                            >
-                              <badge.icon className="h-3 w-3" />
-                              <span className="font-medium">{badge.name}</span>
-                            </div>
+                            <TooltipProvider key={badgeId}>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="flex items-center space-x-1 bg-yellow-50 text-yellow-800 px-2 py-1 rounded-full text-xs border border-yellow-200 hover:bg-yellow-100 hover:border-yellow-300 transition-colors cursor-help">
+                                    <badge.icon className="h-3 w-3" />
+                                    <span className="font-medium">
+                                      {badge.name}
+                                    </span>
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-xs p-3 bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200 shadow-lg">
+                                  <div className="space-y-2">
+                                    <div className="flex items-center space-x-2">
+                                      <badge.icon className="h-5 w-5 text-yellow-600" />
+                                      <span className="font-semibold text-yellow-900">
+                                        {badge.name}
+                                      </span>
+                                    </div>
+                                    <p className="text-sm text-yellow-800 leading-relaxed">
+                                      {badge.description}
+                                    </p>
+                                  </div>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           );
                         })}
                         {member.earnedBadges.length > 6 && (
@@ -436,7 +509,26 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                 </div>
               ))}
 
-            {teamStats.length === 0 && (
+            {filteredTeamStats.length === 0 &&
+              teamStats &&
+              teamStats.length > 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="font-medium">No se encontraron miembros</p>
+                  <p className="text-sm">
+                    Intenta con otro término de búsqueda o{" "}
+                    <Button
+                      variant="link"
+                      onClick={() => setSearchTerm("")}
+                      className="p-0 h-auto text-blue-600 underline"
+                    >
+                      limpia el filtro
+                    </Button>
+                  </p>
+                </div>
+              )}
+
+            {teamStats && teamStats.length === 0 && (
               <div className="text-center py-8 text-gray-500">
                 <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No hay miembros en el equipo aún.</p>
