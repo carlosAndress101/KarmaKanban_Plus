@@ -2,6 +2,45 @@ import { PatchNote, ChangeType, PatchPriority } from "../types";
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    id: "patch-2025-09-29-user-experience",
+    version: "1.6.0",
+    releaseDate: "2025-09-29",
+    title: "👤 ¡Gestiona tu Perfil Completo!",
+    summary:
+      "¡Ahora puedes editar tu información personal y verificar tu email directamente desde tu perfil! Más control y seguridad para tu cuenta.",
+    priority: PatchPriority.HIGH,
+    isVisible: true,
+    createdAt: "2025-09-29T16:00:00",
+    changes: [
+      {
+        id: "profile-management-system",
+        type: ChangeType.NEW_FEATURE,
+        title: "✏️ Edita tu Perfil",
+        description:
+          "¡Ahora tienes control total sobre tu información! Cambia tu nombre, apellido y email cuando quieras.",
+        details: [
+          "👤 Edita tu nombre y apellido fácilmente",
+          "📧 Cambia tu email cuando necesites",
+          "🔒 Tu información siempre segura y actualizada",
+        ],
+        affectedFeatures: ["Perfil de Usuario", "Configuración de Cuenta"],
+      },
+      {
+        id: "email-verification-system",
+        type: ChangeType.NEW_FEATURE,
+        title: "� Verifica tu Email",
+        description:
+          "¡Mantén tu cuenta segura! Ahora puedes verificar tu email con códigos que llegan a tu correo.",
+        details: [
+          "🔐 Códigos de verificación seguros",
+          "⚡ Los emails llegan súper rápido",
+          "✅ Proceso simple y rápido",
+        ],
+        affectedFeatures: ["Seguridad de Cuenta", "Verificación"],
+      },
+    ],
+  },
+  {
     id: "patch-2025-09-28-team-stats",
     version: "1.5.0",
     releaseDate: "2025-09-28",

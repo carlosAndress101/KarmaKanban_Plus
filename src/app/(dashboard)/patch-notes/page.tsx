@@ -198,7 +198,7 @@ export default function PatchNotesPage() {
             <Button
               variant="ghost"
               onClick={handleGoBack}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Volver
@@ -240,7 +240,7 @@ export default function PatchNotesPage() {
                     <button
                       key={patch.id}
                       onClick={() => setSelectedPatch(patch)}
-                      className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${
+                      className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer ${
                         selectedPatch?.id === patch.id
                           ? "bg-blue-50 border-blue-300 shadow-sm"
                           : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300"
@@ -273,7 +273,7 @@ export default function PatchNotesPage() {
                   variant="outline"
                   size="sm"
                   onClick={markAllPatchesAsSeen}
-                  className="w-full"
+                  className="w-full cursor-pointer"
                 >
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Marcar todo como leído

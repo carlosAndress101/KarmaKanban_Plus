@@ -214,7 +214,7 @@ export const PatchNotesModal: React.FC<PatchNotesModalProps> = ({
                   <button
                     key={patch.id}
                     onClick={() => setSelectedPatch(patch)}
-                    className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    className={`w-full text-left p-3 rounded-lg border transition-all cursor-pointer ${
                       selectedPatch?.id === patch.id
                         ? "bg-blue-50 border-blue-200"
                         : "bg-white border-gray-200 hover:bg-gray-50"
