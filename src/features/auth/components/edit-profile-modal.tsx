@@ -161,13 +161,14 @@ export const EditProfileModal = ({
                 variant="outline"
                 onClick={onClose}
                 disabled={isPending}
+                className="cursor-pointer"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isPending}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-blue-600 hover:bg-blue-700 cursor-pointer"
               >
                 {isPending ? (
                   <>

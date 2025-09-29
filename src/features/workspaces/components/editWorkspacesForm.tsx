@@ -168,11 +168,16 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
                   variant="secondary"
                   onClick={onCancel}
                   disabled={isPending}
-                  className={cn(!onCancel && "invisible")}
+                  className={cn(!onCancel && "invisible", "cursor-pointer")}
                 >
                   Cancel
                 </Button>
-                <Button type="submit" size="lg" disabled={isPending}>
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={isPending}
+                  className="cursor-pointer"
+                >
                   Save changes
                 </Button>
               </div>
@@ -195,7 +200,7 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
                 <Button
                   onClick={handleCopyInviteLink}
                   variant="secondary"
-                  className="size-12"
+                  className="size-12 cursor-pointer"
                 >
                   <CopyIcon className="size-5" />
                 </Button>
@@ -208,7 +213,7 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
               size="sm"
               type="button"
               variant="destructive"
-              className="mt-6 w-fit ml-auto"
+              className="mt-6 w-fit ml-auto cursor-pointer"
               disabled={isPending || isResetingInviteCode}
               onClick={handleResetInviteCode}
             >
@@ -231,7 +236,7 @@ const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
               size="sm"
               type="button"
               variant="destructive"
-              className="mt-6 w-fit ml-auto"
+              className="mt-6 w-fit ml-auto cursor-pointer"
               disabled={isPending || isDeletingWorkspace}
               onClick={handleDelete}
             >

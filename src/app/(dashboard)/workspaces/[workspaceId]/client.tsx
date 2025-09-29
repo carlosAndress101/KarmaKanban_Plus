@@ -81,7 +81,12 @@ export const TaskList = ({ data, total }: TaskListProps) => {
       <div className="bg-muted rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Tasks ({total})</p>
-          <Button variant="ghost" size="icon" onClick={() => open(undefined)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => open(undefined)}
+            className="cursor-pointer"
+          >
             <PlusIcon className="size-4 text-neutral-400" />
           </Button>
         </div>
@@ -135,7 +140,12 @@ export const ProjectList = ({ data, total }: ProjectListProps) => {
       <div className="bg-white border rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Projects ({total})</p>
-          <Button variant="secondary" size="icon" onClick={open}>
+          <Button
+            variant="secondary"
+            size="icon"
+            onClick={open}
+            className="cursor-pointer"
+          >
             <PlusIcon className="size-4 text-neutral-400" />
           </Button>
         </div>

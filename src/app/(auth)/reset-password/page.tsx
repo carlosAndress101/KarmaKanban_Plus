@@ -230,7 +230,7 @@ export default function ResetPasswordPage() {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
                             onClick={() => setShowPassword(!showPassword)}
                             disabled={loading}
                           >
@@ -302,7 +302,7 @@ export default function ResetPasswordPage() {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent cursor-pointer"
                             onClick={() =>
                               setShowConfirmPassword(!showConfirmPassword)
                             }
@@ -370,7 +370,7 @@ export default function ResetPasswordPage() {
                 <Button
                   type="submit"
                   disabled={loading || passwordStrength.score < 3}
-                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors text-base"
+                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors text-base cursor-pointer"
                 >
                   {loading ? (
                     <>

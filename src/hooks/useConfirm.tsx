@@ -2,15 +2,8 @@ import { JSX, useState } from "react";
 
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { ResponsiveModal } from "@/components/responsive-modal";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
-import {
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export const useConfirm = (
   title: string,
@@ -56,14 +49,14 @@ export const useConfirm = (
             <Button
               onClick={handleCancel}
               variant="outline"
-              className="w-full lg:w-auto"
+              className="w-full lg:w-auto cursor-pointer"
             >
               Cancel
             </Button>
             <Button
               onClick={handleConfirm}
               variant={variant}
-              className="w-full lg:w-auto"
+              className="w-full lg:w-auto cursor-pointer"
             >
               Confirm
             </Button>

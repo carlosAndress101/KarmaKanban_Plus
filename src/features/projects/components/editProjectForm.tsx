@@ -121,6 +121,7 @@ export const EditProjectForm = ({
                       `/workspaces/${initialValues.workspaceId}/projects/${initialValues.id}`
                     )
             }
+            className="cursor-pointer"
           >
             <ArrowLeftIcon className="size-4 mr-2" />
             Atras
@@ -157,12 +158,17 @@ export const EditProjectForm = ({
                   variant="secondary"
                   onClick={onCancel}
                   disabled={isPending}
-                  className={cn(!onCancel && "invisible")}
+                  className={cn(!onCancel && "invisible", "cursor-pointer")}
                 >
                   Cancelar
                 </Button>
 
-                <Button type="submit" size="lg" disabled={isPending}>
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={isPending}
+                  className="cursor-pointer"
+                >
                   Save changes
                 </Button>
               </div>
@@ -247,7 +253,7 @@ export const EditProjectForm = ({
               size="sm"
               type="button"
               variant="destructive"
-              className="mt-6 w-fit ml-auto"
+              className="mt-6 w-fit ml-auto cursor-pointer"
               disabled={isPending || isDeletingProject}
               onClick={handleDelete}
             >

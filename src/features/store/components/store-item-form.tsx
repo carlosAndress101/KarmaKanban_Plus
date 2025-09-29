@@ -149,7 +149,7 @@ export const StoreItemForm = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="cursor-pointer">
           <Plus className="h-4 w-4 mr-2" />
           Create Store Item
         </Button>
@@ -281,6 +281,7 @@ export const StoreItemForm = ({
                 type="button"
                 variant="outline"
                 onClick={() => setIsOpen(false)}
+                className="cursor-pointer"
               >
                 Cancel
               </Button>
@@ -290,6 +291,7 @@ export const StoreItemForm = ({
                   form.formState.isSubmitting ||
                   createStoreItemMutation.isPending
                 }
+                className="cursor-pointer"
               >
                 {form.formState.isSubmitting ||
                 createStoreItemMutation.isPending

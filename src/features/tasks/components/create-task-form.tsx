@@ -269,12 +269,17 @@ export const CreateTaskForm = ({
                 variant="secondary"
                 onClick={onCancel}
                 disabled={isPending}
-                className={cn(!onCancel && "invisible")}
+                className={cn(!onCancel && "invisible", "cursor-pointer")}
               >
                 Cancel
               </Button>
 
-              <Button type="submit" size="lg" disabled={isPending}>
+              <Button
+                type="submit"
+                size="lg"
+                disabled={isPending}
+                className="cursor-pointer"
+              >
                 New Task
               </Button>
             </div>

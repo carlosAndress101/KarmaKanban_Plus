@@ -287,7 +287,7 @@ export const GamificationProfile = ({
                             <Button
                               variant="outline"
                               size="sm"
-                              className="w-10 h-10 rounded-full"
+                              className="w-10 h-10 rounded-full cursor-pointer"
                             >
                               +
                             </Button>
@@ -347,10 +347,14 @@ export const GamificationProfile = ({
                               <Button
                                 variant="outline"
                                 onClick={() => setIsIconDialogOpen(false)}
+                                className="cursor-pointer"
                               >
                                 Cancel
                               </Button>
-                              <Button onClick={handleSaveIcons}>
+                              <Button
+                                onClick={handleSaveIcons}
+                                className="cursor-pointer"
+                              >
                                 Save Selection
                               </Button>
                             </div>
@@ -405,7 +409,7 @@ export const GamificationProfile = ({
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsEditingAbout(true)}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 cursor-pointer"
                   >
                     <Edit2Icon className="w-4 h-4" />
                   </Button>
@@ -433,10 +437,15 @@ export const GamificationProfile = ({
                           setAboutText(gamificationData.aboutMe || "");
                           setIsEditingAbout(false);
                         }}
+                        className="cursor-pointer"
                       >
                         Cancel
                       </Button>
-                      <Button size="sm" onClick={handleSaveAbout}>
+                      <Button
+                        size="sm"
+                        onClick={handleSaveAbout}
+                        className="cursor-pointer"
+                      >
                         Save
                       </Button>
                     </div>

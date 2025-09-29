@@ -345,6 +345,7 @@ export const StoreClient = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => setActiveTab("store")}
+                  className="cursor-pointer"
                 >
                   <Settings className="h-4 w-4 mr-2" />
                   View Team Store
@@ -408,13 +409,14 @@ export const StoreClient = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => handleEdit(item)}
+                            className="cursor-pointer"
                           >
                             Edit
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
-                            className="text-red-600 hover:text-red-700"
+                            className="text-red-600 hover:text-red-700 cursor-pointer"
                             onClick={() => handleDelete(item)}
                             disabled={deleteStoreItemMutation.isPending}
                           >
@@ -450,7 +452,7 @@ export const StoreClient = () => {
           <CardContent>
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full cursor-pointer"
               onClick={() => setIsPendingModalOpen(true)}
             >
               <Settings className="h-4 w-4 mr-2" />

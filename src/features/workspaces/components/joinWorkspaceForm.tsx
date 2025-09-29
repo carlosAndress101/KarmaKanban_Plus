@@ -81,7 +81,7 @@ export const JoinWorkspaceForm = ({ initalValues }: JoinWorkspaceFormProps) => {
             <Link href="/">Cancel</Link>
           </Button>
           <Button
-            className="w-full lg:w-fit"
+            className="w-full lg:w-fit cursor-pointer"
             size="lg"
             type="button"
             disabled={isPending}

@@ -118,7 +118,7 @@ export const TaskViewSwticher = ({
             </TabsList>
             <Button
               size="sm"
-              className="w-full lg:w-auto"
+              className="w-full lg:w-auto cursor-pointer"
               onClick={() => open(undefined)}
             >
               <PlusIcon className="size-4 mr-2" />

@@ -53,7 +53,7 @@ const CustomToolbar = ({ date, onNavigate }: CustomToolbarProps) => (
       onClick={() => onNavigate("PREV")}
       variant="secondary"
       size="icon"
-      className="flex items-center"
+      className="flex items-center cursor-pointer"
     >
       <ChevronLeftIcon className="size-4" />
     </Button>
@@ -65,7 +65,7 @@ const CustomToolbar = ({ date, onNavigate }: CustomToolbarProps) => (
       onClick={() => onNavigate("NEXT")}
       variant="secondary"
       size="icon"
-      className="flex items-center"
+      className="flex items-center cursor-pointer"
     >
       <ChevronRightIcon className="size-4" />
     </Button>

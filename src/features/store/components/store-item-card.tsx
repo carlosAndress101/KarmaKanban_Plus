@@ -96,7 +96,7 @@ export const StoreItemCard = ({
         <Button
           onClick={() => onRedeem(item)}
           disabled={!isAvailable || isRedeeming}
-          className="w-full"
+          className="w-full cursor-pointer"
           variant={isAvailable ? "default" : "secondary"}
         >
           {isRedeeming ? "Redeeming..." : "Redeem"}

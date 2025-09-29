@@ -152,14 +152,14 @@ export const VerifyEmailModal = ({
                         form.reset();
                       }}
                       disabled={isVerifying}
-                      className="flex-1"
+                      className="flex-1 cursor-pointer"
                     >
                       Back
                     </Button>
                     <Button
                       type="submit"
                       disabled={isVerifying}
-                      className="bg-green-600 hover:bg-green-700 flex-1"
+                      className="bg-green-600 hover:bg-green-700 flex-1 cursor-pointer"
                     >
                       {isVerifying ? (
                         <>
@@ -201,7 +201,11 @@ export const VerifyEmailModal = ({
 
         {!emailSent && (
           <DialogFooter className="flex gap-2">
-            <Button variant="outline" onClick={onClose}>
+            <Button
+              variant="outline"
+              onClick={onClose}
+              className="cursor-pointer"
+            >
               {isEmailVerified ? "Close" : "Later"}
             </Button>
 
@@ -209,7 +213,7 @@ export const VerifyEmailModal = ({
               <Button
                 onClick={sendVerificationEmail}
                 disabled={isSending}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-blue-600 hover:bg-blue-700 cursor-pointer"
               >
                 {isSending ? (
                   <>

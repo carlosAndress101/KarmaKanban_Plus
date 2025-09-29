@@ -156,7 +156,7 @@ export default function ForgotPasswordPage() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 text-base rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 text-base rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none cursor-pointer"
                 >
                   {loading ? (
                     <>

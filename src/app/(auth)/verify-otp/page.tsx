@@ -303,7 +303,7 @@ export default function VerifyOtpPage() {
                 variant="outline"
                 onClick={handleResend}
                 disabled={!canResend || resendLoading}
-                className="w-full h-11 border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 bg-transparent"
+                className="w-full h-11 border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 bg-transparent cursor-pointer"
               >
                 {resendLoading ? (
                   <>

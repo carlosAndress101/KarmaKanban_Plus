@@ -209,12 +209,18 @@ export const EditStoreItemForm = ({
             />
 
             <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={handleClose}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                className="cursor-pointer"
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={updateStoreItemMutation.isPending}
+                className="cursor-pointer"
               >
                 {updateStoreItemMutation.isPending
                   ? "Updating..."

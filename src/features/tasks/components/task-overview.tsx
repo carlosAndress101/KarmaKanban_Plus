@@ -25,7 +25,12 @@ export const TaskOveriew = ({ task, className }: TaskOverviewProps) => {
       <div className="bg-muted rounded-lg p-4 h-full">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Overview</p>
-          <Button size="sm" variant="secondary" onClick={() => open(task.id)}>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => open(task.id)}
+            className="cursor-pointer"
+          >
             <PencilIcon className="size-4 mr-2" />
             Edit
           </Button>

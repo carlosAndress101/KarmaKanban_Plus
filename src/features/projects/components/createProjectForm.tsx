@@ -92,12 +92,17 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
                 variant="secondary"
                 onClick={onCancel}
                 disabled={isPending}
-                className={cn(!onCancel && "invisible")}
+                className={cn(!onCancel && "invisible", "cursor-pointer")}
               >
                 Cancelar
               </Button>
 
-              <Button type="submit" size="lg" disabled={isPending}>
+              <Button
+                type="submit"
+                size="lg"
+                disabled={isPending}
+                className="cursor-pointer"
+              >
                 Create Project
               </Button>
             </div>

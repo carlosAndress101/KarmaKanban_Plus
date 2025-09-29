@@ -247,7 +247,7 @@ export const PatchNotesModal: React.FC<PatchNotesModalProps> = ({
                 variant="outline"
                 size="sm"
                 onClick={handleMarkAllRead}
-                className="w-full"
+                className="w-full cursor-pointer"
               >
                 Mark All as Read
               </Button>
@@ -264,7 +264,12 @@ export const PatchNotesModal: React.FC<PatchNotesModalProps> = ({
                   </Badge>
                 )}
               </div>
-              <Button variant="ghost" size="sm" onClick={handleClose}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClose}
+                className="cursor-pointer"
+              >
                 <X className="h-4 w-4" />
               </Button>
             </div>

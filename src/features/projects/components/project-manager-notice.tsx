@@ -43,7 +43,7 @@ export const ProjectManagerNotice = ({
           This project needs a Project Manager to manage store items and
           redemption requests.
         </span>
-        <Button size="sm" asChild className="ml-4">
+        <Button size="sm" asChild className="ml-4 cursor-pointer">
           <Link
             href={`/workspaces/${workspaceId}/projects/${projectId}/settings`}
           >

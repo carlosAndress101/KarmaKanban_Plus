@@ -42,6 +42,7 @@ export const TaskDescription = ({ task, className }: TaskDescriptionProps) => {
           size="sm"
           variant="secondary"
           onClick={() => setIsEditing((prev) => !prev)}
+          className="cursor-pointer"
         >
           {isEditing ? (
             <>
@@ -68,7 +69,7 @@ export const TaskDescription = ({ task, className }: TaskDescriptionProps) => {
           />
           <Button
             size="sm"
-            className="w-fit ml-auto"
+            className="w-fit ml-auto cursor-pointer"
             onClick={handleSave}
             disabled={isPending}
           >

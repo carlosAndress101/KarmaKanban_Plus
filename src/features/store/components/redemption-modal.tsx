@@ -97,10 +97,19 @@ export const RedemptionModal = ({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={handleClose} disabled={isLoading}>
+          <Button
+            variant="outline"
+            onClick={handleClose}
+            disabled={isLoading}
+            className="cursor-pointer"
+          >
             Cancel
           </Button>
-          <Button onClick={handleConfirm} disabled={isLoading}>
+          <Button
+            onClick={handleConfirm}
+            disabled={isLoading}
+            className="cursor-pointer"
+          >
             {isLoading ? "Processing..." : "Confirm Redemption"}
           </Button>
         </DialogFooter>
