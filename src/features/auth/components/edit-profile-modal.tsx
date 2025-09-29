@@ -25,15 +25,12 @@ import { Loader2, User, Mail } from "lucide-react";
 import { useUpdateProfile } from "../api/use-update-profile";
 
 const editProfileSchema = z.object({
-  name: z
-    .string()
-    .min(1, "El nombre es requerido")
-    .max(50, "El nombre es muy largo"),
+  name: z.string().min(1, "Name is required").max(50, "Name is too long"),
   lastName: z
     .string()
-    .min(1, "El apellido es requerido")
-    .max(50, "El apellido es muy largo"),
-  email: z.string().email("Email inválido"),
+    .min(1, "Last name is required")
+    .max(50, "Last name is too long"),
+  email: z.string().email("Invalid email"),
 });
 
 type EditProfileFormValues = z.infer<typeof editProfileSchema>;
@@ -46,7 +43,7 @@ interface EditProfileModalProps {
     lastName?: string;
     email: string;
   };
-  onEmailChanged?: () => void;
+  onEmailChanged?: (newEmail: string) => void;
 }
 
 export const EditProfileModal = ({
@@ -72,11 +69,11 @@ export const EditProfileModal = ({
     updateProfile(values, {
       onSuccess: (data) => {
         onClose();
-        form.reset();
+        form.reset(values); // Reset with new values
 
-        // If email was changed, trigger the callback to open verification modal
+        // If email was changed, trigger the callback to open verification modal with new email
         if (emailChanged && (data as any).emailChanged && onEmailChanged) {
-          onEmailChanged();
+          onEmailChanged(values.email);
         }
       },
     });
@@ -88,11 +85,11 @@ export const EditProfileModal = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
-            Editar Perfil
+            Edit Profile
           </DialogTitle>
           <DialogDescription>
-            Actualiza tu información personal. Los cambios se guardarán
-            automáticamente.
+            Update your personal information. Changes will be saved
+            automatically.
           </DialogDescription>
         </DialogHeader>
 
@@ -104,11 +101,11 @@ export const EditProfileModal = ({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nombre</FormLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="Tu nombre"
+                        placeholder="Your name"
                         disabled={isPending}
                       />
                     </FormControl>
@@ -122,11 +119,11 @@ export const EditProfileModal = ({
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Apellido</FormLabel>
+                    <FormLabel>Last Name</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="Tu apellido"
+                        placeholder="Your last name"
                         disabled={isPending}
                       />
                     </FormControl>
@@ -148,7 +145,7 @@ export const EditProfileModal = ({
                       <Input
                         {...field}
                         type="email"
-                        placeholder="tu@email.com"
+                        placeholder="your@email.com"
                         disabled={isPending}
                       />
                     </FormControl>
@@ -165,7 +162,7 @@ export const EditProfileModal = ({
                 onClick={onClose}
                 disabled={isPending}
               >
-                Cancelar
+                Cancel
               </Button>
               <Button
                 type="submit"
@@ -175,12 +172,12 @@ export const EditProfileModal = ({
                 {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Guardando...
+                    Saving...
                   </>
                 ) : (
                   <>
                     <User className="mr-2 h-4 w-4" />
-                    Guardar Cambios
+                    Save Changes
                   </>
                 )}
               </Button>

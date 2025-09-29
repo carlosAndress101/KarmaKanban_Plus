@@ -28,7 +28,7 @@ import { useSendVerificationEmail } from "../api/use-send-verification-email";
 import { useVerifyEmail } from "../api/use-verify-email";
 
 const verifyOtpSchema = z.object({
-  otp: z.string().length(6, "El código debe tener 6 dígitos"),
+  otp: z.string().length(6, "Code must be 6 digits"),
 });
 
 type VerifyOtpFormValues = z.infer<typeof verifyOtpSchema>;
@@ -89,12 +89,12 @@ export const VerifyEmailModal = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Mail className="h-5 w-5" />
-            Verificación de Email
+            Email Verification
           </DialogTitle>
           <DialogDescription>
             {isEmailVerified
-              ? "Tu email ya está verificado."
-              : "Verifica tu dirección de email para mayor seguridad."}
+              ? "Your email is already verified."
+              : "Verify your email address for enhanced security."}
           </DialogDescription>
         </DialogHeader>
 
@@ -103,8 +103,8 @@ export const VerifyEmailModal = ({
             <Alert>
               <CheckCircle className="h-4 w-4" />
               <AlertDescription>
-                Tu email <strong>{userEmail}</strong> está verificado
-                correctamente.
+                Your email <strong>{userEmail}</strong> is successfully
+                verified.
               </AlertDescription>
             </Alert>
           ) : emailSent ? (
@@ -112,9 +112,9 @@ export const VerifyEmailModal = ({
               <Alert>
                 <Mail className="h-4 w-4" />
                 <AlertDescription>
-                  Se ha enviado un código de verificación a{" "}
-                  <strong>{userEmail}</strong>. Ingresa el código de 6 dígitos
-                  para verificar tu email.
+                  A verification code has been sent to{" "}
+                  <strong>{userEmail}</strong>. Enter the 6-digit code to verify
+                  your email.
                 </AlertDescription>
               </Alert>
 
@@ -128,7 +128,7 @@ export const VerifyEmailModal = ({
                     name="otp"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Código de verificación</FormLabel>
+                        <FormLabel>Verification Code</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -154,7 +154,7 @@ export const VerifyEmailModal = ({
                       disabled={isVerifying}
                       className="flex-1"
                     >
-                      Atrás
+                      Back
                     </Button>
                     <Button
                       type="submit"
@@ -164,12 +164,12 @@ export const VerifyEmailModal = ({
                       {isVerifying ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Verificando...
+                          Verifying...
                         </>
                       ) : (
                         <>
                           <CheckCircle className="mr-2 h-4 w-4" />
-                          Verificar
+                          Verify
                         </>
                       )}
                     </Button>
@@ -182,18 +182,17 @@ export const VerifyEmailModal = ({
               <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Tu email <strong>{userEmail}</strong> no está verificado. Te
-                  enviaremos un código de verificación para confirmar tu
-                  identidad.
+                  Your email <strong>{userEmail}</strong> is not verified. We
+                  will send you a verification code to confirm your identity.
                 </AlertDescription>
               </Alert>
 
               <div className="text-sm text-muted-foreground">
-                <p>Al verificar tu email podrás:</p>
+                <p>By verifying your email you will be able to:</p>
                 <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li>Recuperar tu contraseña si la olvidas</li>
-                  <li>Recibir notificaciones importantes</li>
-                  <li>Aumentar la seguridad de tu cuenta</li>
+                  <li>Recover your password if you forget it</li>
+                  <li>Receive important notifications</li>
+                  <li>Increase your account security</li>
                 </ul>
               </div>
             </div>
@@ -203,7 +202,7 @@ export const VerifyEmailModal = ({
         {!emailSent && (
           <DialogFooter className="flex gap-2">
             <Button variant="outline" onClick={onClose}>
-              {isEmailVerified ? "Cerrar" : "Más tarde"}
+              {isEmailVerified ? "Close" : "Later"}
             </Button>
 
             {!isEmailVerified && (
@@ -215,12 +214,12 @@ export const VerifyEmailModal = ({
                 {isSending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Enviando...
+                    Sending...
                   </>
                 ) : (
                   <>
                     <Send className="mr-2 h-4 w-4" />
-                    Enviar verificación
+                    Send Verification
                   </>
                 )}
               </Button>

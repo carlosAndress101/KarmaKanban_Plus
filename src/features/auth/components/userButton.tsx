@@ -21,6 +21,7 @@ const UserButton = () => {
   const { mutate: logout } = useLogout();
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isVerifyEmailOpen, setIsVerifyEmailOpen] = useState(false);
+  const [currentEmail, setCurrentEmail] = useState("");
 
   if (isLoading) {
     return (
@@ -72,14 +73,14 @@ const UserButton = () => {
           className="h-10 flex items-center px-3 text-neutral-700 hover:bg-neutral-50 cursor-pointer"
         >
           <Settings className="size-4 mr-3" />
-          Editar perfil
+          Edit Profile
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setIsVerifyEmailOpen(true)}
           className="h-10 flex items-center px-3 text-blue-700 hover:bg-blue-50 cursor-pointer"
         >
           <Mail className="size-4 mr-3" />
-          Verificar correo
+          Verify Email
         </DropdownMenuItem>
         <Separator className="my-1" />
         <DropdownMenuItem
@@ -87,7 +88,7 @@ const UserButton = () => {
           className="h-10 flex items-center px-3 text-red-700 hover:bg-red-50 font-medium cursor-pointer"
         >
           <LogOut className="size-4 mr-3" />
-          Cerrar sesión
+          Logout
         </DropdownMenuItem>
       </DropdownMenuContent>
 
@@ -100,16 +101,20 @@ const UserButton = () => {
           lastName: currentUser?.lastName || "",
           email: email || "",
         }}
-        onEmailChanged={() => {
-          // Open verify email modal when email is changed
+        onEmailChanged={(newEmail) => {
+          // Store the new email and open verify email modal
+          setCurrentEmail(newEmail);
           setIsVerifyEmailOpen(true);
         }}
       />
 
       <VerifyEmailModal
         isOpen={isVerifyEmailOpen}
-        onClose={() => setIsVerifyEmailOpen(false)}
-        userEmail={email || ""}
+        onClose={() => {
+          setIsVerifyEmailOpen(false);
+          setCurrentEmail(""); // Reset when closing
+        }}
+        userEmail={currentEmail || email || ""}
         isEmailVerified={currentUser?.emailVerified || false}
       />
     </DropdownMenu>
