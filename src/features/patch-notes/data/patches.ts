@@ -2,6 +2,75 @@ import { PatchNote, ChangeType, PatchPriority } from "../types";
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    id: "patch-2025-09-28-team-stats",
+    version: "1.5.0",
+    releaseDate: "2025-09-28",
+    title: "📊 Team Statistics Dashboard for Project Managers",
+    summary:
+      "Project Managers now have access to comprehensive team performance analytics with detailed points tracking, task difficulty breakdowns, and member achievements overview.",
+    priority: PatchPriority.HIGH,
+    isVisible: true,
+    createdAt: "2025-09-28T15:00:00",
+    changes: [
+      {
+        id: "team-stats-dashboard",
+        type: ChangeType.NEW_FEATURE,
+        title: "📈 Complete Team Analytics Dashboard",
+        description:
+          "Project Managers can now access detailed team performance metrics with comprehensive points tracking and member statistics.",
+        details: [
+          "📊 Team Overview: Active members, total points, and task completion metrics",
+          "🎯 Points Distinction: Clear separation between current available points and total earned points",
+          "📋 Task Breakdown: Detailed analysis by difficulty levels (Easy, Medium, Hard)",
+          "🔍 Member Search: Quick search functionality to find specific team members",
+          "🏆 Badge Tracking: Visual display of earned badges with detailed tooltips",
+          "📈 Historical Data: Track total points earned vs points available for spending",
+        ],
+        affectedFeatures: [
+          "Store Management",
+          "Team Analytics",
+          "Gamification System",
+        ],
+      },
+      {
+        id: "points-clarification",
+        type: ChangeType.IMPROVEMENT,
+        title: "💡 Points System Clarification",
+        description:
+          "Enhanced points display to clearly distinguish between available points (after store purchases) and total historical points earned from completed tasks.",
+        details: [
+          "💰 Available Points: Shows current points that can be spent in store",
+          "🏆 Total Earned Points: Displays historical total from all completed tasks",
+          "📊 Per-member breakdown: Individual statistics for each team member",
+          "🎨 Visual indicators: Color-coded displays for better understanding",
+        ],
+        affectedFeatures: [
+          "Points System",
+          "Team Statistics",
+          "Store Integration",
+        ],
+      },
+      {
+        id: "english-interface",
+        type: ChangeType.IMPROVEMENT,
+        title: "🌐 English Interface for Team Stats",
+        description:
+          "Complete translation of the team statistics interface to English for better accessibility and international use.",
+        details: [
+          "🗣️ Full English translation of team statistics dashboard",
+          "🏷️ Translated labels for all metrics and descriptions",
+          "🔤 Consistent terminology throughout the interface",
+          "📱 Responsive design maintains functionality across all languages",
+        ],
+        affectedFeatures: [
+          "Internationalization",
+          "User Interface",
+          "Team Statistics",
+        ],
+      },
+    ],
+  },
+  {
     id: "patch-2025-09-26-v2",
     version: "1.4.0",
     releaseDate: "2025-09-26",

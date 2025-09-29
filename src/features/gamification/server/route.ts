@@ -435,14 +435,6 @@ const app = new Hono()
         })
       );
 
-      // Debug: Log the first team member's stats to check data types
-      if (teamStats.length > 0) {
-        console.log(
-          "Sample team member stats:",
-          JSON.stringify(teamStats[0], null, 2)
-        );
-      }
-
       return c.json({
         data: teamStats,
       });
