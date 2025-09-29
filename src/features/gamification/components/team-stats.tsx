@@ -93,7 +93,7 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
         <CardContent className="p-6">
           <div className="text-center text-muted-foreground">
             <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>No se pudieron cargar las estadísticas del equipo.</p>
+            <p>Could not load team statistics.</p>
           </div>
         </CardContent>
       </Card>
@@ -103,6 +103,10 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
   // Calculate team totals
   const totalTeamPoints = teamStats.reduce(
     (sum, member) => sum + Number(member.totalPoints || 0),
+    0
+  );
+  const totalHistoricalTeamPoints = teamStats.reduce(
+    (sum, member) => sum + Number(member.totalHistoricalPoints || 0),
     0
   );
   const totalTeamTasks = teamStats.reduce(
@@ -137,41 +141,47 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
         <CardHeader>
           <div className="flex items-center space-x-2">
             <Users className="h-6 w-6 text-blue-600" />
-            <CardTitle className="text-xl">Resumen del Equipo</CardTitle>
+            <CardTitle className="text-xl">Team Overview</CardTitle>
           </div>
-          <CardDescription>
-            Estadísticas generales del rendimiento del equipo
-          </CardDescription>
+          <CardDescription>General team performance statistics</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">
                 {teamStats.length}
               </div>
-              <div className="text-sm text-gray-600">Miembros Activos</div>
+              <div className="text-sm text-gray-600">Active Members</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
                 {totalTeamPoints.toLocaleString()}
               </div>
-              <div className="text-sm text-gray-600">Puntos Totales</div>
+              <div className="text-sm text-gray-600">
+                Current Available Points
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-emerald-600">
+                {totalHistoricalTeamPoints.toLocaleString()}
+              </div>
+              <div className="text-sm text-gray-600">Total Points Earned</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">
                 {totalTeamTasks.toLocaleString()}
               </div>
-              <div className="text-sm text-gray-600">Tareas Completadas</div>
+              <div className="text-sm text-gray-600">Tasks Completed</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">
                 {totalTeamTasks > 0
                   ? Math.round(
-                      totalTeamPoints / totalTeamTasks
+                      totalHistoricalTeamPoints / totalTeamTasks
                     ).toLocaleString()
                   : "0"}
               </div>
-              <div className="text-sm text-gray-600">Prom. Pts/Tarea</div>
+              <div className="text-sm text-gray-600">Avg. Pts/Task</div>
             </div>
           </div>
         </CardContent>
@@ -183,7 +193,7 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
           <CardHeader>
             <div className="flex items-center space-x-2">
               <Target className="h-5 w-5 text-blue-600" />
-              <CardTitle className="text-lg">Tareas por Dificultad</CardTitle>
+              <CardTitle className="text-lg">Tasks by Difficulty</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
@@ -194,9 +204,9 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                     variant="secondary"
                     className="bg-green-100 text-green-800"
                   >
-                    Fácil
+                    Easy
                   </Badge>
-                  <span className="text-sm text-gray-600">10 pts c/u</span>
+                  <span className="text-sm text-gray-600">10 pts each</span>
                 </div>
                 <span className="font-semibold">
                   {teamTasksByDifficulty.Easy.toLocaleString()}
@@ -208,9 +218,9 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                     variant="secondary"
                     className="bg-yellow-100 text-yellow-800"
                   >
-                    Media
+                    Medium
                   </Badge>
-                  <span className="text-sm text-gray-600">20 pts c/u</span>
+                  <span className="text-sm text-gray-600">20 pts each</span>
                 </div>
                 <span className="font-semibold">
                   {teamTasksByDifficulty.Medium.toLocaleString()}
@@ -222,9 +232,9 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                     variant="secondary"
                     className="bg-red-100 text-red-800"
                   >
-                    Difícil
+                    Hard
                   </Badge>
-                  <span className="text-sm text-gray-600">30 pts c/u</span>
+                  <span className="text-sm text-gray-600">30 pts each</span>
                 </div>
                 <span className="font-semibold">
                   {teamTasksByDifficulty.Hard.toLocaleString()}
@@ -238,7 +248,7 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
           <CardHeader>
             <div className="flex items-center space-x-2">
               <Trophy className="h-5 w-5 text-yellow-600" />
-              <CardTitle className="text-lg">Puntos por Dificultad</CardTitle>
+              <CardTitle className="text-lg">Points by Difficulty</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
@@ -249,7 +259,7 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                     variant="secondary"
                     className="bg-green-100 text-green-800"
                   >
-                    Fácil
+                    Easy
                   </Badge>
                 </div>
                 <span className="font-semibold text-green-600">
@@ -262,7 +272,7 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                     variant="secondary"
                     className="bg-yellow-100 text-yellow-800"
                   >
-                    Media
+                    Medium
                   </Badge>
                 </div>
                 <span className="font-semibold text-yellow-600">
@@ -275,7 +285,7 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                     variant="secondary"
                     className="bg-red-100 text-red-800"
                   >
-                    Difícil
+                    Hard
                   </Badge>
                 </div>
                 <span className="font-semibold text-red-600">
@@ -293,15 +303,13 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <TrendingUp className="h-5 w-5 text-blue-600" />
-              <CardTitle className="text-lg">
-                Estadísticas por Miembro
-              </CardTitle>
+              <CardTitle className="text-lg">Member Statistics</CardTitle>
             </div>
             <div className="flex items-center space-x-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Buscar miembro..."
+                  placeholder="Search member..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 pr-10 w-64"
@@ -320,12 +328,11 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
             </div>
           </div>
           <CardDescription>
-            Detalle de puntos por dificultad de tarea para cada miembro del
-            equipo{" "}
+            Points breakdown by task difficulty for each team member{" "}
             {searchTerm &&
-              `(${filteredTeamStats.length} de ${
+              `(${filteredTeamStats.length} of ${
                 teamStats?.length || 0
-              } miembros)`}
+              } members)`}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -353,8 +360,13 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                       <div className="text-lg font-bold text-blue-600">
                         {member.totalPoints.toLocaleString()} pts
                       </div>
-                      <div className="text-sm text-gray-600">
-                        {member.totalTasksCompleted} tareas totales
+                      <div className="text-sm text-gray-600">Available</div>
+                      <div className="text-sm font-semibold text-emerald-600">
+                        {member.totalHistoricalPoints.toLocaleString()} pts
+                      </div>
+                      <div className="text-sm text-gray-600">Total Earned</div>
+                      <div className="text-sm text-gray-600 mt-1">
+                        {member.totalTasksCompleted} tasks completed
                       </div>
                     </div>
                   </div>
@@ -364,14 +376,14 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                     <div className="bg-green-50 p-3 rounded-lg">
                       <div className="flex items-center justify-between">
                         <Badge className="bg-green-100 text-green-800 text-xs">
-                          Fácil
+                          Easy
                         </Badge>
                         <div className="text-right">
                           <div className="font-semibold text-green-700">
                             {member.pointsByDifficulty.Easy} pts
                           </div>
                           <div className="text-xs text-green-600">
-                            {member.tasksCompletedByDifficulty.Easy} tareas
+                            {member.tasksCompletedByDifficulty.Easy} tasks
                           </div>
                         </div>
                       </div>
@@ -380,14 +392,14 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                     <div className="bg-yellow-50 p-3 rounded-lg">
                       <div className="flex items-center justify-between">
                         <Badge className="bg-yellow-100 text-yellow-800 text-xs">
-                          Media
+                          Medium
                         </Badge>
                         <div className="text-right">
                           <div className="font-semibold text-yellow-700">
                             {member.pointsByDifficulty.Medium} pts
                           </div>
                           <div className="text-xs text-yellow-600">
-                            {member.tasksCompletedByDifficulty.Medium} tareas
+                            {member.tasksCompletedByDifficulty.Medium} tasks
                           </div>
                         </div>
                       </div>
@@ -396,14 +408,14 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                     <div className="bg-red-50 p-3 rounded-lg">
                       <div className="flex items-center justify-between">
                         <Badge className="bg-red-100 text-red-800 text-xs">
-                          Difícil
+                          Hard
                         </Badge>
                         <div className="text-right">
                           <div className="font-semibold text-red-700">
                             {member.pointsByDifficulty.Hard} pts
                           </div>
                           <div className="text-xs text-red-600">
-                            {member.tasksCompletedByDifficulty.Hard} tareas
+                            {member.tasksCompletedByDifficulty.Hard} tasks
                           </div>
                         </div>
                       </div>
@@ -416,7 +428,7 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                       <div className="flex items-center space-x-2 mb-2">
                         <Award className="h-4 w-4 text-yellow-600" />
                         <span className="text-sm font-medium text-gray-700">
-                          Insignias ({member.earnedBadges.length})
+                          Badges ({member.earnedBadges.length})
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-2">
@@ -465,13 +477,13 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                                 size="sm"
                                 className="h-6 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full text-xs"
                               >
-                                +{member.earnedBadges.length - 6} más
+                                +{member.earnedBadges.length - 6} more
                               </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-80 p-4">
                               <div className="space-y-3">
                                 <h4 className="font-medium text-sm">
-                                  Todas las insignias de {member.name}
+                                  All badges of {member.name}
                                 </h4>
                                 <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
                                   {member.earnedBadges.map((badgeId) => {
@@ -529,15 +541,15 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
               teamStats.length > 0 && (
                 <div className="text-center py-8 text-gray-500">
                   <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p className="font-medium">No se encontraron miembros</p>
+                  <p className="font-medium">No members found</p>
                   <p className="text-sm">
-                    Intenta con otro término de búsqueda o{" "}
+                    Try a different search term or{" "}
                     <Button
                       variant="link"
                       onClick={() => setSearchTerm("")}
                       className="p-0 h-auto text-blue-600 underline"
                     >
-                      limpia el filtro
+                      clear the filter
                     </Button>
                   </p>
                 </div>
@@ -546,7 +558,7 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
             {teamStats && teamStats.length === 0 && (
               <div className="text-center py-8 text-gray-500">
                 <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No hay miembros en el equipo aún.</p>
+                <p>No team members yet.</p>
               </div>
             )}
           </div>

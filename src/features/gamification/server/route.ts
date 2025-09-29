@@ -374,6 +374,12 @@ const app = new Hono()
             Hard: Number(tasksCompletedByDifficulty.Hard) * 30 || 0,
           };
 
+          // Calculate total historical points earned (from completed tasks)
+          const totalHistoricalPoints =
+            pointsByDifficulty.Easy +
+            pointsByDifficulty.Medium +
+            pointsByDifficulty.Hard;
+
           // Get total completed tasks
           const totalCompleted =
             Number(
@@ -420,6 +426,7 @@ const app = new Hono()
             email: teamMember.email,
             gamificationRole: teamMember.gamificationRole,
             totalPoints: teamMember.points || 0,
+            totalHistoricalPoints: totalHistoricalPoints,
             totalTasksCompleted: totalCompleted,
             tasksCompletedByDifficulty,
             pointsByDifficulty,
