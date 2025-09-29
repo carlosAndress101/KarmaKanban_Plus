@@ -481,21 +481,36 @@ export const TeamStats = ({ workspaceId }: TeamStatsProps) => {
                                     if (!badge) return null;
 
                                     return (
-                                      <div
-                                        key={badgeId}
-                                        className="flex items-center space-x-2 p-2 bg-yellow-50 text-yellow-800 rounded-lg border border-yellow-200"
-                                        title={badge.description}
-                                      >
-                                        <badge.icon className="h-4 w-4 flex-shrink-0" />
-                                        <div className="min-w-0">
-                                          <p className="font-medium text-xs truncate">
-                                            {badge.name}
-                                          </p>
-                                          <p className="text-xs text-yellow-600 truncate">
-                                            {badge.description}
-                                          </p>
-                                        </div>
-                                      </div>
+                                      <TooltipProvider key={badgeId}>
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <div className="flex items-center space-x-2 p-2 bg-yellow-50 text-yellow-800 rounded-lg border border-yellow-200 hover:bg-yellow-100 hover:border-yellow-300 transition-colors cursor-help">
+                                              <badge.icon className="h-4 w-4 flex-shrink-0" />
+                                              <div className="min-w-0">
+                                                <p className="font-medium text-xs truncate">
+                                                  {badge.name}
+                                                </p>
+                                                <p className="text-xs text-yellow-600 truncate">
+                                                  {badge.description}
+                                                </p>
+                                              </div>
+                                            </div>
+                                          </TooltipTrigger>
+                                          <TooltipContent className="max-w-xs p-3 bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200 shadow-lg">
+                                            <div className="space-y-2">
+                                              <div className="flex items-center space-x-2">
+                                                <badge.icon className="h-5 w-5 text-yellow-600" />
+                                                <span className="font-semibold text-yellow-900">
+                                                  {badge.name}
+                                                </span>
+                                              </div>
+                                              <p className="text-sm text-yellow-800 leading-relaxed">
+                                                {badge.description}
+                                              </p>
+                                            </div>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
                                     );
                                   })}
                                 </div>
