@@ -13,7 +13,7 @@ import { EditStoreItemForm } from "./edit-store-item-form";
 import { StoreItem } from "../types";
 import { StoreItemForm } from "./store-item-form";
 import { PendingRequestsModal } from "./pending-requests-modal";
-import { Loader, ShoppingBag, Settings, Coins } from "lucide-react";
+import { Loader, ShoppingBag, Settings, Coins, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { TeamStats } from "@/features/gamification/components/team-stats";
 
 export const StoreClient = () => {
   const workspaceId = useWorkspaceId();
@@ -128,9 +129,10 @@ export const StoreClient = () => {
       return (
         <div className="space-y-6">
           <Tabs value="management" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="store">Team Store</TabsTrigger>
               <TabsTrigger value="management">Store Management</TabsTrigger>
+              <TabsTrigger value="team-stats">Team Stats</TabsTrigger>
             </TabsList>
 
             <TabsContent value="store" className="mt-6">
@@ -145,6 +147,10 @@ export const StoreClient = () => {
                 </p>
                 <StoreItemForm workspaceId={workspaceId} onSuccess={() => {}} />
               </div>
+            </TabsContent>
+
+            <TabsContent value="team-stats" className="mt-6">
+              <TeamStats workspaceId={workspaceId} />
             </TabsContent>
 
             <TabsContent value="management" className="mt-6">
@@ -466,9 +472,13 @@ export const StoreClient = () => {
     return (
       <div className="space-y-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="store">Team Store</TabsTrigger>
             <TabsTrigger value="management">Store Management</TabsTrigger>
+            <TabsTrigger value="team-stats">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Team Stats
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="store" className="mt-6">
@@ -477,6 +487,10 @@ export const StoreClient = () => {
 
           <TabsContent value="management" className="mt-6">
             <ManagementContent />
+          </TabsContent>
+
+          <TabsContent value="team-stats" className="mt-6">
+            <TeamStats workspaceId={workspaceId} />
           </TabsContent>
         </Tabs>
 
