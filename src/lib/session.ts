@@ -40,6 +40,7 @@ export const sessionMiddleware = createMiddleware(async (c, next) => {
         email: users.email,
         name: users.name,
         lastName: users.lastName,
+        emailVerified: users.emailVerified,
       })
       .from(users)
       .where(eq(users.id, payload.sub))

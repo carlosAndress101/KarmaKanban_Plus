@@ -7,6 +7,7 @@ import {
   forgotPasswordSchema,
   verifyOtpSchema,
   resetPasswordSchema,
+  updateProfileSchema,
 } from "@/features/auth/schemas";
 import { db } from "@/lib/drizzle";
 import { AUTH_COOKIE, SECRET_JWT } from "../constants";
@@ -296,6 +297,165 @@ const app = new Hono()
       console.error("Error in resend-otp:", error);
       return c.json({ error: "Internal server error" }, 500);
     }
-  });
+  })
+  .patch(
+    "/profile",
+    protectedRoute,
+    zValidator("json", updateProfileSchema),
+    async (c) => {
+      const user = c.get("user");
+      const { name, lastName, email } = c.req.valid("json");
+
+      if (!user) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      try {
+        // Check if new email already exists (if different from current)
+        if (email !== user.email) {
+          const existingUser = await db
+            .select({ id: users.id })
+            .from(users)
+            .where(eq(users.email, email));
+
+          if (existingUser.length > 0) {
+            return c.json({ error: "Email already in use" }, 409);
+          }
+        }
+
+        // Update user profile
+        const updatedUser = await db
+          .update(users)
+          .set({
+            name,
+            lastName,
+            email,
+            emailVerified: email !== user.email ? false : user.emailVerified, // Reset verification if email changed
+          })
+          .where(eq(users.id, user.id))
+          .returning({
+            id: users.id,
+            email: users.email,
+            name: users.name,
+            lastName: users.lastName,
+            emailVerified: users.emailVerified,
+          });
+
+        if (!updatedUser || updatedUser.length === 0) {
+          return c.json({ error: "Failed to update profile" }, 500);
+        }
+
+        const message =
+          email !== user.email
+            ? "Profile updated successfully. Please verify your new email address."
+            : "Profile updated successfully";
+
+        return c.json({
+          success: true,
+          message,
+          data: updatedUser[0],
+          emailChanged: email !== user.email,
+        });
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        return c.json({ error: "Internal server error" }, 500);
+      }
+    }
+  )
+  .post("/send-verification-email", protectedRoute, async (c) => {
+    const user = c.get("user");
+
+    if (!user) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    if (user.emailVerified) {
+      return c.json({ error: "Email is already verified" }, 400);
+    }
+
+    try {
+      // Check if an active OTP already exists
+      const timeRemaining = otpService.getOTPTimeRemaining(user.email);
+      if (timeRemaining > 480) {
+        // If more than 8 minutes remain (out of 10 total)
+        return c.json(
+          {
+            error: "You must wait before requesting a new verification code",
+            timeRemaining: timeRemaining,
+          },
+          429
+        );
+      }
+
+      // Generate new OTP
+      const otp = otpService.generateOTP();
+
+      // Store OTP
+      await otpService.storeOTP(user.email, otp);
+
+      // Send email with OTP
+      const emailSent = await emailService.sendEmailVerificationCode(
+        user.email,
+        otp,
+        user.name
+      );
+
+      if (!emailSent) {
+        return c.json({ error: "Error sending verification email" }, 500);
+      }
+
+      return c.json({
+        success: true,
+        message: "Verification email sent successfully",
+        timeRemaining: otpService.getOTPTimeRemaining(user.email),
+      });
+    } catch (error) {
+      console.error("Error sending verification email:", error);
+      return c.json({ error: "Internal server error" }, 500);
+    }
+  })
+  .post(
+    "/verify-email",
+    protectedRoute,
+    zValidator("json", verifyOtpSchema),
+    async (c) => {
+      const user = c.get("user");
+      const { email, otp } = c.req.valid("json");
+
+      if (!user) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      if (email !== user.email) {
+        return c.json({ error: "Email mismatch" }, 400);
+      }
+
+      if (user.emailVerified) {
+        return c.json({ error: "Email is already verified" }, 400);
+      }
+
+      try {
+        // Verify OTP
+        const otpResult = await otpService.verifyOTP(email, otp);
+        if (!otpResult.valid) {
+          return c.json({ error: otpResult.message }, 400);
+        }
+
+        // Update user's email verification status
+        await db
+          .update(users)
+          .set({ emailVerified: true })
+          .where(eq(users.id, user.id));
+
+        return c.json({
+          success: true,
+          message: "Email verified successfully",
+        });
+      } catch (error) {
+        console.error("Error verifying email:", error);
+        return c.json({ error: "Internal server error" }, 500);
+      }
+    }
+  );
 
 export default app;

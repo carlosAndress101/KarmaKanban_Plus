@@ -103,6 +103,105 @@ export class EmailService {
     }
   }
 
+  async sendEmailVerificationCode(
+    to: string,
+    otp: string,
+    userName: string
+  ): Promise<boolean> {
+    try {
+      const mailOptions = {
+        from: '"KarmaKanban"',
+        to: to,
+        subject: "Email Verification Code",
+        html: `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+                .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+                .otp-code { background: #10b981; color: white; font-size: 32px; font-weight: bold; text-align: center; padding: 20px; border-radius: 8px; letter-spacing: 8px; margin: 20px 0; }
+                .info { background: #dbeafe; border: 1px solid #93c5fd; color: #1e40af; padding: 15px; border-radius: 4px; margin: 20px 0; }
+                .warning { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; border-radius: 4px; margin: 20px 0; }
+                .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>📧 Email Verification</h1>
+                  <p>KarmaKanban</p>
+                </div>
+                <div class="content">
+                  <h2>Hello ${userName}!</h2>
+                  <p>Please verify your email address to secure your account. Use the following verification code:</p>
+
+                  <div class="otp-code">${otp}</div>
+
+                  <div class="info">
+                    <strong>🔐 Why verify your email?</strong>
+                    <ul>
+                      <li>Secure password recovery</li>
+                      <li>Important account notifications</li>
+                      <li>Enhanced account security</li>
+                    </ul>
+                  </div>
+
+                  <div class="warning">
+                    <strong>⚠️ Important:</strong>
+                    <ul>
+                      <li>This code expires in 10 minutes</li>
+                      <li>It can only be used once</li>
+                      <li>Don't share this code with anyone</li>
+                    </ul>
+                  </div>
+
+                  <p>If you haven't requested this verification, you can safely ignore this message.</p>
+
+                  <p>If you need help, contact our support team.</p>
+                </div>
+                <div class="footer">
+                  <p>© ${new Date().getFullYear()} KarmaKanban - Project Management System</p>
+                  <p>This is an automated message, please do not reply.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `,
+        text: `
+          KarmaKanban - Email Verification
+
+          Hello ${userName}!
+
+          Please verify your email address to secure your account. Your verification code is: ${otp}
+
+          Why verify your email?
+          - Secure password recovery
+          - Important account notifications
+          - Enhanced account security
+
+          IMPORTANT:
+          - This code expires in 10 minutes
+          - It can only be used once
+          - Don't share this code with anyone
+
+          If you haven't requested this verification, you can ignore this message.
+
+          © ${new Date().getFullYear()} KarmaKanban
+        `,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error("Error sending email verification code:", error);
+      return false;
+    }
+  }
+
   async sendTaskAssignedEmail(
     to: string,
     taskData: {

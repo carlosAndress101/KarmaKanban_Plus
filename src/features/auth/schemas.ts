@@ -44,11 +44,24 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
+export const updateProfileSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must be less than 50 characters"),
+  lastName: z
+    .string()
+    .min(2, "Last name must be at least 2 characters")
+    .max(50, "Last name must be less than 50 characters"),
+  email: z.string().email("Enter a valid email"),
+});
+
 export type User = {
   id: string;
   email: string;
   name: string;
   lastName: string;
+  emailVerified?: boolean;
 };
 
 declare module "hono" {

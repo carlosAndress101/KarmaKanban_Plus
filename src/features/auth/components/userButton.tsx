@@ -10,12 +10,17 @@ import {
 
 import { useCurrent } from "../api/use-current";
 import { useLogout } from "../api/use-logout";
-import { Loader, LogOut } from "lucide-react";
+import { Loader, LogOut, Settings, Mail, CheckCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import { EditProfileModal } from "./edit-profile-modal";
+import { VerifyEmailModal } from "./verify-email-modal";
 
 const UserButton = () => {
   const { data: currentUser, isLoading } = useCurrent();
   const { mutate: logout } = useLogout();
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [isVerifyEmailOpen, setIsVerifyEmailOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -63,13 +68,50 @@ const UserButton = () => {
         </div>
         <Separator className="mb-1" />
         <DropdownMenuItem
-          onClick={() => logout()}
-          className="h-10 flex items-center justify-center text-amber-700 font-medium cursor-pointer"
+          onClick={() => setIsEditProfileOpen(true)}
+          className="h-10 flex items-center px-3 text-neutral-700 hover:bg-neutral-50 cursor-pointer"
         >
-          <LogOut className="size-4 mr-2" />
-          Log out
+          <Settings className="size-4 mr-3" />
+          Editar perfil
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => setIsVerifyEmailOpen(true)}
+          className="h-10 flex items-center px-3 text-blue-700 hover:bg-blue-50 cursor-pointer"
+        >
+          <Mail className="size-4 mr-3" />
+          Verificar correo
+        </DropdownMenuItem>
+        <Separator className="my-1" />
+        <DropdownMenuItem
+          onClick={() => logout()}
+          className="h-10 flex items-center px-3 text-red-700 hover:bg-red-50 font-medium cursor-pointer"
+        >
+          <LogOut className="size-4 mr-3" />
+          Cerrar sesión
         </DropdownMenuItem>
       </DropdownMenuContent>
+
+      {/* Modals */}
+      <EditProfileModal
+        isOpen={isEditProfileOpen}
+        onClose={() => setIsEditProfileOpen(false)}
+        user={{
+          name: name || "",
+          lastName: currentUser?.lastName || "",
+          email: email || "",
+        }}
+        onEmailChanged={() => {
+          // Open verify email modal when email is changed
+          setIsVerifyEmailOpen(true);
+        }}
+      />
+
+      <VerifyEmailModal
+        isOpen={isVerifyEmailOpen}
+        onClose={() => setIsVerifyEmailOpen(false)}
+        userEmail={email || ""}
+        isEmailVerified={currentUser?.emailVerified || false}
+      />
     </DropdownMenu>
   );
 };
