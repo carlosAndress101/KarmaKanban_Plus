@@ -79,11 +79,26 @@ export const PatchNotesModal: React.FC<PatchNotesModalProps> = ({
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    // Manually format the date without using Date constructor
+    const [year, month, day] = dateString.split("-");
+
+    const monthNames = [
+      "enero",
+      "febrero",
+      "marzo",
+      "abril",
+      "mayo",
+      "junio",
+      "julio",
+      "agosto",
+      "septiembre",
+      "octubre",
+      "noviembre",
+      "diciembre",
+    ];
+
+    const monthName = monthNames[parseInt(month) - 1];
+    return `${parseInt(day)} de ${monthName} de ${year}`;
   };
 
   const renderPatchChange = (change: PatchChange) => (

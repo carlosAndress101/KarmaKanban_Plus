@@ -52,15 +52,15 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    id: "patch-2025-09-26-v2",
+    id: "patch-2025-09-25-v2",
     version: "1.4.0",
-    releaseDate: "2025-09-26",
+    releaseDate: "2025-09-25",
     title: "¡Notificaciones por Email y Mejoras en la App!",
     summary:
       "¡Ahora recibirás emails automáticos cuando te asignen tareas o haya novedades en la tienda! También mejoramos la experiencia general de la aplicación.",
     priority: PatchPriority.HIGH,
     isVisible: true,
-    createdAt: "2025-09-26T12:00:00",
+    createdAt: "2025-09-25T12:00:00",
     changes: [
       {
         id: "email-notifications",
@@ -92,15 +92,15 @@ export const PATCH_NOTES: PatchNote[] = [
     ],
   },
   {
-    id: "patch-2025-09-26",
+    id: "patch-2025-09-25",
     version: "1.3.0",
-    releaseDate: "2025-09-26",
+    releaseDate: "2025-09-25",
     title: "🔍 Filtros para Tareas Archivadas",
     summary:
       "¡Ahora puedes encontrar fácilmente tus tareas archivadas! Busca por nombre, fecha, estado y responsable para encontrar rápidamente lo que necesitas.",
     priority: PatchPriority.MEDIUM,
     isVisible: true,
-    createdAt: "2025-09-26T08:00:00",
+    createdAt: "2025-09-25T08:00:00",
     changes: [
       {
         id: "archived-filters",
