@@ -14,7 +14,7 @@ services:
       POSTGRES_PASSWORD: kkplus_pass # Contraseña del usuario (se puede personalizar)
       POSTGRES_DB: kkplus_db # Nombre de la base de datos (se puede personalizar)
     ports:
-      - "5432:5432"
+      - "5433:5433"
     volumes:
       - db_data:/var/lib/postgresql/data
     restart: unless-stopped
